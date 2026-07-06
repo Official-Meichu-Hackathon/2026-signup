@@ -1,0 +1,12 @@
+# Environment
+.env*
+!.env.example
+
+# OS / editors
+.DS_Store
+.vscode
+.cursor
+.idea
+
+# Logs
+*.log
