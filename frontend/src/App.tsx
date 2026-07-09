@@ -1,5 +1,3 @@
-import './index.css'
-
 function App() {
   return (
     <main className="flex min-h-svh flex-col items-center justify-center gap-4 px-6 text-center">
