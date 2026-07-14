@@ -4,9 +4,6 @@ import QuestionTitle from './QuestionTitle'
 interface ChoiceQuestionProps {
   title: string
   description?: string
-  pdf?: string
-  referenceLink?: string
-  referenceLinkText?: string
   options: string[]
   value: string
   onChange: (value: string) => void
@@ -15,9 +12,6 @@ interface ChoiceQuestionProps {
 export default function ChoiceQuestion({
   title,
   description,
-  pdf,
-  referenceLink,
-  referenceLinkText = '參考連結',
   options,
   value,
   onChange,
@@ -29,44 +23,9 @@ export default function ChoiceQuestion({
       <h3 className="text-sm leading-6 font-semibold text-white md:text-[1.5625rem] md:leading-10">
         <QuestionTitle title={title} />
       </h3>
-      {pdf && (
-        <>
-          <iframe
-            src={`https://drive.google.com/file/d/${pdf}/preview`}
-            className="my-5 h-[60vh] w-full"
-            allow="autoplay"
-            title={title}
-          />
-          <p className="mx-4 mt-2 text-white/80">
-            若pdf無法正確內嵌顯示，你可以{' '}
-            <a
-              href={`https://drive.google.com/file/d/${pdf}/view`}
-              className="text-lightblue hover:underline"
-              target="_blank"
-              rel="noreferrer"
-            >
-              點擊我下載
-            </a>
-            （在新分頁中開啟）
-          </p>
-        </>
-      )}
       {description && (
         <p className="mx-4 mt-2 text-xs leading-snug whitespace-pre-line text-white/80 md:mt-3 md:text-xl md:leading-relaxed">
           {description}
-        </p>
-      )}
-      {referenceLink && (
-        <p className="mx-4 mt-2 text-white/80">
-          <a
-            href={referenceLink}
-            className="text-lightblue hover:underline"
-            target="_blank"
-            rel="noreferrer"
-          >
-            {referenceLinkText}
-          </a>
-          （在新分頁中開啟）
         </p>
       )}
       <div className="mx-4 mt-3 flex flex-wrap gap-x-8 gap-y-3 md:mt-5 md:gap-x-20 md:gap-y-6">
