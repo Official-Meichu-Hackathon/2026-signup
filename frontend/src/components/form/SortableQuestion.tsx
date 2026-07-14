@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import QuestionTitle from './QuestionTitle'
+import QuestionHeader from './QuestionHeader'
 
 interface SortableQuestionProps {
   title: string
@@ -71,14 +71,7 @@ export default function SortableQuestion({
 
   return (
     <div className="py-4 md:py-8">
-      <h3 className="text-sm leading-6 font-semibold text-white md:text-[1.5625rem] md:leading-10">
-        <QuestionTitle title={title} />
-      </h3>
-      {description && (
-        <p className="mx-4 mt-2 text-xs leading-snug whitespace-pre-line md:mt-3 md:text-xl md:leading-relaxed">
-          {description}
-        </p>
-      )}
+      <QuestionHeader title={title} description={description} />
       <div className="mx-4 mt-3 flex flex-col gap-3 md:mt-5 md:gap-4">
         {value.map((option, index) => (
           <div key={option} className="flex items-center gap-3">

@@ -1,5 +1,5 @@
 import { useId } from 'react'
-import QuestionTitle from './QuestionTitle'
+import QuestionHeader from './QuestionHeader'
 
 interface ChoiceQuestionProps {
   title: string
@@ -20,14 +20,11 @@ export default function ChoiceQuestion({
 
   return (
     <div className="py-4 whitespace-pre-line md:py-8">
-      <h3 className="text-sm leading-6 font-semibold text-white md:text-[1.5625rem] md:leading-10">
-        <QuestionTitle title={title} />
-      </h3>
-      {description && (
-        <p className="mx-4 mt-2 text-xs leading-snug whitespace-pre-line text-white/80 md:mt-3 md:text-xl md:leading-relaxed">
-          {description}
-        </p>
-      )}
+      <QuestionHeader
+        title={title}
+        description={description}
+        descriptionClassName="mx-4 mt-2 text-xs leading-snug whitespace-pre-line text-white/80 md:mt-3 md:text-xl md:leading-relaxed"
+      />
       <div className="mx-4 mt-3 flex flex-wrap gap-x-8 gap-y-3 md:mt-5 md:gap-x-20 md:gap-y-6">
         {options.map((option) => (
           <label
