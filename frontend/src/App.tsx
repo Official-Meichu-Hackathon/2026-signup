@@ -1,11 +1,30 @@
-import './App.css'
+import { useState } from 'react'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import RegistrationView from './views/RegistrationView'
+import SignupView from './views/SignupView'
+import SuccessView from './views/SuccessView'
+
+// Same page split as the 2025 site: /registration (info) and /signup (form)
+// were separate routes there; / was the home page (not yet designed for 2026).
+function SignupPage() {
+  const [submitted, setSubmitted] = useState(false)
+
+  return submitted ? (
+    <SuccessView />
+  ) : (
+    <SignupView onSuccess={() => setSubmitted(true)} />
+  )
+}
 
 function App() {
   return (
-    <main className="flex min-h-svh flex-col items-center justify-center gap-4 px-6 text-center">
-      <h1 className="text-4xl font-semibold tracking-tight">Registration</h1>
-      <p className="text-neutral-500">Coming soon</p>
-    </main>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<RegistrationView />} />
+        <Route path="/registration" element={<SignupPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
