@@ -1,6 +1,8 @@
 import Navbar from '../components/layout/Navbar'
 import Footer from '../components/layout/Footer'
 
+const BG_MASK = 'linear-gradient(to bottom, black 55%, transparent 100%)'
+
 export default function SuccessView() {
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden text-white">
@@ -11,9 +13,8 @@ export default function SuccessView() {
         className="absolute inset-0 -z-10 bg-cover bg-center"
         style={{
           backgroundImage: 'url(/bg-1.png)',
-          maskImage: 'linear-gradient(to bottom, black 55%, transparent 100%)',
-          WebkitMaskImage:
-            'linear-gradient(to bottom, black 55%, transparent 100%)',
+          maskImage: BG_MASK,
+          WebkitMaskImage: BG_MASK,
         }}
       />
 

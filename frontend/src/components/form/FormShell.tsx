@@ -12,6 +12,9 @@ interface FormShellProps {
   children: ReactNode
 }
 
+const BG1_MASK = 'linear-gradient(to bottom, black 40%, transparent 100%)'
+const BG2_MASK = 'linear-gradient(to bottom, transparent 0%, black 85%)'
+
 // Starry shell for the /registration form: bg layers, glow title, Navbar,
 // Footer, plus a rail slot and card children.
 export default function FormShell({
@@ -37,10 +40,8 @@ export default function FormShell({
           draggable={false}
           className="absolute inset-x-0 top-0 block h-auto w-full max-w-none select-none"
           style={{
-            maskImage:
-              'linear-gradient(to bottom, black 40%, transparent 100%)',
-            WebkitMaskImage:
-              'linear-gradient(to bottom, black 40%, transparent 100%)',
+            maskImage: BG1_MASK,
+            WebkitMaskImage: BG1_MASK,
           }}
         />
         {/* bg-2 — lower blob */}
@@ -50,9 +51,8 @@ export default function FormShell({
           draggable={false}
           className="absolute inset-x-0 bottom-0 block h-auto w-full max-w-none select-none"
           style={{
-            maskImage: 'linear-gradient(to bottom, transparent 0%, black 85%)',
-            WebkitMaskImage:
-              'linear-gradient(to bottom, transparent 0%, black 85%)',
+            maskImage: BG2_MASK,
+            WebkitMaskImage: BG2_MASK,
           }}
         />
       </div>
