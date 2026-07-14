@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import FormShell from '../components/form/FormShell'
-import type { Section } from '../components/form/railSections'
+import { RAIL_SECTIONS, type Section } from '../components/form/railSections'
 import FormStep from '../components/form/FormStep'
 import TextQuestion from '../components/form/TextQuestion'
 import ChoiceQuestion from '../components/form/ChoiceQuestion'
@@ -171,12 +171,13 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
 
   // Rail state — a section is reached once its first step is at/before current.
   const activeSection = sectionForStep(currentStep, playerCount)
-  const reached: Record<Section, boolean> = {
-    option: firstStepOfSection('option', playerCount) <= currentStep,
-    basic: firstStepOfSection('basic', playerCount) <= currentStep,
-    consent: firstStepOfSection('consent', playerCount) <= currentStep,
-    other: firstStepOfSection('other', playerCount) <= currentStep,
-  }
+  const reached = RAIL_SECTIONS.reduce(
+    (acc, { section }) => {
+      acc[section] = firstStepOfSection(section, playerCount) <= currentStep
+      return acc
+    },
+    {} as Record<Section, boolean>,
+  )
   const goToSection = (section: Section) => {
     const target = firstStepOfSection(section, playerCount)
     if (target <= currentStep) setCurrentStep(target)
