@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import RegistrationView from './views/RegistrationView'
+import ScheduleView from './views/ScheduleView'
 import SignupView from './views/SignupView'
 import SuccessView from './views/SuccessView'
 
@@ -22,6 +23,7 @@ function App() {
       <Routes>
         <Route path="/" element={<RegistrationView />} />
         <Route path="/registration" element={<SignupPage />} />
+        <Route path="/schedule" element={<ScheduleView />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

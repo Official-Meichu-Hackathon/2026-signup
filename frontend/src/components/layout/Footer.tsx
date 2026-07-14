@@ -13,11 +13,7 @@ export default function Footer() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img
-            src={facebookIcon}
-            alt="Facebook"
-            className="h-[3.125rem] w-[3.125rem]"
-          />
+          <img src={facebookIcon} alt="Facebook" width="50" height="50" />
         </a>
         <a
           href="https://www.instagram.com/mc_hackathon"
@@ -25,11 +21,7 @@ export default function Footer() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img
-            src={instagramIcon}
-            alt="Instagram"
-            className="h-[3.125rem] w-[3.125rem]"
-          />
+          <img src={instagramIcon} alt="Instagram" width="50" height="50" />
         </a>
         <a
           href="mailto:2026mchackathon@gmail.com"
@@ -37,11 +29,7 @@ export default function Footer() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img
-            src={gmailIcon}
-            alt="Email"
-            className="h-[3.125rem] w-[3.125rem]"
-          />
+          <img src={gmailIcon} alt="Email" width="50" height="50" />
         </a>
       </div>
       <div className="text-center text-lg font-bold text-white">
