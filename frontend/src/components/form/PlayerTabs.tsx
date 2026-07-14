@@ -7,7 +7,7 @@ interface PlayerTabsProps {
 }
 
 // Participant tab strip on top of the card during the 基本資料 stage. Active tab
-// is taller (protrudes); navigation is backward-only. Desktop-only.
+// is taller; navigation is backward-only.
 export default function PlayerTabs({
   playerCount,
   activeIndex,
@@ -16,8 +16,8 @@ export default function PlayerTabs({
   return (
     <nav
       aria-label="參賽者"
-      // -mt-14 pulls the strip up by the active tab's height so its bottom edge
-      // meets the card top; the tabs protrude above the card body.
+      // Pulled up by the active tab's height so its bottom edge meets the card
+      // top; the tabs protrude above the card body.
       className="relative z-20 -mt-12 flex items-end gap-0 md:-mt-[6.5rem]"
     >
       {Array.from({ length: playerCount }, (_, index) => {
@@ -33,7 +33,7 @@ export default function PlayerTabs({
             disabled={!isReachable}
             onClick={() => isReachable && onSelect(index)}
             // Glass tab, rounded top only so it merges into the card. Flush
-            // (-ml-px overlaps borders); active is taller with a brighter fill.
+            // stacking; active is taller with a brighter fill.
             className={`relative flex items-center justify-center overflow-hidden rounded-t-2xl border border-b-0 backdrop-blur-2xl backdrop-saturate-150 transition-all duration-200 md:rounded-t-[3.4375rem] ${
               index > 0 ? '-ml-px' : ''
             } ${

@@ -1,5 +1,4 @@
-// Taiwan national ID / residence certificate validation, ported from the
-// 2025 signup site (Official-Meichu-Hackathon/2025-signup).
+// Taiwan national ID / residence certificate validation.
 
 const countyCode: Record<string, string> = {
   A: '10',

@@ -8,8 +8,8 @@ interface StepRailProps {
   onActiveOffset?: (px: number) => void
 }
 
-// Left rail: 4 glass tabs stacked flush, rounded right corners; the active tab
-// is wider. Unreached tabs are disabled for navigation.
+// Left rail: 4 glass tabs stacked flush; the active tab is wider. Unreached
+// tabs are disabled for navigation.
 export default function StepRail({
   activeSection,
   reached,
@@ -62,8 +62,7 @@ export default function StepRail({
             aria-current={isActive ? 'step' : undefined}
             disabled={!isReached}
             onClick={() => isReached && onNavigate(section)}
-            // Glass spec (glass 適合黑色背景); flush stacking (-mt-px overlaps
-            // borders into one line).
+            // Glass spec; flush stacking (-mt-px overlaps borders into one line).
             className={`relative flex min-h-[4.5rem] transform-gpu items-center justify-center overflow-hidden rounded-r-[1.75rem] border-[0.272px] border-[rgba(255,255,255,0.2)] bg-[linear-gradient(161deg,rgba(255,255,255,0.14)_0%,rgba(255,255,255,0.03)_90.55%)] py-5 shadow-[0_2.722px_8.166px_0_rgba(0,0,0,0.25),inset_0_0.272px_2.178px_0_rgba(255,255,255,0.5)] backdrop-blur-[9.527px] transition-all duration-200 [will-change:transform] [backface-visibility:hidden] md:min-h-40 md:rounded-r-[4.0625rem] md:border md:py-12 md:shadow-[0_10px_30px_0_rgba(0,0,0,0.25),inset_0_1px_8px_0_rgba(255,255,255,0.5)] md:backdrop-blur-[35px] ${
               index > 0 ? '-mt-px' : ''
             } ${

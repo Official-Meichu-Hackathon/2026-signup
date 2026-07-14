@@ -1,16 +1,10 @@
-// Meteor streaks + 4-point stars scattered around the 報名黑客松 hero title,
-// using the Figma-exported assets. Purely decorative: non-interactive,
-// aria-hidden. Two variants: a compact mobile set (Figma frame 136:99) and the
-// roomier desktop set (report page 125:302). Title-hugging pieces anchor to the
-// hero centre; the desktop corner stars anchor to the edges so they stay
-// on-screen across widths.
+// Decorative meteor streaks + 4-point stars around the 報名黑客松 hero title.
+// Purely decorative (aria-hidden). Two variants: mobile and desktop.
 export default function HeroDecorations() {
   return (
     <>
-      {/* Mobile hero decorations — the 5 流星 (流星1-4 + 流星線) scattered around
-          the 報名黑客松 title, from Figma mobile frame 136:99. Positions are px
-          offsets from the title centre, expressed in rem so they scale with the
-          fluid root font-size (1rem = 16px at the 390px mobile frame). */}
+      {/* Mobile hero decorations — the 5 流星 (流星1-4 + 流星線) around the title.
+          Positions are rem offsets from the title centre. */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 overflow-visible select-none md:hidden"

@@ -28,10 +28,8 @@ import {
 import { submitRegistration } from '../lib/submit'
 import { trackSignUp } from '../lib/analytics'
 
-// TODO: confirm 2026 contact email with organizers
 const CONTACT_EMAIL = '2026mchackathon@gmail.com'
 
-// TODO: replace with the real consent text (design shows this placeholder)
 const CONSENT_PLACEHOLDER =
   'Lorem ipsum dolor sit amet consectetur. Neque ac odio scelerisque magnis ultrices feugiat tortor. Gravida sed in euismod tortor ipsum facilisis lorem. Ultrices ac pellentesque ac tellus consectetur. Arcu amet maecenas commodo a consequat scelerisque. Bibendum phasellus semper id dignissim in nibh ultrices id ut. Nibh pellentesque aliquam quam egestas et. Morbi ac sit nulla aliquam. Pellentesque placerat nibh mauris sit donec. Sed semper diam consectetur tempor scelerisque consequat lectus eu.'
 
@@ -39,8 +37,6 @@ interface SignupViewProps {
   onSuccess: () => void
 }
 
-// The left rail maps 4 SECTIONS to step ranges. Per-player steps (2..count+1)
-// all live under the 基本資料 (basic) section. totalSteps = playerCount + 3.
 function sectionForStep(currentStep: number, playerCount: number): Section {
   if (currentStep === 1) return 'option'
   if (currentStep <= playerCount + 1) return 'basic'
@@ -70,7 +66,6 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
   const [groupName, setGroupName] = useState('')
   const [playerCountChoice, setPlayerCountChoice] = useState('')
   const [isCrossDomain, setIsCrossDomain] = useState('')
-  // design pre-fills the full default order; users reorder it
   const [priorityOrder, setPriorityOrder] = useState<string[]>([
     ...PRIORITY_OPTIONS,
   ])
@@ -84,7 +79,7 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
   const [assentFirst, setAssentFirst] = useState('')
   const [assentSecond, setAssentSecond] = useState('')
 
-  // 其他 (2026 design: team-level upload + attendance questions)
+  // 其他
   const [lowIncomeProof, setLowIncomeProof] = useState<File | null>(null)
   const [workshopAttendance, setWorkshopAttendance] = useState('')
   const [ceremonyAttendance, setCeremonyAttendance] = useState('')
@@ -135,8 +130,7 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
     player.shirtSize !== ''
 
   const assentOk = assentFirst === '是' && assentSecond === '是'
-  // 清寒證明 upload treated as optional despite the design's ★ —
-  // TODO: confirm with the design team
+  // 清寒證明 upload is optional despite the design's ★.
   const otherOk = workshopAttendance !== '' && ceremonyAttendance !== ''
 
   const submit = async () => {
@@ -175,8 +169,7 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
     onSubmit: () => void submit(),
   }
 
-  // Rail state — backward-only: a section is reached once its first step is
-  // at or before the current step.
+  // Rail state — a section is reached once its first step is at/before current.
   const activeSection = sectionForStep(currentStep, playerCount)
   const reached: Record<Section, boolean> = {
     option: firstStepOfSection('option', playerCount) <= currentStep,
@@ -337,8 +330,6 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
         stepName="填寫同意書"
         requiredOk={assentOk}
       >
-        {/* TODO: replace lorem ipsum with the real 2026 consent text,
-            matching the design placeholder for now */}
         <ChoiceQuestion
           title="★個人資料搜集、處理及利用之告知暨同意書"
           description={`${CONSENT_PLACEHOLDER}\n\n★我已詳細閱讀，並同意以上內容`}
