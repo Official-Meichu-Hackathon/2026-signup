@@ -7,15 +7,23 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <header className="fixed top-0 left-0 z-50 flex w-full flex-col">
-      <div className="flex items-center justify-between px-6 py-4">
-        <Link to="/">
+    <>
+      <header className="fixed top-0 left-0 z-50 flex w-full items-center justify-between px-6 py-4">
+        {/* Faded/blurred (not literally layered under the drawer — `fixed`
+            elements always open their own stacking context, so nesting the
+            toggle button under a lower z-index header would trap it there
+            too) to look covered by the glass panel while it's open, per the
+            reference screenshot, while staying out of the way visually. */}
+        <Link
+          to="/"
+          className={`transition duration-300 ${menuOpen ? 'pointer-events-none opacity-30 blur-[2px]' : ''}`}
+        >
           <img src={logo} alt="梅竹黑客松" className="h-12 w-auto" />
         </Link>
         <div className="flex items-center gap-4">
           <Link
             to="/registration"
-            className="rounded-full border border-white/20 bg-white/10 px-5 py-1.5 text-sm text-white backdrop-blur transition hover:bg-white/20"
+            className={`rounded-full border border-white/20 bg-white/10 px-5 py-1.5 text-sm text-white backdrop-blur transition duration-300 hover:bg-white/20 ${menuOpen ? 'pointer-events-none opacity-30 blur-[2px]' : ''}`}
           >
             點我報名
           </Link>
@@ -24,7 +32,7 @@ export default function Navbar() {
             aria-label={menuOpen ? '關閉選單' : '選單'}
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((open) => !open)}
-            className="text-white transition hover:opacity-70"
+            className="relative z-50 text-white transition hover:opacity-70"
           >
             <svg
               viewBox="0 0 24 24"
@@ -33,16 +41,12 @@ export default function Navbar() {
               strokeWidth="2"
               className="h-6 w-6"
             >
-              {menuOpen ? (
-                <path strokeLinecap="round" d="M6 6l12 12M18 6L6 18" />
-              ) : (
-                <path strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />
-              )}
+              <path strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />
             </svg>
           </button>
         </div>
-      </div>
-      {menuOpen && <MobileNavMenu onNavigate={() => setMenuOpen(false)} />}
-    </header>
+      </header>
+      <MobileNavMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
+    </>
   )
 }
