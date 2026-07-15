@@ -1,9 +1,12 @@
-import type { RegistrationData } from './types'
+import { PRIORITY_OPTIONS, type RegistrationData } from './types'
 
 type SheetCell = string | null
 
+// Fixed number of 志願序 columns; both branches pad to this width.
+const PRIORITY_WIDTH = PRIORITY_OPTIONS.length
+
 // Row layout matches the 2026 sheet schema (see apps-script/README.md):
-// [timestamp, groupName, playerCount, crossDomain, priority1..7,
+// [timestamp, groupName, playerCount, crossDomain, priority1..8,
 //  name, gender, birthday, idNumber, identity, school, department, grade,
 //  occupation, email, phone, dietaryRestrictions, shirtSize,
 //  assentFirst, assentSecond, lowIncomeProofFilename,
@@ -14,7 +17,7 @@ export function buildRows(data: RegistrationData): SheetCell[][] {
   const players = data.players.slice(0, playerCount)
 
   const priority: SheetCell[] = [...data.priorityOrder]
-  while (priority.length < 7) {
+  while (priority.length < PRIORITY_WIDTH) {
     priority.push(null)
   }
 
@@ -55,7 +58,7 @@ export function buildRows(data: RegistrationData): SheetCell[][] {
       null,
       null,
       null,
-      ...Array<SheetCell>(7).fill(null),
+      ...Array<SheetCell>(PRIORITY_WIDTH).fill(null),
       ...playerCells(player),
     ])
 

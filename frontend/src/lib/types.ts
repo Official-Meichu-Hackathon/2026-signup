@@ -48,16 +48,20 @@ export const MAX_PLAYERS = 5
 
 export const PLAYER_COUNT_OPTIONS = ['3人', '4人', '5人']
 
-// Default 志願序 order from the 2026 design (design/components/報名頁面摺頁)
+// 黑客組 志願序: this year's 7 companies + 創客交流組 fallback.
 export const PRIORITY_OPTIONS = [
-  'CloudMosa',
-  'NXP',
-  'TSMC',
-  '羅技',
-  'Google',
   'AMD',
+  'CloudMosa',
+  'Google',
+  '恩智浦半導體',
+  '愛德萬測試',
+  '羅技',
+  '聚陽實業',
   '創客交流組',
 ]
+
+// 創客組 (?ref=maker): locked to the maker group alone.
+export const MAKER_PRIORITY_OPTIONS = ['創客交流組']
 
 export const GENDER_OPTIONS = ['男', '女']
 

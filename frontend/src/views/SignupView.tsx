@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import FormShell from '../components/form/FormShell'
 import { RAIL_SECTIONS, type Section } from '../components/form/railSections'
 import FormStep from '../components/form/FormStep'
@@ -11,6 +12,7 @@ import {
   createPlayerData,
   GENDER_OPTIONS,
   IDENTITY_OPTIONS,
+  MAKER_PRIORITY_OPTIONS,
   MAX_PLAYERS,
   PLAYER_COUNT_OPTIONS,
   PLAYER_ORDER_LABELS,
@@ -62,13 +64,25 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState(false)
 
+  // ?ref=maker locks 志願序 to 創客交流組; default is the full enterprise list.
+  const [searchParams] = useSearchParams()
+  const isMaker = searchParams.get('ref') === 'maker'
+  const priorityOptions = isMaker ? MAKER_PRIORITY_OPTIONS : PRIORITY_OPTIONS
+
   // step 1: 報名選項
   const [groupName, setGroupName] = useState('')
   const [playerCountChoice, setPlayerCountChoice] = useState('')
   const [isCrossDomain, setIsCrossDomain] = useState('')
   const [priorityOrder, setPriorityOrder] = useState<string[]>([
-    ...PRIORITY_OPTIONS,
+    ...priorityOptions,
   ])
+
+  // Re-seed the list when the branch flips (?ref changing in place).
+  const [prevIsMaker, setPrevIsMaker] = useState(isMaker)
+  if (isMaker !== prevIsMaker) {
+    setPrevIsMaker(isMaker)
+    setPriorityOrder([...priorityOptions])
+  }
 
   // steps 2..n: 參賽者基本資料
   const [players, setPlayers] = useState<PlayerData[]>(() =>
@@ -220,7 +234,9 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
         <SortableQuestion
           title="★組別或企業志願序"
           description={
-            '備註：\n(1) 企業題目或組別將依據隊伍的志願序分發。若單一企業或組別超額，將亂數抽籤決定。\n(2) 未報名創客交流組則將創客交流組的志願序填為 7。\n(3) 若未選擇，將隨機分配。'
+            isMaker
+              ? ''
+              : '備註：\n(1) 企業題目或組別將依據隊伍的志願序分發。若單一企業或組別超額，將亂數抽籤決定。\n(2) 未報名創客交流組則將創客交流組的志願序填為 8。\n(3) 若未選擇，將隨機分配。'
           }
           value={priorityOrder}
           onChange={setPriorityOrder}

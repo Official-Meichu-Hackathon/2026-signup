@@ -29,7 +29,7 @@ interface SortableQuestionProps {
   onChange: (value: string[]) => void
 }
 
-const rankLabels = ['一', '二', '三', '四', '五', '六', '七']
+const rankLabels = ['一', '二', '三', '四', '五', '六', '七', '八']
 
 // Six-dot grab handle, shared by the in-list rows and the DragOverlay clone.
 function DragHandle({ className = '' }: { className?: string }) {
