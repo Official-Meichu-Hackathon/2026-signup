@@ -43,14 +43,15 @@ const SOCIAL_LINKS = [
 // 688:3871's bare content in this card) use identical fill/blur/shadow
 // values, so this isn't a per-breakpoint style switch, just fluid spacing.
 //
-// Fixed to the viewport bottom (mirroring Navbar's `fixed top-0`) so it
-// overlays on top of the page background instead of trailing after it in
-// normal flow, per the reference screenshot where both hero and footer sit
-// in the same view with no scrolling.
-export default function Footer() {
+// No positioning of its own — callers decide (`fixed bottom-0` to overlay a
+// short page like Home, `absolute` at a specific offset to sit over a tall
+// custom canvas like ScheduleView's nebula art). Baking in `fixed` here once
+// broke ScheduleView's `absolute top-[94.77%]` placement, since `fixed`
+// unconditionally wins over an ancestor's positioning.
+export default function Footer({ className = '' }: { className?: string }) {
   return (
     <footer
-      className="fixed bottom-0 left-0 z-40 flex w-full flex-col items-center justify-center bg-[rgba(177,162,202,0.56)] shadow-[0px_10px_30px_0px_rgba(0,0,0,0.25),inset_0px_1px_8px_0px_rgba(255,255,255,0.5)] backdrop-blur-[35px]"
+      className={`flex w-full flex-col items-center justify-center bg-[rgba(177,162,202,0.56)] shadow-[0px_10px_30px_0px_rgba(0,0,0,0.25),inset_0px_1px_8px_0px_rgba(255,255,255,0.5)] backdrop-blur-[35px] ${className}`}
       style={{ paddingBlock: paddingY }}
     >
       <div className="flex flex-col items-center" style={{ gap: rowGap }}>

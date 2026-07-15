@@ -184,8 +184,12 @@ function DesktopSchedule() {
         />
 
         {/* Footer sits over the tail of the nebula background (matching
-            node 484:1151 in Figma), not on flat black. */}
-        <div className="absolute top-[94.77%] left-0 w-full">
+            node 484:1151 in Figma), not on flat black. Pinned to `bottom-0`
+            rather than a `top-%` offset — this canvas has no max-width, so
+            past ~1460px viewport width its aspect-ratio height keeps
+            growing while Footer's own fluid height caps out, and a `top-%`
+            offset would open a growing gap below it. */}
+        <div className="absolute bottom-0 left-0 w-full">
           <Footer />
         </div>
       </div>
@@ -274,8 +278,10 @@ function MobileSchedule() {
         className="absolute top-[22.81%] left-0 w-[96.04%]"
       />
 
-      {/* Footer sits over the tail of the nebula background, not on flat black. */}
-      <div className="absolute top-[95.20%] left-0 w-full">
+      {/* Footer sits over the tail of the nebula background, not on flat
+          black. Pinned to `bottom-0` rather than a `top-%` offset — see the
+          matching comment in DesktopSchedule for why. */}
+      <div className="absolute bottom-0 left-0 w-full">
         <Footer />
       </div>
     </div>
