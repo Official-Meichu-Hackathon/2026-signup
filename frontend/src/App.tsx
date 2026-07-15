@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import Footer from './components/layout/Footer'
 import Navbar from './components/layout/Navbar'
 
 function HomeView() {
@@ -19,6 +20,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomeView />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   )
 }

@@ -8,7 +8,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 z-50 flex w-full items-center justify-between px-6 py-4">
+      <header className="fixed top-0 left-0 z-50 flex w-full items-center justify-between bg-black/5 px-6 py-4 backdrop-blur-[2px]">
         {/* Faded/blurred (not literally layered under the drawer — `fixed`
             elements always open their own stacking context, so nesting these
             under a lower z-index header would trap them there too) to look
