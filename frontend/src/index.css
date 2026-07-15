@@ -3,8 +3,64 @@
 @theme {
   --font-chiron: 'Chiron Hei HK', sans-serif;
   --font-noto-tc: 'Noto Sans TC', sans-serif;
+
+  /* Placeholder design tokens — replace values when the 2026 Canva design
+     tokens arrive. Components reference these names, not raw hex. */
+  --color-darkblue: #2d3e63;
+  --color-lightblue: #d3e4fc;
+  --font-zen: 'Zen Antique', serif;
+  --font-noto: 'Noto Sans', sans-serif;
+  /* Strong ease-out — built-in CSS easings are too weak for UI motion */
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  --animate-twinkle: twinkle 3s ease-in-out infinite;
+  --animate-fade-in: fade-in 0.35s ease-out;
+
+  @keyframes twinkle {
+    0%,
+    100% {
+      opacity: 0.1;
+      transform: scale(0.7);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 }
 
 body {
   @apply bg-white text-neutral-900;
+}
+
+/* Glowing title text per the 2026 design (報名方式 / 報名黑客松 heroes) */
+.glow-text {
+  text-shadow:
+    0 0 12px rgba(255, 255, 255, 0.8),
+    0 0 40px rgba(255, 255, 255, 0.45),
+    0 0 80px rgba(160, 180, 255, 0.35);
+}
+
+.glow-text-subtle {
+  text-shadow:
+    0 0 12px rgba(255, 255, 255, 0.45),
+    0 0 30px rgba(160, 180, 255, 0.22);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-twinkle {
+    animation: none;
+    opacity: 0.8;
+  }
+  .animate-fade-in {
+    animation: none;
+  }
 }
