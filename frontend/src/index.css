@@ -1,8 +1,11 @@
 @import 'tailwindcss';
 
-/* Placeholder design tokens — replace values when the 2026 Canva design
-   tokens arrive. Components reference these names, not raw hex. */
 @theme {
+  --font-chiron: 'Chiron Hei HK', sans-serif;
+  --font-noto-tc: 'Noto Sans TC', sans-serif;
+
+  /* Placeholder design tokens — replace values when the 2026 Canva design
+     tokens arrive. Components reference these names, not raw hex. */
   --color-darkblue: #2d3e63;
   --color-lightblue: #d3e4fc;
   --font-zen: 'Zen Antique', serif;
