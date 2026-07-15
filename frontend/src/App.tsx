@@ -22,7 +22,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<RegistrationView />} />
-        <Route path="/registration" element={<SignupPage />} />
+        <Route path="/signup" element={<SignupPage />} />
         <Route path="/schedule" element={<ScheduleView />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

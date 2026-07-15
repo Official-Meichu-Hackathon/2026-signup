@@ -9,7 +9,7 @@ export default function Navbar() {
       </Link>
       <div className="flex items-center gap-4">
         <Link
-          to="/registration"
+          to="/signup"
           className="rounded-full border border-white/20 bg-white/10 px-5 py-1.5 text-sm text-white backdrop-blur transition hover:bg-white/20"
         >
           點我報名
