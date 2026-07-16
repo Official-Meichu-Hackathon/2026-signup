@@ -38,10 +38,9 @@ const SOCIAL_LINKS = [
   },
 ]
 
-// Same purple frosted-glass card at every size — node 786:4617 (mobile) and
-// node 1368:61523 ("footer電腦版", the finished desktop frame that wraps
-// 688:3871's bare content in this card) use identical fill/blur/shadow
-// values, so this isn't a per-breakpoint style switch, just fluid spacing.
+// Fully transparent — node 484:1151, the current desktop "footer" frame,
+// drops the purple glass card down to a bare `backdrop-blur-[2px]` with no
+// fill or shadow, so the page background shows straight through.
 //
 // No positioning of its own — callers decide (`fixed bottom-0` to overlay a
 // short page like Home, `absolute` at a specific offset to sit over a tall
@@ -51,7 +50,7 @@ const SOCIAL_LINKS = [
 export default function Footer({ className = '' }: { className?: string }) {
   return (
     <footer
-      className={`flex w-full flex-col items-center justify-center bg-[rgba(177,162,202,0.56)] shadow-[0px_10px_30px_0px_rgba(0,0,0,0.25),inset_0px_1px_8px_0px_rgba(255,255,255,0.5)] backdrop-blur-[35px] ${className}`}
+      className={`flex w-full flex-col items-center justify-center backdrop-blur-[2px] ${className}`}
       style={{ paddingBlock: paddingY }}
     >
       <div className="flex flex-col items-center" style={{ gap: rowGap }}>
