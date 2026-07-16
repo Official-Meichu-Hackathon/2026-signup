@@ -295,7 +295,7 @@ export default function RegistrationMethodView() {
 
       <section
         id="報名時程"
-        className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden px-6 pt-32 pb-20"
+        className="relative isolate flex flex-col items-center overflow-hidden px-6 pt-28 pb-16 md:pt-36 md:pb-20"
       >
         <img
           src={bgHero}
@@ -303,7 +303,7 @@ export default function RegistrationMethodView() {
           className="absolute inset-0 -z-10 h-full w-full object-cover"
         />
         <StarField count={20} seed={1046} />
-        <h1 className="glow-text font-zen relative mb-16 text-center text-6xl text-[#f6f6f6] md:mb-24 md:text-8xl">
+        <h1 className="glow-text font-zen relative mb-10 text-center text-5xl text-[#f6f6f6] md:mb-16 md:text-8xl">
           報名方式
         </h1>
         <DateCard />
@@ -311,7 +311,7 @@ export default function RegistrationMethodView() {
 
       <section
         id="報名資訊"
-        className="relative overflow-hidden px-6 py-20 md:px-0"
+        className="relative isolate overflow-hidden px-6 py-16 md:px-0 md:py-24"
       >
         <img
           src={bgContent}
