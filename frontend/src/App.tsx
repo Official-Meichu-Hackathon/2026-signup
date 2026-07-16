@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Footer from './components/layout/Footer'
 import Navbar from './components/layout/Navbar'
+import RegistrationMethodView from './views/RegistrationMethodView'
 import ScheduleView from './views/ScheduleView'
 
 // Owns its own Navbar/Footer rather than relying on a global App-level
@@ -28,6 +29,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomeView />} />
         <Route path="/schedule" element={<ScheduleView />} />
+        <Route path="/registration" element={<RegistrationMethodView />} />
       </Routes>
     </BrowserRouter>
   )
