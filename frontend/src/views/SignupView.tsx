@@ -349,14 +349,14 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
       >
         <ChoiceQuestion
           title="★個人資料搜集、處理及利用之告知暨同意書"
-          description={`${CONSENT_PLACEHOLDER}\n\n★我已詳細閱讀，並同意以上內容`}
+          description={`${CONSENT_PLACEHOLDER}\n\n*我已詳細閱讀，並同意以上內容`}
           options={['是']}
           value={assentFirst}
           onChange={setAssentFirst}
         />
         <ChoiceQuestion
           title="★智慧財產權聲明暨授權同意書"
-          description={`${CONSENT_PLACEHOLDER}\n\n★我已詳細閱讀，並同意以上內容`}
+          description={`${CONSENT_PLACEHOLDER}\n\n*我已詳細閱讀，並同意以上內容`}
           options={['是']}
           value={assentSecond}
           onChange={setAssentSecond}
