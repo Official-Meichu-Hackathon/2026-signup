@@ -296,16 +296,24 @@ const DATE_ITEMS: DateItem[] = [
 // A short connecting line between the two ends of a date range (node
 // 107:330/107:307 "分隔線") — a real stroke, not a dash character, so it
 // reads as one continuous range rather than two unrelated dates.
+//
+// The note (e.g. "20:00 前") is its own line below the date+circle row,
+// always — it used to sit inline via flex-wrap, which fit below 1460px
+// (fluid text was still shrinking) but broke once viewport width crossed
+// 1460px and fluid sizing hit its max plateau, widening the row just
+// enough to force an unpredictable wrap. A fixed layout doesn't shift.
 function DateRange({ item }: { item: DateItem }) {
   return (
-    <div className="flex flex-wrap items-baseline gap-2">
-      <DateBadge date={item.date} day={item.day} />
-      {item.endDate && item.endDay && (
-        <>
-          <span className="h-px w-6 shrink-0 bg-white/50 md:w-9" />
-          <DateBadge date={item.endDate} day={item.endDay} />
-        </>
-      )}
+    <div className="flex flex-col gap-1">
+      <div className="flex flex-nowrap items-baseline gap-2">
+        <DateBadge date={item.date} day={item.day} />
+        {item.endDate && item.endDay && (
+          <>
+            <span className="h-px w-6 shrink-0 bg-white/50 md:w-9" />
+            <DateBadge date={item.endDate} day={item.endDay} />
+          </>
+        )}
+      </div>
       {item.note && (
         <span className="text-white/80" style={{ fontSize: noteTextSize }}>
           {item.note}
