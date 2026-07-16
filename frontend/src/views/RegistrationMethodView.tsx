@@ -297,24 +297,34 @@ const DATE_ITEMS: DateItem[] = [
 // 107:330/107:307 "分隔線") — a real stroke, not a dash character, so it
 // reads as one continuous range rather than two unrelated dates.
 //
-// The note (e.g. "20:00 前") is its own line below the date+circle row,
-// always — it used to sit inline via flex-wrap, which fit below 1460px
-// (fluid text was still shrinking) but broke once viewport width crossed
-// 1460px and fluid sizing hit its max plateau, widening the row just
-// enough to force an unpredictable wrap. A fixed layout doesn't shift.
+// The note (e.g. "20:00 前") sits on its own fixed line directly under the
+// END date specifically (matching the reference render), not centered
+// under the whole row. It used to be inline via flex-wrap, which fit below
+// 1460px viewport width (fluid text was still shrinking) but broke once
+// sizing hit its max plateau past 1460px, widening the row just enough to
+// force an unpredictable wrap — a fixed line doesn't shift.
 function DateRange({ item }: { item: DateItem }) {
+  const hasRange = Boolean(item.endDate && item.endDay)
   return (
-    <div className="flex flex-col gap-1">
-      <div className="flex flex-nowrap items-baseline gap-2">
-        <DateBadge date={item.date} day={item.day} />
-        {item.endDate && item.endDay && (
-          <>
-            <span className="h-px w-6 shrink-0 bg-white/50 md:w-9" />
-            <DateBadge date={item.endDate} day={item.endDay} />
-          </>
-        )}
-      </div>
-      {item.note && (
+    <div className="flex flex-nowrap items-center gap-2">
+      <DateBadge date={item.date} day={item.day} />
+      {hasRange && (
+        <>
+          <span className="h-px w-6 shrink-0 bg-white/50 md:w-9" />
+          <div className="flex flex-col gap-0.5">
+            <DateBadge date={item.endDate!} day={item.endDay!} />
+            {item.note && (
+              <span
+                className="text-white/80"
+                style={{ fontSize: noteTextSize }}
+              >
+                {item.note}
+              </span>
+            )}
+          </div>
+        </>
+      )}
+      {!hasRange && item.note && (
         <span className="text-white/80" style={{ fontSize: noteTextSize }}>
           {item.note}
         </span>
