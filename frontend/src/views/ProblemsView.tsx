@@ -1,10 +1,12 @@
 import Footer from '../components/layout/Footer'
 import StarField from '../components/layout/StarField'
 import ProblemDeck from '../components/problems/ProblemDeck'
+import ProblemStars from '../components/problems/ProblemStars'
 import buoyArrow from '../assets/Problems/buoy-arrow.svg'
 import bgGradient from '../assets/Problems/bg-gradient.png'
 import logo14th from '../assets/Problems/logo-14th.svg'
 import ctaSparkle from '../assets/Problems/cta-sparkle.svg'
+import logoNav from '../assets/Problems/logo-nav.png'
 
 // 浮標（題目說明_浮標 838:19509 / 838:27446）：玻璃質感導引標籤。
 function Buoy({
@@ -45,7 +47,18 @@ export default function ProblemsView() {
         alt=""
         className="pointer-events-none absolute bottom-0 left-[-9.44%] h-[1064px] w-[109.44%] max-w-none rotate-180 select-none"
       />
+      {/* 小星點（共用元件）鋪底，設計稿的 5 顆大星疊在其上 */}
       <StarField count={28} seed={2026} />
+      <ProblemStars />
+
+      {/* 左上角梅竹黑客松 logo（1366:61503：x47 y13 148×67）。設計稿以
+          object-cover 貼齊底部，故頂端星芒被裁切。navbar 其餘元件（報名
+          按鈕、選單）屬他人負責範圍，此處不實作。 */}
+      <img
+        src={logoNav}
+        alt="梅竹黑客松"
+        className="absolute top-[13px] left-[47px] z-10 h-[67px] w-[148px] object-cover object-bottom"
+      />
 
       <main className="relative z-10 flex flex-col items-center px-6 pt-28 pb-16">
         <h1 className="glow-text font-zen text-ink text-center text-6xl md:text-8xl">
@@ -56,8 +69,11 @@ export default function ProblemsView() {
             待設計確認顯示時機後再開放；其預留高度反映在下方留白，
             讓頁面維持設計稿 1440×2550 的長捲動比例。 */}
 
-        {/* 黑客組牌堆 — 設計稿中收合牌堆靠頁面左側（664:8019 於 x≈88） */}
-        <section className="mt-[48rem] flex w-full max-w-[1262px] flex-col">
+        {/* 黑客組牌堆 — 設計稿中收合牌堆靠頁面左側（664:8019 於 x≈88）。
+            上方留白除了設計稿的保密聲明預留空間（48rem）外，另外加寬到
+            63rem，讓題目卡放大時能往上升起而不壓到「題目説明」標題
+            （放大卡需要 ProblemDeck 的 ZOOM_RISE ≈ 965px）。 */}
+        <section className="mt-[63rem] flex w-full max-w-[1262px] flex-col">
           <ProblemDeck />
           <Buoy label="黑客組" className="mt-52 self-start" />
         </section>

@@ -15,12 +15,27 @@
   --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
   --animate-twinkle: twinkle 3s ease-in-out infinite;
   --animate-fade-in: fade-in 0.35s ease-out;
+  /* 星星閃爍 — gentler than `twinkle`, which fades to 0.1 and suits small
+     dots; the design's large stars would read as blinking at that depth. */
+  --animate-star-twinkle: star-twinkle 4s ease-in-out infinite;
 
   @keyframes twinkle {
     0%,
     100% {
       opacity: 0.1;
       transform: scale(0.7);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes star-twinkle {
+    0%,
+    100% {
+      opacity: 0.5;
+      transform: scale(0.94);
     }
     50% {
       opacity: 1;
@@ -72,6 +87,9 @@ body {
   .animate-twinkle {
     animation: none;
     opacity: 0.8;
+  }
+  .animate-star-twinkle {
+    animation: none;
   }
   .animate-fade-in {
     animation: none;
