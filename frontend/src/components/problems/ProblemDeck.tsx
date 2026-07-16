@@ -2,18 +2,18 @@ import { useState } from 'react'
 import { PROBLEMS, type Problem } from '../../data/problems'
 import cardBack from '../../assets/Problems/card-back.png'
 
-// 卡背上的白色小卡（題目卡廠商背景電腦版 390:437）— 星星裝飾以 CSS 光點
-// 呈現，避免拉進 7 張幾乎相同的向量圖。
+// 卡面中央的白色小卡（題目卡廠商背景電腦版 390:437）。
+// 收合狀態依設計稿不放 logo，展開後才顯示企業 logo。
 function CardFace({ problem }: { problem?: Problem }) {
   return (
-    <div className="relative flex h-full w-full items-center justify-center">
-      <div className="flex h-[52%] w-[76%] flex-col items-center justify-center gap-2 rounded-[14px] bg-white p-2 shadow-[0px_4px_50px_rgba(255,255,255,0.5),0px_4px_40px_rgba(255,255,255,0.5),0px_0px_20px_rgba(255,255,255,0.5)]">
+    <div className="absolute inset-0 flex items-center justify-center">
+      <div className="flex h-[47%] w-[76%] flex-col items-center justify-center gap-[6%] rounded-[14px] bg-white p-[4%] shadow-[0px_4px_50px_rgba(255,255,255,0.5),0px_4px_40px_rgba(255,255,255,0.5),0px_0px_20px_rgba(255,255,255,0.5)]">
         {problem?.logos.map((logo) => (
           <img
             key={logo}
             src={logo}
             alt={problem.sponsor}
-            className="max-h-[45%] max-w-[85%] object-contain"
+            className="max-h-[48%] max-w-[85%] object-contain"
           />
         ))}
       </div>
@@ -21,33 +21,7 @@ function CardFace({ problem }: { problem?: Problem }) {
   )
 }
 
-interface DeckCardProps {
-  problem: Problem
-  onClick?: () => void
-  className?: string
-  style?: React.CSSProperties
-}
-
-function DeckCard({ problem, onClick, className = '', style }: DeckCardProps) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      style={style}
-      className={`relative aspect-[242/434] overflow-hidden rounded-3xl bg-cover bg-center transition-transform duration-300 hover:-translate-y-2 ${className}`}
-      aria-label={`${problem.sponsor} 題目`}
-    >
-      <img
-        src={cardBack}
-        alt=""
-        className="absolute inset-0 h-full w-full rounded-3xl object-cover"
-      />
-      <CardFace problem={problem} />
-    </button>
-  )
-}
-
-// 題目內文彈窗（zoomin1–7 變體）：白卡置中、企業 logo、題目段落、閱讀完畢。
+// 題目內文（zoomin1–7 變體）：白卡置中、企業 logo、題目段落、閱讀完畢。
 function ProblemModal({
   problem,
   onClose,
@@ -100,60 +74,63 @@ function ProblemModal({
   )
 }
 
+// 收合牌堆的尺寸（Property 1=close）：卡片 242×434、每張右移 27px。
+const CARD_CLOSED = 242
+const CARD_OPEN = 152
+const STACK_OFFSET = 27
+
 export default function ProblemDeck() {
   const [isOpen, setIsOpen] = useState(false)
   const [selected, setSelected] = useState<Problem | null>(null)
 
-  if (!isOpen) {
-    // 收合牌堆（Property 1=close）：7 張卡右緣微錯位堆疊，整疊可點擊。
-    return (
-      <button
-        type="button"
-        onClick={() => setIsOpen(true)}
-        className="group relative block h-[434px] w-[406px] cursor-pointer transition-transform duration-300 hover:scale-105"
-        aria-label="點擊展開黑客組題目牌組"
-      >
-        <div className="absolute inset-0 rounded-full bg-white/60 blur-3xl" />
+  return (
+    <>
+      <div className="relative h-[434px] w-full max-w-[1262px]">
+        {/* 收合時牌堆後方的光暈 */}
+        <div
+          className="absolute top-0 h-[434px] rounded-full bg-white/50 blur-3xl transition-opacity duration-700"
+          style={{
+            width: CARD_CLOSED + STACK_OFFSET * (PROBLEMS.length - 1),
+            opacity: isOpen ? 0 : 1,
+          }}
+        />
         {PROBLEMS.map((problem, index) => (
-          <div
+          <button
             key={problem.sponsor}
-            className="absolute top-0 aspect-[242/434] w-[242px] overflow-hidden rounded-3xl"
-            style={{ left: index * 27 }}
+            type="button"
+            onClick={() => (isOpen ? setSelected(problem) : setIsOpen(true))}
+            className="ease-out-strong absolute top-0 aspect-[242/434] overflow-hidden rounded-3xl transition-all duration-700 hover:-translate-y-2"
+            style={{
+              width: isOpen ? CARD_OPEN : CARD_CLOSED,
+              left: isOpen
+                ? `calc(${index} * (100% - ${CARD_OPEN}px) / ${PROBLEMS.length - 1})`
+                : index * STACK_OFFSET,
+              zIndex: isOpen ? index + 1 : PROBLEMS.length - index,
+              transitionDelay: `${index * 50}ms`,
+            }}
+            aria-label={
+              isOpen ? `${problem.sponsor} 題目` : '點擊展開黑客組題目牌組'
+            }
           >
             <img
               src={cardBack}
               alt=""
               className="absolute inset-0 h-full w-full object-cover"
             />
-            {index === 0 && <CardFace />}
-          </div>
+            <CardFace problem={isOpen ? problem : undefined} />
+          </button>
         ))}
-        <span className="font-noto text-periwinkle absolute top-[calc(50%-12px)] left-[121px] w-[185px] -translate-y-1/2 text-center text-xl leading-[26px] font-semibold">
+        <span
+          className="font-noto text-periwinkle pointer-events-none absolute top-[calc(50%-12px)] left-0 -translate-y-1/2 text-center text-xl leading-[26px] font-semibold transition-opacity duration-300"
+          style={{
+            width: CARD_CLOSED,
+            zIndex: PROBLEMS.length + 1,
+            opacity: isOpen ? 0 : 1,
+          }}
+        >
           請點擊展開牌組
         </span>
-      </button>
-    )
-  }
-
-  return (
-    <>
-      <div className="animate-fade-in flex max-w-[1262px] flex-wrap items-center justify-center gap-6 px-6">
-        {PROBLEMS.map((problem) => (
-          <DeckCard
-            key={problem.sponsor}
-            problem={problem}
-            onClick={() => setSelected(problem)}
-            className="w-[150px] xl:w-[160px]"
-          />
-        ))}
       </div>
-      <button
-        type="button"
-        onClick={() => setIsOpen(false)}
-        className="font-noto text-periwinkle mt-6 rounded-full border border-white/20 bg-white/10 px-6 py-2 text-lg font-semibold backdrop-blur transition hover:bg-white/20"
-      >
-        收合牌組
-      </button>
       {selected && (
         <ProblemModal problem={selected} onClose={() => setSelected(null)} />
       )}
