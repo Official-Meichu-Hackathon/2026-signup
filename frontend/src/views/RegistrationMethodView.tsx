@@ -303,13 +303,27 @@ const DATE_ITEMS: DateItem[] = [
 // 1460px viewport width (fluid text was still shrinking) but broke once
 // sizing hit its max plateau past 1460px, widening the row just enough to
 // force an unpredictable wrap — a fixed line doesn't shift.
-function DateRange({ item }: { item: DateItem }) {
+//
+// alignEndOnSingle: on the desktop grid, single dates (08.24, 08.25) sit
+// in the same horizontal slot a range's END date would occupy — closer to
+// the divider, not flush left with 08.06/08.20 — matching the reference.
+// An invisible copy of a start-badge + connector reserves that width
+// without hardcoding a pixel value that could drift from the real fluid
+// badge size. Mobile's single stacked column doesn't want this — every
+// row starts flush left there — so it's opt-in per call site.
+function DateRange({
+  item,
+  alignEndOnSingle = false,
+}: {
+  item: DateItem
+  alignEndOnSingle?: boolean
+}) {
   const hasRange = Boolean(item.endDate && item.endDay)
   return (
     <div className="flex flex-nowrap items-center gap-2">
-      <DateBadge date={item.date} day={item.day} />
-      {hasRange && (
+      {hasRange ? (
         <>
+          <DateBadge date={item.date} day={item.day} />
           <span className="h-px w-6 shrink-0 bg-white/50 md:w-9" />
           <div className="flex flex-col gap-0.5">
             <DateBadge date={item.endDate!} day={item.endDay!} />
@@ -323,11 +337,24 @@ function DateRange({ item }: { item: DateItem }) {
             )}
           </div>
         </>
-      )}
-      {!hasRange && item.note && (
-        <span className="text-white/80" style={{ fontSize: noteTextSize }}>
-          {item.note}
-        </span>
+      ) : (
+        <>
+          {alignEndOnSingle && (
+            <span
+              aria-hidden="true"
+              className="invisible flex flex-nowrap items-center gap-2"
+            >
+              <DateBadge date={item.date} day={item.day} />
+              <span className="h-px w-6 shrink-0 md:w-9" />
+            </span>
+          )}
+          <DateBadge date={item.date} day={item.day} />
+          {item.note && (
+            <span className="text-white/80" style={{ fontSize: noteTextSize }}>
+              {item.note}
+            </span>
+          )}
+        </>
       )}
     </div>
   )
@@ -397,11 +424,14 @@ function DateCard() {
       >
         {DATE_ITEMS.map((item, i) => (
           <div key={item.label} style={{ gridColumn: 1, gridRow: i + 1 }}>
-            <DateRange item={item} />
+            <DateRange item={item} alignEndOnSingle />
           </div>
         ))}
+        {/* self-stretch overrides the grid's items-center — without it this
+            item (empty, no intrinsic height) sizes to 0 and centers inside
+            its 4-row span instead of filling it, rendering invisible. */}
         <div
-          className="bg-white/30"
+          className="self-stretch bg-white/30"
           style={{
             gridColumn: 2,
             gridRow: `1 / span ${DATE_ITEMS.length}`,
