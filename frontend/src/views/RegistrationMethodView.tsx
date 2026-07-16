@@ -28,6 +28,8 @@ const dayLabelSize = fluid(5, 20) // day-of-week text inside the circle badge
 const circleSize = fluid(13, 54)
 const cardRadius = fluid(27, 169)
 const cardPadding = fluid(20, 48)
+const cardGapX = fluid(8, 24) // gap either side of the divider
+const cardGapY = fluid(8, 24) // gap between date rows
 
 // Same +/− glyph as MobileNavMenu's ToggleIcon, duplicated locally rather
 // than exported/shared — this page's accordion opens by index instead of by
@@ -304,20 +306,14 @@ const DATE_ITEMS: DateItem[] = [
 // sizing hit its max plateau past 1460px, widening the row just enough to
 // force an unpredictable wrap — a fixed line doesn't shift.
 //
-// alignEndOnSingle: on the desktop grid, single dates (08.24, 08.25) sit
-// in the same horizontal slot a range's END date would occupy — closer to
-// the divider, not flush left with 08.06/08.20 — matching the reference.
-// An invisible copy of a start-badge + connector reserves that width
-// without hardcoding a pixel value that could drift from the real fluid
-// badge size. Mobile's single stacked column doesn't want this — every
-// row starts flush left there — so it's opt-in per call site.
-function DateRange({
-  item,
-  alignEndOnSingle = false,
-}: {
-  item: DateItem
-  alignEndOnSingle?: boolean
-}) {
+// Single dates (08.24, 08.25) sit in the same horizontal slot a range's END
+// date would occupy — closer to the divider, not flush left with
+// 08.06/08.20 — matching the reference at both breakpoints (node 1221:61439
+// confirmed mobile uses this same dates|divider|labels layout, just
+// smaller, not a stacked single column). An invisible copy of a
+// start-badge + connector reserves that width without hardcoding a pixel
+// value that could drift from the real fluid badge size.
+function DateRange({ item }: { item: DateItem }) {
   const hasRange = Boolean(item.endDate && item.endDay)
   return (
     <div className="flex flex-nowrap items-center gap-2">
@@ -339,15 +335,13 @@ function DateRange({
         </>
       ) : (
         <>
-          {alignEndOnSingle && (
-            <span
-              aria-hidden="true"
-              className="invisible flex flex-nowrap items-center gap-2"
-            >
-              <DateBadge date={item.date} day={item.day} />
-              <span className="h-px w-6 shrink-0 md:w-9" />
-            </span>
-          )}
+          <span
+            aria-hidden="true"
+            className="invisible flex flex-nowrap items-center gap-2"
+          >
+            <DateBadge date={item.date} day={item.day} />
+            <span className="h-px w-6 shrink-0 md:w-9" />
+          </span>
           <DateBadge date={item.date} day={item.day} />
           {item.note && (
             <span className="text-white/80" style={{ fontSize: noteTextSize }}>
@@ -371,13 +365,11 @@ function DateLabel({ children }: { children: ReactNode }) {
   )
 }
 
-// The frosted-glass timeline card (node 105:2131 desktop / 136:73 mobile).
-// Desktop is two columns — every date on the left, every label on the
-// right, split by one divider spanning the full card height. Mobile has no
-// such column split: each row is just its own date + label stacked
-// together. That's a real structural difference (not a resize), so it's two
-// renders of the same DATE_ITEMS list behind `md:hidden`/`hidden md:flex`,
-// not one layout coerced to fit both.
+// The frosted-glass timeline card (node 105:2131 desktop / 136:73 mobile) —
+// one dates|divider|labels grid at every size, not two different layouts
+// swapped at a breakpoint. Mobile (node 1221:61439) turned out to use the
+// exact same column structure as desktop, just at fluid-scaled sizes, not
+// the stacked single-column layout this used to render below md.
 function DateCard() {
   return (
     <div
@@ -398,18 +390,6 @@ function DateCard() {
         className="absolute inset-0 rounded-[inherit] shadow-[inset_0px_1px_8px_0px_rgba(255,255,255,0.5)]"
       />
 
-      <div
-        className="relative flex flex-col gap-5 md:hidden"
-        style={{ padding: cardPadding }}
-      >
-        {DATE_ITEMS.map((item) => (
-          <div key={item.label} className="flex flex-col gap-1">
-            <DateRange item={item} />
-            <DateLabel>{item.label}</DateLabel>
-          </div>
-        ))}
-      </div>
-
       {/* Grid, not two independent flex columns — the first row's date is
           taller than its label (the "20:00 前" note adds a line only on
           the dates side), and two separate flex columns with
@@ -417,14 +397,27 @@ function DateCard() {
           so that one taller row throws every later row out of alignment
           between the columns. A shared grid row per item can't drift like
           that — both cells in a row are always exactly as tall as the
-          taller of the two. */}
+          taller of the two.
+          Dates and labels columns are equal (1fr each) so the divider
+          between them sits at the card's true horizontal center, with each
+          side's content justified toward it (dates right-aligned, labels
+          already left-aligned by default) — hugging the divider without
+          relying on an off-center auto-width column to pull it there. */}
       <div
-        className="relative hidden md:grid md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-x-10 md:gap-y-6"
-        style={{ padding: cardPadding }}
+        className="relative grid grid-cols-[1fr_auto_1fr] items-center"
+        style={{
+          padding: cardPadding,
+          columnGap: cardGapX,
+          rowGap: cardGapY,
+        }}
       >
         {DATE_ITEMS.map((item, i) => (
-          <div key={item.label} style={{ gridColumn: 1, gridRow: i + 1 }}>
-            <DateRange item={item} alignEndOnSingle />
+          <div
+            key={item.label}
+            className="justify-self-end"
+            style={{ gridColumn: 1, gridRow: i + 1 }}
+          >
+            <DateRange item={item} />
           </div>
         ))}
         {/* self-stretch overrides the grid's items-center — without it this
