@@ -383,21 +383,36 @@ function DateCard() {
         ))}
       </div>
 
+      {/* Grid, not two independent flex columns — the first row's date is
+          taller than its label (the "20:00 前" note adds a line only on
+          the dates side), and two separate flex columns with
+          justify-between size each column's gaps off its OWN total height,
+          so that one taller row throws every later row out of alignment
+          between the columns. A shared grid row per item can't drift like
+          that — both cells in a row are always exactly as tall as the
+          taller of the two. */}
       <div
-        className="relative hidden md:flex md:items-stretch md:gap-10"
+        className="relative hidden md:grid md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-x-10 md:gap-y-6"
         style={{ padding: cardPadding }}
       >
-        <div className="flex flex-1 flex-col justify-between gap-6">
-          {DATE_ITEMS.map((item) => (
-            <DateRange key={item.label} item={item} />
-          ))}
-        </div>
-        <div className="w-px bg-white/30" />
-        <div className="flex flex-1 flex-col justify-between gap-6">
-          {DATE_ITEMS.map((item) => (
-            <DateLabel key={item.label}>{item.label}</DateLabel>
-          ))}
-        </div>
+        {DATE_ITEMS.map((item, i) => (
+          <div key={item.label} style={{ gridColumn: 1, gridRow: i + 1 }}>
+            <DateRange item={item} />
+          </div>
+        ))}
+        <div
+          className="bg-white/30"
+          style={{
+            gridColumn: 2,
+            gridRow: `1 / span ${DATE_ITEMS.length}`,
+            width: '1px',
+          }}
+        />
+        {DATE_ITEMS.map((item, i) => (
+          <div key={item.label} style={{ gridColumn: 3, gridRow: i + 1 }}>
+            <DateLabel>{item.label}</DateLabel>
+          </div>
+        ))}
       </div>
     </div>
   )
