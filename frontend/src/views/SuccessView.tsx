@@ -1,5 +1,6 @@
 import Navbar from '../components/layout/Navbar'
 import Footer from '../components/layout/Footer'
+import HeroDecorations from '../components/layout/HeroDecorations'
 
 const BG_MASK = 'linear-gradient(to bottom, black 55%, transparent 100%)'
 
@@ -21,9 +22,12 @@ export default function SuccessView() {
       <Navbar />
 
       <main className="relative z-10 flex flex-1 flex-col items-center justify-center gap-6 px-6 text-center">
-        <h1 className="glow-text font-zen text-5xl tracking-widest md:text-7xl">
-          報名成功！
-        </h1>
+        <div className="relative flex items-center justify-center">
+          <HeroDecorations />
+          <h1 className="glow-text font-zen relative z-10 text-5xl tracking-widest md:text-7xl">
+            報名成功！
+          </h1>
+        </div>
         <p className="text-lg text-white/80">
           我們已收到您的報名資料，請留意後續的 email 通知。
         </p>
