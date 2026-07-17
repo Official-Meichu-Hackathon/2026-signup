@@ -9,6 +9,11 @@ import logoWtMicro from '../assets/Problems/logo-wtmicro.png'
 import logoAdvantest from '../assets/Problems/logo-advantest.png'
 import logoGoogle from '../assets/Problems/logo-google.png'
 
+// 題目是否已公布。false 時整頁走設計稿的「未公開」版本（664:1564）：
+// 收合牌堆的白卡不放 logo 也不放提示、點卡片顯示「尚未公開」而非題目內容、
+// 創客交流組也顯示「尚未公開」。題目公布後改成 true 即可。
+export const PROBLEMS_PUBLISHED = false
+
 export interface Problem {
   sponsor: string
   logos: string[]
