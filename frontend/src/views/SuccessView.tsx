@@ -21,19 +21,20 @@ export default function SuccessView() {
 
       <Navbar />
 
-      <main className="relative z-10 flex flex-1 flex-col items-center justify-center gap-6 px-6 text-center">
-        {/* Full-width hero (mirrors FormShell) so HeroDecorations' inset-0
-            layer anchors to the page edges — star-03 lands far left (7%) and
-            star-02 far right (7.5%), exactly like /signup. */}
+      <main className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 text-center">
+        {/* Full-width hero so HeroDecorations anchors to page edges like /signup */}
         <section className="relative flex w-full items-center justify-center">
-          <HeroDecorations />
-          <h1 className="glow-text font-zen relative z-10 text-5xl tracking-widest md:text-7xl">
-            報名成功！
-          </h1>
+          <HeroDecorations variant="success" />
+          {/* p uses w-0 min-w-full so the column width comes from the title */}
+          <div className="relative z-10 flex flex-col gap-6">
+            <h1 className="font-zen text-center text-[3rem] leading-[3.25rem] tracking-widest text-[#F6F6F6] [text-shadow:0_4px_40px_rgba(255,255,255,0.20),0_0_20px_rgba(255,255,255,0.35)] md:text-8xl md:leading-none md:text-white md:[text-shadow:0_0_12px_rgba(255,255,255,0.8),0_0_40px_rgba(255,255,255,0.45),0_0_80px_rgba(160,180,255,0.35)]">
+              報名成功！
+            </h1>
+            <p className="w-0 min-w-full text-lg text-white/80 md:text-[1.3rem] md:whitespace-nowrap">
+              我們已收到您的報名資料，請留意後續的 email 通知。
+            </p>
+          </div>
         </section>
-        <p className="text-lg text-white/80">
-          我們已收到您的報名資料，請留意後續的 email 通知。
-        </p>
       </main>
 
       <Footer />
