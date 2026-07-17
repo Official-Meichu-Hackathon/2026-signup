@@ -22,16 +22,17 @@ const cq = (n: number) => `${((n / CARD_W) * 100).toFixed(3)}cqw`
 const pctX = (n: number) => `${((n / CARD_W) * 100).toFixed(2)}%`
 const pctY = (n: number) => `${((n / CARD_H) * 100).toFixed(2)}%`
 
-// 設計稿的原型參數（每段時長、緩動）MCP 讀不到，故依分鏡自行拓一個節奏。
-// 想調整整段快慢改這裡即可。注意 DELAY_* + FADE_IN_MS 必須小於 REVEAL_MS，
-// 否則該元素還沒淡入完就被切到下一階段（等於看不到）。
-const FADE_MS = 500 // 起始內容放大淡出
-const FADE_IN_MS = 400 // reveal 階段每個元素自己的淡入時長
+// 設計稿的原型參數（每段時長、緩動）MCP 讀不到，故依分鏡自行拓一個節奏，
+// 全程約 3.2 秒。想調整整段快慢改這裡即可。注意 DELAY_LOGOS 加上最後一顆
+// logo 的錯開（3×60ms）再加 FADE_IN_MS 必須小於 REVEAL_MS，否則 logo 還沒
+// 淡入完就被切到下一階段（等於看不到）。
+const FADE_MS = 650 // 起始內容放大淡出
+const FADE_IN_MS = 520 // reveal 階段每個元素自己的淡入時長
 const DELAY_2026 = 0 // 以下三個是 reveal 階段內的相對延遲
-const DELAY_TITLE = 250
-const DELAY_LOGOS = 500
-const REVEAL_MS = 1400 // reveal 停留多久後進 content（logo 全亮後再停 500ms）
-const CONTENT_MS = 600 // 標題縮到頂端＋說明文字與連結浮現
+const DELAY_TITLE = 330
+const DELAY_LOGOS = 650
+const REVEAL_MS = 1800 // reveal 停留多久後進 content（logo 全亮後再停 450ms）
+const CONTENT_MS = 780 // 標題縮到頂端＋說明文字與連結浮現
 
 type Stage = 'idle' | 'fading' | 'reveal' | 'content'
 
