@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { PROBLEMS, PROBLEMS_PUBLISHED, type Problem } from '../../data/problems'
+import { PROBLEMS, type Problem } from '../../data/problems'
+import { useProblemsPublished } from '../../hooks/useProblemsPublished'
 import cardBack from '../../assets/Problems/card-back.png'
 import cardDecor from '../../assets/Problems/card-decor.svg'
 import zoomDivider from '../../assets/Problems/zoom-divider.svg'
@@ -225,6 +226,7 @@ interface Placement {
 }
 
 export default function ProblemDeck() {
+  const published = useProblemsPublished()
   const [isOpen, setIsOpen] = useState(false)
   const [zoomed, setZoomed] = useState<number | null>(null)
   const deckRef = useRef<HTMLDivElement>(null)
@@ -242,11 +244,11 @@ export default function ProblemDeck() {
     if (!deck) return
     const box = deck.getBoundingClientRect()
     const deckTop = box.top + window.scrollY
-    const risen = PROBLEMS_PUBLISHED ? ZOOM_RISE : PANEL_RISE
+    const risen = published ? ZOOM_RISE : PANEL_RISE
     const rise = (risen / DECK_W) * box.width
     const target = zoomed === null ? deckTop : deckTop - rise
     window.scrollTo({ top: Math.max(0, target - 32), behavior: 'smooth' })
-  }, [zoomed])
+  }, [zoomed, published])
 
   // 一列共 7 格、首尾切齊容器；第 slot 格的左緣
   const rowCard = (slot: number): Placement => ({
@@ -262,7 +264,7 @@ export default function ProblemDeck() {
     // 放大：被點的卡從自己的格子往上浮起放大，其餘六張完全不動（原本的
     // 格子就空著）；收合時再原路縮回同一格。未公開版沒有這段——七張卡
     // 全部留在原地，改由 UnpublishedPanel 浮在上方（設計稿 Variant3）。
-    if (PROBLEMS_PUBLISHED && zoomed === index) {
+    if (published && zoomed === index) {
       return {
         left: `calc(50% - ${cq(ZOOM_W / 2)})`,
         top: `calc(-1 * ${cq(ZOOM_RISE)})`,
@@ -306,12 +308,12 @@ export default function ProblemDeck() {
             opacity: isOpen ? 0 : 1,
           }}
         />
-        {!PROBLEMS_PUBLISHED && zoomed !== null && (
+        {!published && zoomed !== null && (
           <UnpublishedPanel onDismiss={() => setZoomed(null)} />
         )}
         {PROBLEMS.map((problem, index) => {
           const spot = placement(index)
-          const isZoomed = PROBLEMS_PUBLISHED && zoomed === index
+          const isZoomed = published && zoomed === index
           return (
             // 卡片本身是 div，未放大時才鋪一層透明按鈕接點擊。放大卡裡有自己的
             // 按鈕與連結，若外層也是 button 會變成巢狀 button（無效的 HTML），
@@ -357,7 +359,7 @@ export default function ProblemDeck() {
           )
         })}
         {/* 未公開版的收合牌堆在設計稿裡沒有這行提示（白卡是空的） */}
-        {PROBLEMS_PUBLISHED && (
+        {published && (
           <span
             className="font-noto text-periwinkle pointer-events-none absolute top-[calc(50%-12px)] left-0 text-center font-semibold transition-opacity duration-300"
             style={{
