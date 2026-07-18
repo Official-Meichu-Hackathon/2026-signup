@@ -3,28 +3,36 @@ import star2 from '../../assets/Problems/star-2.svg'
 import star3 from '../../assets/Problems/star-3.svg'
 import star4 from '../../assets/Problems/star-4.svg'
 import star5 from '../../assets/Problems/star-5.svg'
+import figmaStar1 from '../../assets/Problems/figma-star-1.svg'
+import figmaStar2 from '../../assets/Problems/figma-star-2.svg'
+import figmaStar3 from '../../assets/Problems/figma-star-3.svg'
+import figmaStar4 from '../../assets/Problems/figma-star-4.svg'
+import figmaStar5 from '../../assets/Problems/figma-star-5.svg'
+import figmaStar6 from '../../assets/Problems/figma-star-6.svg'
+import figmaStar7 from '../../assets/Problems/figma-star-7.svg'
+import figmaStar8 from '../../assets/Problems/figma-star-8.svg'
 
-// 星星閃爍（570:1281，1376.367×2020.722）。設計稿把每顆星拆成一個定位框、
-// 一個旋轉／傾斜的內層，內層再放往外擴的 SVG 以容納光暈。下列數值即該幾何
-// 換算後的百分比，皆相對於各自的父層，因此整層可隨頁面等比縮放。
 interface Star {
   src: string
   left: number
   top: number
   width: number
   height: number
-  innerW: number
-  innerH: number
   rotate: number
   skew: number
+  delay: number
+}
+
+interface OverflowStar extends Star {
+  innerW: number
+  innerH: number
   imgLeft: number
   imgTop: number
   imgW: number
   imgH: number
-  delay: number
 }
 
-const STARS: Star[] = [
+const LEGACY_STARS: OverflowStar[] = [
   {
     src: star1,
     left: 0,
@@ -107,14 +115,151 @@ const STARS: Star[] = [
   },
 ]
 
+const FIGMA_STARS: OverflowStar[] = [
+  {
+    src: figmaStar1,
+    left: 67.88,
+    top: 6.92,
+    width: 6.25,
+    height: 6.84,
+    rotate: 62.36,
+    skew: 0,
+    innerW: 100,
+    innerH: 100,
+    imgLeft: -76.26,
+    imgTop: -75.17,
+    imgW: 252.52,
+    imgH: 263.41,
+    delay: 0,
+  },
+  {
+    src: figmaStar2,
+    left: 74.28,
+    top: 9.78,
+    width: 21.35,
+    height: 13.15,
+    rotate: 78.58,
+    skew: 0,
+    innerW: 100,
+    innerH: 100,
+    imgLeft: -43.6,
+    imgTop: -16.93,
+    imgW: 187.2,
+    imgH: 136.81,
+    delay: 1.2,
+  },
+  {
+    src: figmaStar3,
+    left: 0,
+    top: 20.45,
+    width: 4.93,
+    height: 7.25,
+    rotate: -148.94,
+    skew: 6.22,
+    innerW: 100,
+    innerH: 100,
+    imgLeft: -126.88,
+    imgTop: -58.51,
+    imgW: 353.76,
+    imgH: 227.19,
+    delay: 2.4,
+  },
+  {
+    src: figmaStar4,
+    left: 24,
+    top: 38.21,
+    width: 3.78,
+    height: 5.65,
+    rotate: -98.23,
+    skew: 7.71,
+    innerW: 100,
+    innerH: 100,
+    imgLeft: -83.44,
+    imgTop: -103.73,
+    imgW: 266.88,
+    imgH: 325.51,
+    delay: 0.6,
+  },
+  {
+    src: figmaStar5,
+    left: 96.7,
+    top: 79.43,
+    width: 3.3,
+    height: 3.7,
+    rotate: -97.79,
+    skew: 0,
+    innerW: 100,
+    innerH: 100,
+    imgLeft: -119.5,
+    imgTop: -116.98,
+    imgW: 339,
+    imgH: 354.31,
+    delay: 1.8,
+  },
+  {
+    src: figmaStar6,
+    left: 82.45,
+    top: 54.5,
+    width: 16.31,
+    height: 16.16,
+    rotate: 33.13,
+    skew: 0,
+    innerW: 100,
+    innerH: 100,
+    imgLeft: -27.47,
+    imgTop: -36.74,
+    imgW: 154.94,
+    imgH: 179.87,
+    delay: 3,
+  },
+  {
+    src: figmaStar7,
+    left: 19.8,
+    top: 66.5,
+    width: 7.8,
+    height: 8.34,
+    rotate: 77.93,
+    skew: 0,
+    innerW: 100,
+    innerH: 100,
+    imgLeft: -56.33,
+    imgTop: -51.66,
+    imgW: 212.66,
+    imgH: 212.31,
+    delay: 0.9,
+  },
+  {
+    src: figmaStar8,
+    left: 92.79,
+    top: 0,
+    width: 3.31,
+    height: 3.47,
+    rotate: 33.13,
+    skew: 0,
+    innerW: 100,
+    innerH: 100,
+    imgLeft: -149.08,
+    imgTop: -150.96,
+    imgW: 398.16,
+    imgH: 428.17,
+    delay: 2.1,
+  },
+]
+
+const STAR_GLOW = [
+  'drop-shadow(0 0 20px rgba(255,255,255,0.5))',
+  'drop-shadow(0 4px 40px rgba(255,255,255,0.5))',
+  'drop-shadow(0 4px 50px rgba(255,255,255,0.5))',
+].join(' ')
+const FIGMA_STAR_SCALE = 0.55
+
 export default function ProblemStars() {
   return (
-    // 星星閃爍 instance 於頁面的位置（570:1298：x32 y104 / 1440×2550）
     <div
       aria-hidden
       className="pointer-events-none absolute top-[4.08%] left-[2.22%] h-[79.24%] w-[95.58%]"
     >
-      {STARS.map((star) => (
+      {LEGACY_STARS.map((star) => (
         <div
           key={star.src}
           className="absolute"
@@ -135,7 +280,6 @@ export default function ProblemStars() {
               transform: `rotate(${star.rotate}deg) skewX(${star.skew}deg)`,
             }}
           >
-            {/* 閃爍套在 img 上，避免 keyframe 的 scale 覆寫外層的 rotate/skew */}
             <img
               src={star.src}
               alt=""
@@ -145,6 +289,43 @@ export default function ProblemStars() {
                 top: `${star.imgTop}%`,
                 width: `${star.imgW}%`,
                 height: `${star.imgH}%`,
+                animationDelay: `${star.delay}s`,
+              }}
+            />
+          </div>
+        </div>
+      ))}
+      {FIGMA_STARS.map((star) => (
+        <div
+          key={star.src}
+          className="absolute"
+          style={{
+            left: `${star.left}%`,
+            top: `${star.top}%`,
+            width: `${star.width * FIGMA_STAR_SCALE}%`,
+            height: `${star.height * FIGMA_STAR_SCALE}%`,
+          }}
+        >
+          <div
+            className="absolute"
+            style={{
+              left: `${(100 - star.innerW) / 2}%`,
+              top: `${(100 - star.innerH) / 2}%`,
+              width: `${star.innerW}%`,
+              height: `${star.innerH}%`,
+              transform: `rotate(${star.rotate}deg) skewX(${star.skew}deg)`,
+            }}
+          >
+            <img
+              src={star.src}
+              alt=""
+              className="animate-star-twinkle absolute max-w-none"
+              style={{
+                left: `${star.imgLeft}%`,
+                top: `${star.imgTop}%`,
+                width: `${star.imgW}%`,
+                height: `${star.imgH}%`,
+                filter: STAR_GLOW,
                 animationDelay: `${star.delay}s`,
               }}
             />
