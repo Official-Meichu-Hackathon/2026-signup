@@ -246,7 +246,17 @@ function ZoomedFace({
           }}
         >
           {problem.hashtags.map((tag, index) => (
-            <p key={`${tag}-${index}`}>{tag}</p>
+            <p key={`${tag}-${index}`}>
+              {isGoogle && index === 1 ? (
+                <>
+                  #Multimodal Reasoning
+                  <br />
+                  （多模態推理）
+                </>
+              ) : (
+                tag
+              )}
+            </p>
           ))}
         </div>
 
@@ -259,7 +269,7 @@ function ZoomedFace({
             lineHeight: cq(zpx(isLargeHashtagCard ? 40 : 26)),
           }}
         >
-          {isLogitech || isGoogle ? '完整題目將於當天公告' : HASHTAG_NOTE}
+          {isLogitech ? '完整題目將於當天公告' : HASHTAG_NOTE}
         </p>
       </div>
 
