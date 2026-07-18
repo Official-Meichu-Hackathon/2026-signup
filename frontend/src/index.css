@@ -1,6 +1,13 @@
 @import 'tailwindcss';
 
+html {
+  scroll-behavior: smooth;
+}
+
 @theme {
+  --font-sans:
+    'Noto Sans TC', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
   --font-chiron: 'Chiron Hei HK', sans-serif;
   --font-noto-tc: 'Noto Sans TC', sans-serif;
 
@@ -17,6 +24,20 @@
      must not clobber the stars' inline positioning transforms). */
   --animate-twinkle: twinkle-star 3s ease-in-out infinite;
   --animate-fade-in: fade-in 0.35s ease-out;
+  
+  @keyframes pop-in-right {
+    0% {
+      transform: translateX(120%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0%);
+      opacity: 1;
+    }
+  }
+
+  .animate-pop-in-right {
+    animation: pop-in-right 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
 
   @keyframes twinkle-star {
     0%,

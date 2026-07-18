@@ -1,3 +1,5 @@
+import './index.css'
+import Home from './views/Home'
 import { useState } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import Footer from './components/layout/Footer'
@@ -15,12 +17,7 @@ function HomeView() {
   return (
     <>
       <Navbar />
-      <main className="flex min-h-svh flex-col items-center justify-center gap-4 bg-black px-6 text-center">
-        <h1 className="text-4xl font-semibold tracking-tight text-white">
-          Registration
-        </h1>
-        <p className="text-neutral-400">Coming soon</p>
-      </main>
+      <Home />
       <Footer className="fixed bottom-0 left-0 z-40" />
     </>
   )
