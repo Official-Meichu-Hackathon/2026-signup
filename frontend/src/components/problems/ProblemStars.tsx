@@ -246,11 +246,6 @@ const FIGMA_STARS: OverflowStar[] = [
   },
 ]
 
-const STAR_GLOW = [
-  'drop-shadow(0 0 20px rgba(255,255,255,0.5))',
-  'drop-shadow(0 4px 40px rgba(255,255,255,0.5))',
-  'drop-shadow(0 4px 50px rgba(255,255,255,0.5))',
-].join(' ')
 const FIGMA_STAR_SCALE = 0.55
 
 export default function ProblemStars() {
@@ -325,7 +320,6 @@ export default function ProblemStars() {
                 top: `${star.imgTop}%`,
                 width: `${star.imgW}%`,
                 height: `${star.imgH}%`,
-                filter: STAR_GLOW,
                 animationDelay: `${star.delay}s`,
               }}
             />
