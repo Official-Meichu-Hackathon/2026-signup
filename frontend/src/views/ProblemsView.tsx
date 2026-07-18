@@ -1,5 +1,4 @@
 import Footer from '../components/layout/Footer'
-import StarField from '../components/layout/StarField'
 import ProblemDeck from '../components/problems/ProblemDeck'
 import ProblemStars from '../components/problems/ProblemStars'
 import MakerCta from '../components/problems/MakerCta'
@@ -47,7 +46,6 @@ export default function ProblemsView() {
         className="pointer-events-none absolute bottom-0 left-[-9.44%] h-[1064px] w-[109.44%] max-w-none rotate-180 select-none"
       />
       {/* 小星點（共用元件）鋪底，設計稿的 5 顆大星疊在其上 */}
-      <StarField count={28} seed={2026} />
       <ProblemStars />
 
       {/* 左上角梅竹黑客松 logo（1366:61503：x47 y13 148×67）。設計稿以
