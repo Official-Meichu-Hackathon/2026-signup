@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import { PROBLEMS, type Problem } from '../../data/problems'
+import { PROBLEMS, HASHTAG_NOTE, type Problem } from '../../data/problems'
 import { useProblemsPublished } from '../../hooks/useProblemsPublished'
 import cardBack from '../../assets/Problems/card-back.png'
 import cardDecor from '../../assets/Problems/card-decor.svg'
 import zoomDivider from '../../assets/Problems/zoom-divider.svg'
-import logo14th from '../../assets/Problems/logo-14th.svg'
 
 // 設計稿的題目卡母元件為 242.414×434.223。頁面上的 instance（664:8019）是
 // 母元件的 0.5644 倍，但那個尺寸下內文只有 11px、難以閱讀，故放大到 0.67 —
@@ -39,21 +38,6 @@ const ROW_GAP = px(94) // 63
 // 放大卡往「上」長：卡列的位置完全不動，放大卡以負偏移浮在上方的空白區。
 // 若改成往下長，卡列會被推走近千 px，收合時就變成從畫面外飛回來而非平移。
 const ZOOM_RISE = ZOOM_H + ROW_GAP
-
-// 尚未公開面板（資產 4 1 / 664:2640，未公開版的 Variant3）。設計稿裡它是
-// 一張透明、只做裁切的圓角面板，浮在卡列上方；七張卡全部留在原地不動。
-// 座標換算：變體裡卡列在 y=153，面板在 y=-892，故相對卡列為 -1045。
-const PANEL_W = px(1502) // 1006.3
-const PANEL_H = px(840) // 562.8
-const PANEL_RISE = px(1045) // 700.2
-// 圓角刻意不對稱：右下角幾乎是直角（與創客交流組 CTA 同一種造型）
-const PANEL_RADIUS = `${cq(px(169))} ${cq(px(169))} ${cq(px(11))} ${cq(px(169))}`
-// 星座光暈：0 0 20px / 0 4px 40px / 0 4px 50px，白色 50%
-const STAR_GLOW = [
-  `0 0 ${cq(px(20))} rgba(255,255,255,0.5)`,
-  `0 ${cq(px(4))} ${cq(px(40))} rgba(255,255,255,0.5)`,
-  `0 ${cq(px(4))} ${cq(px(50))} rgba(255,255,255,0.5)`,
-].join(', ')
 
 // 白卡光暈（390:377）：0 4px 50px / 0 4px 40px / 0 0 20px，白色 50%
 const PANEL_GLOW = [
@@ -93,13 +77,17 @@ function CardFace({ problem }: { problem?: Problem }) {
 }
 
 // 放大卡內容（zoomin1–7）：白卡佔 86.19%×93.05%，其上依序為企業 logo、
-// 企業名、分隔線、題目內文、詳細題目說明、閱讀完畢。百分比皆由設計稿的
-// 卡片座標系（662.4×1186.4）換算而來。
+// 企業名、分隔線、內文區、閱讀完畢。內文區依 published 分支：
+//   已公開（810:15346 版）：題目全文 ＋「詳細題目說明」PDF 連結
+//   未公開（1601:61961 版）：3 行 hashtag ＋「完整題目將於比賽當日公開」
+// 百分比皆由設計稿的卡片座標系（662.4×1186.4）換算而來。
 function ZoomedFace({
   problem,
+  published,
   onClose,
 }: {
   problem: Problem
+  published: boolean
   onClose: () => void
 }) {
   return (
@@ -138,31 +126,55 @@ function ZoomedFace({
         style={{ height: cq(zpx(2)) }}
       />
 
-      {/* 內文（內文：Noto Sans SemiBold 20/26，主色 #2D3E63），上緣定位。
-          設計稿只有 zoomin1 的精確排版，故高度上限取到「詳細題目說明」之前，
-          題目較長的變體以捲動處理，避免壓到下方元素 */}
-      <div
-        className="font-noto text-darkblue absolute top-[35.02%] left-1/2 flex max-h-[15%] w-[72.46%] -translate-x-1/2 flex-col gap-[2%] overflow-y-auto text-center font-semibold"
-        style={{ fontSize: cq(zpx(20)), lineHeight: cq(zpx(26)) }}
-      >
-        {problem.paragraphs.length > 0 ? (
-          problem.paragraphs.map((paragraph) => (
-            <p key={paragraph.slice(0, 24)}>{paragraph}</p>
-          ))
-        ) : (
-          <p className="text-darkblue/60">題目內容即將公開，敬請期待！</p>
-        )}
-      </div>
+      {published ? (
+        <>
+          {/* 題目全文（內文：Noto Sans SemiBold 20/26，主色 #2D3E63），上緣
+              定位。高度上限取到「詳細題目說明」之前，長題目以捲動處理 */}
+          <div
+            className="font-noto text-darkblue absolute top-[35.02%] left-1/2 flex max-h-[15%] w-[72.46%] -translate-x-1/2 flex-col gap-[2%] overflow-y-auto text-center font-semibold"
+            style={{ fontSize: cq(zpx(20)), lineHeight: cq(zpx(26)) }}
+          >
+            {problem.paragraphs.length > 0 ? (
+              problem.paragraphs.map((paragraph) => (
+                <p key={paragraph.slice(0, 24)}>{paragraph}</p>
+              ))
+            ) : (
+              <p className="text-darkblue/60">題目內容即將公開，敬請期待！</p>
+            )}
+          </div>
 
-      {/* TODO: 詳細題目說明的連結目的地待設計/主辦確認 */}
-      <a
-        href="#"
-        onClick={(event) => event.preventDefault()}
-        className="font-noto text-periwinkle absolute top-[52.03%] left-1/2 flex h-[8.09%] w-[41.97%] -translate-x-1/2 -translate-y-1/2 items-center justify-center text-center font-semibold hover:underline"
-        style={{ fontSize: cq(zpx(20)), lineHeight: cq(zpx(26)) }}
-      >
-        詳細題目說明&gt;&gt;
-      </a>
+          {/* TODO: 詳細題目說明的 PDF 網址待主辦提供 */}
+          <a
+            href="#"
+            onClick={(event) => event.preventDefault()}
+            className="font-noto text-periwinkle absolute top-[52.03%] left-1/2 flex h-[8.09%] w-[41.97%] -translate-x-1/2 -translate-y-1/2 items-center justify-center text-center font-semibold hover:underline"
+            style={{ fontSize: cq(zpx(20)), lineHeight: cq(zpx(26)) }}
+          >
+            詳細題目說明&gt;&gt;
+          </a>
+        </>
+      ) : (
+        <>
+          {/* hashtag（小標題：Noto Sans SemiBold 25/40，主色 #2D3E63）。
+              設計稿為 3 行置中，上緣定位在題目全文的相同起點 */}
+          <div
+            className="font-noto text-darkblue absolute top-[35.02%] left-1/2 flex w-[72.46%] -translate-x-1/2 flex-col items-center text-center font-semibold"
+            style={{ fontSize: cq(zpx(25)), lineHeight: cq(zpx(40)) }}
+          >
+            {problem.hashtags.map((tag, index) => (
+              <p key={`${tag}-${index}`}>{tag}</p>
+            ))}
+          </div>
+
+          {/* 完整題目將於比賽當日公開（內文 20/26，輔助文字色 #A5BDE2） */}
+          <p
+            className="font-noto text-periwinkle absolute top-[52.03%] left-1/2 w-[72.46%] -translate-x-1/2 -translate-y-1/2 text-center font-semibold"
+            style={{ fontSize: cq(zpx(20)), lineHeight: cq(zpx(26)) }}
+          >
+            {HASHTAG_NOTE}
+          </p>
+        </>
+      )}
 
       <button
         type="button"
@@ -173,46 +185,6 @@ function ZoomedFace({
         閱讀完畢
       </button>
     </div>
-  )
-}
-
-// 尚未公開面板（664:2640 + 664:3521）：書法字 logo 與創客交流組 CTA 共用同一
-// 份藝術字（此處為 1.562 倍，SVG 可直接縮放），下方是 Zen Antique 100px 的
-// 「尚未公開」。面板本身無填色，設計稿的背景直接透出。
-function UnpublishedPanel({ onDismiss }: { onDismiss: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onDismiss}
-      aria-label="關閉尚未公開說明"
-      className="animate-fade-in ease-out-strong absolute -translate-x-1/2 cursor-pointer overflow-hidden transition-all duration-700"
-      style={{
-        left: '50%',
-        top: `calc(-1 * ${cq(PANEL_RISE)})`,
-        width: cq(PANEL_W),
-        height: cq(PANEL_H),
-        borderRadius: PANEL_RADIUS,
-        zIndex: PROBLEMS.length + 1,
-      }}
-    >
-      {/* 書法字 logo（664:2641：面板內 left 7.39% / top 2.98% / 63.85%） */}
-      <img
-        src={logo14th}
-        alt="梅竹黑客松 14th"
-        className="absolute top-[2.98%] left-[7.39%] w-[63.85%]"
-      />
-      {/* 尚未公開（664:3521：中心 52.5%，Zen Antique 100/64，主要文字色） */}
-      <p
-        className="font-zen text-ink absolute top-[52.5%] left-1/2 flex h-[28.1%] w-[47.87%] -translate-x-1/2 -translate-y-1/2 items-center justify-center text-center"
-        style={{
-          fontSize: cq(px(100)),
-          lineHeight: cq(px(64)),
-          textShadow: STAR_GLOW,
-        }}
-      >
-        尚未公開
-      </p>
-    </button>
   )
 }
 
@@ -232,9 +204,9 @@ export default function ProblemDeck() {
   const deckRef = useRef<HTMLDivElement>(null)
   const prevZoomed = useRef<number | null>(null)
 
-  // 卡列的位置固定不動，放大卡／尚未公開面板都是往「上」長的（見
-  // placement），所以展開時往上捲到它、收合時往下捲回卡列。升起的高度隨
-  // 容器寬度縮放，故要依實際寬度換算，不能用固定 px。
+  // 卡列的位置固定不動，放大卡是往「上」長的（見 placement），所以放大時
+  // 往上捲到放大卡、收合時往下捲回卡列。升起的高度隨容器寬度縮放，故要依
+  // 實際寬度換算，不能用固定 px。
   useEffect(() => {
     const previous = prevZoomed.current
     prevZoomed.current = zoomed
@@ -244,11 +216,10 @@ export default function ProblemDeck() {
     if (!deck) return
     const box = deck.getBoundingClientRect()
     const deckTop = box.top + window.scrollY
-    const risen = published ? ZOOM_RISE : PANEL_RISE
-    const rise = (risen / DECK_W) * box.width
+    const rise = (ZOOM_RISE / DECK_W) * box.width
     const target = zoomed === null ? deckTop : deckTop - rise
     window.scrollTo({ top: Math.max(0, target - 32), behavior: 'smooth' })
-  }, [zoomed, published])
+  }, [zoomed])
 
   // 一列共 7 格、首尾切齊容器；第 slot 格的左緣
   const rowCard = (slot: number): Placement => ({
@@ -262,9 +233,8 @@ export default function ProblemDeck() {
 
   const placement = (index: number): Placement => {
     // 放大：被點的卡從自己的格子往上浮起放大，其餘六張完全不動（原本的
-    // 格子就空著）；收合時再原路縮回同一格。未公開版沒有這段——七張卡
-    // 全部留在原地，改由 UnpublishedPanel 浮在上方（設計稿 Variant3）。
-    if (published && zoomed === index) {
+    // 格子就空著）；收合時再原路縮回同一格。已公開／未公開流程相同。
+    if (zoomed === index) {
       return {
         left: `calc(50% - ${cq(ZOOM_W / 2)})`,
         top: `calc(-1 * ${cq(ZOOM_RISE)})`,
@@ -308,12 +278,9 @@ export default function ProblemDeck() {
             opacity: isOpen ? 0 : 1,
           }}
         />
-        {!published && zoomed !== null && (
-          <UnpublishedPanel onDismiss={() => setZoomed(null)} />
-        )}
         {PROBLEMS.map((problem, index) => {
           const spot = placement(index)
-          const isZoomed = published && zoomed === index
+          const isZoomed = zoomed === index
           return (
             // 卡片本身是 div，未放大時才鋪一層透明按鈕接點擊。放大卡裡有自己的
             // 按鈕與連結，若外層也是 button 會變成巢狀 button（無效的 HTML），
@@ -339,7 +306,11 @@ export default function ProblemDeck() {
                 className="absolute inset-0 h-full w-full object-cover"
               />
               {isZoomed ? (
-                <ZoomedFace problem={problem} onClose={() => setZoomed(null)} />
+                <ZoomedFace
+                  problem={problem}
+                  published={published}
+                  onClose={() => setZoomed(null)}
+                />
               ) : (
                 <>
                   <CardFace problem={isOpen ? problem : undefined} />
@@ -358,21 +329,19 @@ export default function ProblemDeck() {
             </div>
           )
         })}
-        {/* 未公開版的收合牌堆在設計稿裡沒有這行提示（白卡是空的） */}
-        {published && (
-          <span
-            className="font-noto text-periwinkle pointer-events-none absolute top-[calc(50%-12px)] left-0 text-center font-semibold transition-opacity duration-300"
-            style={{
-              width: cq(CARD_W),
-              fontSize: cq(px(20)),
-              lineHeight: cq(px(26)),
-              zIndex: PROBLEMS.length + 2,
-              opacity: isOpen ? 0 : 1,
-            }}
-          >
-            請點擊展開牌組
-          </span>
-        )}
+        {/* 收合牌堆的提示（未公開版 1601:61961 也有這行，白卡上顯示） */}
+        <span
+          className="font-noto text-periwinkle pointer-events-none absolute top-[calc(50%-12px)] left-0 text-center font-semibold transition-opacity duration-300"
+          style={{
+            width: cq(CARD_W),
+            fontSize: cq(px(20)),
+            lineHeight: cq(px(26)),
+            zIndex: PROBLEMS.length + 2,
+            opacity: isOpen ? 0 : 1,
+          }}
+        >
+          請點擊展開牌組
+        </span>
       </div>
     </div>
   )
