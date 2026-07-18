@@ -1,1 +1,25 @@
 @import 'tailwindcss';
+
+html {
+  scroll-behavior: smooth;
+}
+
+@theme {
+  --font-sans:
+    'Noto Sans TC', ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+@keyframes pop-in-right {
+  0% {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+}
+
+.animate-pop-in-right {
+  animation: pop-in-right 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
