@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { PROBLEMS, HASHTAG_NOTE, type Problem } from '../../data/problems'
-import { useProblemsPublished } from '../../hooks/useProblemsPublished'
 import cardBack from '../../assets/Problems/card-back.png'
 import cardDecor from '../../assets/Problems/card-decor.svg'
+import zoomCardDecor from '../../assets/Problems/zoom-card-decor.svg'
 import zoomDivider from '../../assets/Problems/zoom-divider.svg'
 
 // 設計稿的題目卡母元件為 242.414×434.223。頁面上的 instance（664:8019）是
@@ -46,48 +46,76 @@ const PANEL_GLOW = [
   `0 0 ${cq(px(20))} rgba(255,255,255,0.5)`,
 ].join(', ')
 
+// 每張卡上企業 logo 的設計稿幾何（909:27702–27740，卡片座標 242.414×434.223，
+// 換算成百分比）。設計稿是逐家手調的尺寸，不是統一縮進白卡，所以不能用
+// 「塞滿白卡」的通用規則——先前那樣做就是被反映 logo 太小的原因。
+// 順序對齊 PROBLEMS：CloudMosa、羅技、AMD、聚陽、恩智浦(+文曄)、愛德萬、Google。
+const LOGO_BOXES: { left: number; top: number; w: number; h: number }[][] = [
+  [{ left: 19.39, top: 43.07, w: 60.64, h: 8.29 }],
+  [{ left: 15.67, top: 37.31, w: 70.95, h: 19.81 }],
+  [{ left: 10.72, top: 37.31, w: 83.33, h: 20.27 }],
+  [{ left: 28.05, top: 37.08, w: 43.31, h: 20.04 }],
+  [
+    { left: 13.2, top: 40.99, w: 46.2, h: 12.67 },
+    { left: 34.65, top: 33.39, w: 70.13, h: 29.01 },
+  ],
+  [{ left: 20.63, top: 42.14, w: 58.58, h: 9.9 }],
+  [{ left: 25.23, top: 42.24, w: 53.93, h: 9.82 }],
+]
+
 // 題目卡廠商背景電腦版（390:437）：白卡 + 星星裝飾，於卡片內佔
 // left 3.3% / top 17.81% / 92.97%×64.55%。收合狀態依設計稿不放 logo。
-function CardFace({ problem }: { problem?: Problem }) {
+function CardFace({ problem, index }: { problem?: Problem; index?: number }) {
   return (
-    <div className="pointer-events-none absolute top-[17.81%] left-[3.3%] h-[64.55%] w-[92.97%]">
-      {/* 白卡（390:377） */}
-      <div
-        className="absolute inset-[22.12%_7.52%_31.14%_10.4%] flex flex-col items-center justify-center gap-[4%] bg-white p-[5%]"
-        style={{ borderRadius: cq(px(14)), boxShadow: PANEL_GLOW }}
-      >
-        {problem?.logos.map((logo) => (
-          <img
-            key={logo}
-            src={logo}
-            alt={problem.sponsor}
-            className="min-h-0 max-w-[85%] flex-1 object-contain"
-          />
-        ))}
+    <div className="pointer-events-none absolute inset-0">
+      <div className="absolute top-[17.81%] left-[3.3%] h-[64.55%] w-[92.97%]">
+        {/* 白卡（390:377） */}
+        <div
+          className="absolute inset-[22.12%_7.52%_31.14%_10.4%] bg-white"
+          style={{ borderRadius: cq(px(14)), boxShadow: PANEL_GLOW }}
+        />
+        {/* 星星裝飾（390:380 等 7 個向量合成的單一素材）。素材 viewBox 外擴
+            以容納光暈，故負偏移 + 超過 100% 的尺寸為預期值 */}
+        <img
+          src={cardDecor}
+          alt=""
+          className="absolute top-[-22.69%] left-[-31.81%] h-[148.81%] w-[164%] max-w-none"
+        />
       </div>
-      {/* 星星裝飾（390:380 等 7 個向量合成的單一素材）。素材 viewBox 外擴
-          以容納光暈，故負偏移 + 超過 100% 的尺寸為預期值 */}
-      <img
-        src={cardDecor}
-        alt=""
-        className="absolute top-[-22.69%] left-[-31.81%] h-[148.81%] w-[164%] max-w-none"
-      />
+      {/* 企業 logo：設計稿逐家手調的位置與尺寸（卡片座標系） */}
+      {problem &&
+        index !== undefined &&
+        problem.logos.map((logo, logoIndex) => {
+          const box = LOGO_BOXES[index]?.[logoIndex]
+          if (!box) return null
+          return (
+            <img
+              key={logo}
+              src={logo}
+              alt={problem.sponsor}
+              className="absolute object-contain"
+              style={{
+                left: `${box.left}%`,
+                top: `${box.top}%`,
+                width: `${box.w}%`,
+                height: `${box.h}%`,
+              }}
+            />
+          )
+        })}
     </div>
   )
 }
 
-// 放大卡內容（zoomin1–7）：白卡佔 86.19%×93.05%，其上依序為企業 logo、
-// 企業名、分隔線、內文區、閱讀完畢。內文區依 published 分支：
-//   已公開（810:15346 版）：題目全文 ＋「詳細題目說明」PDF 連結
-//   未公開（1601:61961 版）：3 行 hashtag ＋「完整題目將於比賽當日公開」
-// 百分比皆由設計稿的卡片座標系（662.4×1186.4）換算而來。
+// 放大卡內容（1601:62032–62309）：白卡佔 86.19%×93.05%，其上由上而下依序為
+// 企業 logo、企業名、（保密說明，部分企業才有）、分隔線、hashtag、「完整題目
+// 將於比賽當日公開」，閱讀完畢固定在底部。內容區改用 flex 直排（非絕對定位），
+// 因各企業有無保密說明、hashtag 數量不一，流式堆疊才能自動適應。
 function ZoomedFace({
   problem,
-  published,
   onClose,
 }: {
   problem: Problem
-  published: boolean
   onClose: () => void
 }) {
   return (
@@ -98,83 +126,71 @@ function ZoomedFace({
         style={{ borderRadius: cq(zpx(13.059)) }}
       />
 
-      <div className="absolute top-[14.27%] left-1/2 flex h-[6.07%] w-[44.38%] -translate-x-1/2 items-center justify-center gap-[4%]">
-        {problem.logos.map((logo) => (
-          <img
-            key={logo}
-            src={logo}
-            alt={problem.sponsor}
-            className="h-full max-w-[48%] flex-1 object-contain"
-          />
-        ))}
-      </div>
-
-      {/* 企業名（三級標題：Noto Sans SemiBold 30/44）。設計稿此區塊為
-          中心點定位（-translate-y-1/2），故 top 是中心而非上緣 */}
-      <p
-        className="font-noto text-periwinkle absolute top-[24.38%] left-1/2 flex h-[8.09%] w-[41.97%] -translate-x-1/2 -translate-y-1/2 items-center justify-center text-center font-semibold"
-        style={{ fontSize: cq(zpx(30)), lineHeight: cq(zpx(44)) }}
+      {/* 內容直排，置中對齊，於白卡上緣起算 */}
+      <div
+        className="absolute top-[9%] left-1/2 flex w-[72.46%] -translate-x-1/2 flex-col items-center"
+        style={{ gap: cq(zpx(18)) }}
       >
-        {problem.sponsor}
-      </p>
+        {/* 企業 logo：以固定高度盒 + object-contain，寬 logo 受寬度上限、
+            高 logo（聚陽、愛德萬）受高度上限，皆比先前放大許多 */}
+        <div
+          className="flex w-full items-center justify-center"
+          style={{ height: cq(zpx(120)), gap: cq(zpx(20)) }}
+        >
+          {problem.logos.map((logo) => (
+            <img
+              key={logo}
+              src={logo}
+              alt={problem.sponsor}
+              className="max-h-full max-w-[46%] object-contain"
+            />
+          ))}
+        </div>
 
-      {/* 分隔線（Line 33，#A5BDE2 2px） */}
-      <img
-        src={zoomDivider}
-        alt=""
-        className="absolute top-[28.43%] left-1/2 w-[67.18%] -translate-x-1/2"
-        style={{ height: cq(zpx(2)) }}
-      />
+        {/* 企業名（三級標題：Noto Sans SemiBold 30/44，輔助文字色 #A5BDE2） */}
+        <p
+          className="font-noto text-periwinkle text-center font-semibold"
+          style={{ fontSize: cq(zpx(30)), lineHeight: cq(zpx(44)) }}
+        >
+          {problem.sponsor}
+        </p>
 
-      {published ? (
-        <>
-          {/* 題目全文（內文：Noto Sans SemiBold 20/26，主色 #2D3E63），上緣
-              定位。高度上限取到「詳細題目說明」之前，長題目以捲動處理 */}
-          <div
-            className="font-noto text-darkblue absolute top-[35.02%] left-1/2 flex max-h-[15%] w-[72.46%] -translate-x-1/2 flex-col gap-[2%] overflow-y-auto text-center font-semibold"
-            style={{ fontSize: cq(zpx(20)), lineHeight: cq(zpx(26)) }}
-          >
-            {problem.paragraphs.length > 0 ? (
-              problem.paragraphs.map((paragraph) => (
-                <p key={paragraph.slice(0, 24)}>{paragraph}</p>
-              ))
-            ) : (
-              <p className="text-darkblue/60">題目內容即將公開，敬請期待！</p>
-            )}
-          </div>
-
-          {/* TODO: 詳細題目說明的 PDF 網址待主辦提供 */}
-          <a
-            href="#"
-            onClick={(event) => event.preventDefault()}
-            className="font-noto text-periwinkle absolute top-[52.03%] left-1/2 flex h-[8.09%] w-[41.97%] -translate-x-1/2 -translate-y-1/2 items-center justify-center text-center font-semibold hover:underline"
-            style={{ fontSize: cq(zpx(20)), lineHeight: cq(zpx(26)) }}
-          >
-            詳細題目說明&gt;&gt;
-          </a>
-        </>
-      ) : (
-        <>
-          {/* hashtag（小標題：Noto Sans SemiBold 25/40，主色 #2D3E63）。
-              設計稿為 3 行置中，上緣定位在題目全文的相同起點 */}
-          <div
-            className="font-noto text-darkblue absolute top-[35.02%] left-1/2 flex w-[72.46%] -translate-x-1/2 flex-col items-center text-center font-semibold"
-            style={{ fontSize: cq(zpx(25)), lineHeight: cq(zpx(40)) }}
-          >
-            {problem.hashtags.map((tag, index) => (
-              <p key={`${tag}-${index}`}>{tag}</p>
-            ))}
-          </div>
-
-          {/* 完整題目將於比賽當日公開（內文 20/26，輔助文字色 #A5BDE2） */}
+        {/* 保密說明（內文 20/26，主色 #2D3E63），只有部分企業有 */}
+        {problem.note && (
           <p
-            className="font-noto text-periwinkle absolute top-[52.03%] left-1/2 w-[72.46%] -translate-x-1/2 -translate-y-1/2 text-center font-semibold"
+            className="font-noto text-darkblue text-center font-semibold"
             style={{ fontSize: cq(zpx(20)), lineHeight: cq(zpx(26)) }}
           >
-            {HASHTAG_NOTE}
+            {problem.note}
           </p>
-        </>
-      )}
+        )}
+
+        {/* 分隔線（Line 33，#A5BDE2 2px） */}
+        <img
+          src={zoomDivider}
+          alt=""
+          className="w-full"
+          style={{ height: cq(zpx(2)) }}
+        />
+
+        {/* hashtag（小標題：Noto Sans SemiBold 25/40，主色 #2D3E63） */}
+        <div
+          className="font-noto text-darkblue flex flex-col items-center text-center font-semibold"
+          style={{ fontSize: cq(zpx(25)), lineHeight: cq(zpx(40)) }}
+        >
+          {problem.hashtags.map((tag, index) => (
+            <p key={`${tag}-${index}`}>{tag}</p>
+          ))}
+        </div>
+
+        {/* 完整題目將於比賽當日公開（內文 20/26，輔助文字色 #A5BDE2） */}
+        <p
+          className="font-noto text-periwinkle text-center font-semibold"
+          style={{ fontSize: cq(zpx(20)), lineHeight: cq(zpx(26)) }}
+        >
+          {HASHTAG_NOTE}
+        </p>
+      </div>
 
       <button
         type="button"
@@ -184,6 +200,21 @@ function ZoomedFace({
       >
         閱讀完畢
       </button>
+
+      {/* 牌面裝飾（1097:61437）：7 個星星向量合成的單一素材。渲染在最後、蓋在
+          白卡與文字之上（設計稿裡星星本來就疊在卡面最上層），故用
+          pointer-events-none 避免擋到閱讀完畢等互動元素 */}
+      <img
+        src={zoomCardDecor}
+        alt=""
+        className="pointer-events-none absolute max-w-none"
+        style={{
+          left: '-7.5468%',
+          top: '-3.8912%',
+          width: '118.398%',
+          height: '110.0572%',
+        }}
+      />
     </div>
   )
 }
@@ -198,7 +229,6 @@ interface Placement {
 }
 
 export default function ProblemDeck() {
-  const published = useProblemsPublished()
   const [isOpen, setIsOpen] = useState(false)
   const [zoomed, setZoomed] = useState<number | null>(null)
   const deckRef = useRef<HTMLDivElement>(null)
@@ -306,14 +336,13 @@ export default function ProblemDeck() {
                 className="absolute inset-0 h-full w-full object-cover"
               />
               {isZoomed ? (
-                <ZoomedFace
-                  problem={problem}
-                  published={published}
-                  onClose={() => setZoomed(null)}
-                />
+                <ZoomedFace problem={problem} onClose={() => setZoomed(null)} />
               ) : (
                 <>
-                  <CardFace problem={isOpen ? problem : undefined} />
+                  <CardFace
+                    problem={isOpen ? problem : undefined}
+                    index={index}
+                  />
                   <button
                     type="button"
                     onClick={() => handleClick(index)}

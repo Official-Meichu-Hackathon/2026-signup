@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { useProblemsPublished } from '../../hooks/useProblemsPublished'
 import logo14th from '../../assets/Problems/logo-14th.svg'
 import ctaSparkle from '../../assets/Problems/cta-sparkle.svg'
 import orgWda from '../../assets/Problems/org-wda.png'
@@ -81,7 +80,6 @@ const PARAGRAPH = [
 ]
 
 export default function MakerCta() {
-  const published = useProblemsPublished()
   const [stage, setStage] = useState<Stage>('idle')
   const timers = useRef<number[]>([])
 
@@ -111,27 +109,6 @@ export default function MakerCta() {
   const cardRadius = '11.252cqw 11.252cqw 0.732cqw 11.252cqw'
   const cardShape =
     'glass-dark relative block aspect-[961/538] w-full overflow-hidden'
-
-  // 未公開版（838:15010）：同一張卡只換成「尚未公開」，沒有過場也不可點
-  if (!published) {
-    return (
-      <div className="@container w-full">
-        <div className={cardShape} style={{ borderRadius: cardRadius }}>
-          <img
-            src={logo14th}
-            alt="梅竹黑客松 14th"
-            className="absolute top-[3%] left-[7.4%] w-[63.9%]"
-          />
-          <p
-            className="glow-text font-zen text-ink absolute top-[54.8%] left-1/2 w-full -translate-x-1/2 -translate-y-1/2 text-center"
-            style={{ fontSize: cq(100), lineHeight: cq(64) }}
-          >
-            尚未公開
-          </p>
-        </div>
-      </div>
-    )
-  }
 
   return (
     // @container 在外層，卡片自己的圓角才能用 cqw（cqw 不能參照自己）

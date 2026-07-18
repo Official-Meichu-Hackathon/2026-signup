@@ -1,5 +1,5 @@
-// 黑客組企業題目 — 內容取自 Figma「題目說明電腦版_黑客組」zoomin1–7 變體。
-// 聚陽實業、愛德萬測試的題目內文設計稿尚未提供，先留空陣列。
+// 黑客組企業題目 — 內容取自 Figma「題目說明電腦版_黑客組_未公開2」
+// （1601:61961）的 zoomin1–7 變體。
 import logoCloudMosa from '../assets/Problems/logo-cloudmosa.png'
 import logoLogitech from '../assets/Problems/logo-logitech.png'
 import logoAmdItri from '../assets/Problems/logo-amd-itri.png'
@@ -9,27 +9,23 @@ import logoWtMicro from '../assets/Problems/logo-wtmicro.png'
 import logoAdvantest from '../assets/Problems/logo-advantest.png'
 import logoGoogle from '../assets/Problems/logo-google.png'
 
-// 題目是否已公布（比賽當天公布）。設計稿「題目說明電腦版_黑客組_未公開2」
-// （1601:61961）與已公開版流程完全相同——收合牌堆→展開→點卡片放大，
-// 差別只在放大卡的內文區：
-//   false（現在）：3 行 hashtag ＋「完整題目將於比賽當日公開」，無外部連結
-//   true（比賽當天）：題目全文 ＋「詳細題目說明」PDF 連結
-// 題目公布後改成 true 即可。
-export const PROBLEMS_PUBLISHED = false
-
-// 未公開時放大卡上顯示的提示（設計稿放在 hashtag 下方，輔助文字色）
+// 題目全文於比賽當天另行公布，網站上一律只放 hashtag 提示，沒有公開/未公開
+// 之分。paragraphs 保留各企業的題目全文備用，目前不會顯示。
 export const HASHTAG_NOTE = '完整題目將於比賽當日公開'
 
-// hashtag 佔位。設計稿是「#......」，實際內容各企業不同、待主辦提供後逐一
-// 替換 PROBLEMS 裡的 hashtags。
+// hashtag 佔位。設計稿是「#......」，聚陽、恩智浦、愛德萬、CloudMosa 尚未
+// 提供實際內容，先用佔位；主辦給了之後替換各企業的 hashtags。
 const HASHTAG_PLACEHOLDER = ['#......', '#......', '#......']
 
 export interface Problem {
   sponsor: string
   logos: string[]
-  paragraphs: string[]
-  // 比賽前的提示標籤（1~3 個）。內容確定前一律用 HASHTAG_PLACEHOLDER。
+  // 比賽前的提示標籤。內容確定前用 HASHTAG_PLACEHOLDER。
   hashtags: string[]
+  // 保密協定說明，只有部分企業有（如羅技）。設計稿放在企業名與分隔線之間。
+  note?: string
+  // 題目全文，備用，目前不顯示。
+  paragraphs: string[]
 }
 
 export const PROBLEMS: Problem[] = [
@@ -44,7 +40,8 @@ export const PROBLEMS: Problem[] = [
   {
     sponsor: '羅技',
     logos: [logoLogitech],
-    hashtags: HASHTAG_PLACEHOLDER,
+    hashtags: ['#AICopilot', '#FutureOfWork', '#AIGaming', '#PlayToWin'],
+    note: '請務必簽署附件之保密協定，並於回傳組別繳費證明的郵件的同時，一併繳交個人的保密協定同意書，方為報名成功。',
     paragraphs: [
       '在三個子題中，打造沉浸式的使用者體驗。',
       '包括：打造增加使用者互動的 AI 工具如動態遊戲助手、永續發展人工智慧、情境感知使用者界面或自適應性能優化器；3D桌面互動概念，透過網路攝影機、空間輸入和顯示創新來增加數位工作流程；多模態介面，結合 AR/VR、手勢、語音和行動裝置、實現統一的使用者參與。',
@@ -54,7 +51,7 @@ export const PROBLEMS: Problem[] = [
   {
     sponsor: 'AMD',
     logos: [logoAmdItri],
-    hashtags: HASHTAG_PLACEHOLDER,
+    hashtags: ['#PhysicalAI', '#Cloud-to-Edge AI Deployment', '#Robotics'],
     paragraphs: [
       'AMD 將提供每組一台 AI PC Laptop (ASUS M5606W HX370/0001DA/32G/T)，請運用本地算力，開發能夠協助生活的 AI Agent。',
       '在旅遊規劃、自動發文、個人活安排或校園活動整合中，創造一個更加便利的生活模式。你將利用 Lemonade server 來發揮 Ryzen AI PC 的潛力，並通過串流工具，將其連接到 Hugging Face 的 Tiny Agents 等內容，打造多樣的 AI Agents。',
@@ -84,7 +81,11 @@ export const PROBLEMS: Problem[] = [
   {
     sponsor: 'Google',
     logos: [logoGoogle],
-    hashtags: HASHTAG_PLACEHOLDER,
+    hashtags: [
+      '#AI Agent (AI智慧代理)',
+      '#Multimodal Reasoning (多模態推理)',
+      '#Autonomy (自治)',
+    ],
     paragraphs: [
       '運用 Gemini 模型，發揮創意，將智慧應用帶入每個人的手機中。',
       '例如，即時語音描述路況系統、處理複雜文件內容、結合手機鏡頭辨識垃圾種類、電話詐騙預防系統等等。在手機的應用場景上，使用指定模型、結合其他輔助領域之技術，解決真實世界的問題，提升弱勢社群的無障礙體驗。',
