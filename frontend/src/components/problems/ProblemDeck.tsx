@@ -339,7 +339,7 @@ export default function ProblemDeck() {
     width: cq(CARD_W),
     height: cq(CARD_H),
     radius: cq(CARD_RADIUS),
-    zIndex: slot + 1,
+    zIndex: PROBLEMS.length - slot,
   })
 
   const placement = (index: number): Placement => {
