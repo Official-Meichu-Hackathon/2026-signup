@@ -118,6 +118,46 @@ function ZoomedFace({
   problem: Problem
   onClose: () => void
 }) {
+  const isLogitech = problem.sponsor === '羅技'
+  const isAmd = problem.sponsor === 'AMD'
+  const isGoogle = problem.sponsor === 'Google'
+  const logitechNoteLines = [
+    '請務必簽署附件之保密協定，',
+    '並於回傳組別繳費證明的郵件的同時，',
+    '一併繳交個人的保密協定同意書，方為報名成功。',
+  ]
+  const logoBoxHeight = isLogitech ? 172 : isAmd ? 176 : isGoogle ? 85.263 : 120
+  const logoImageWidth = isLogitech
+    ? 344
+    : isAmd
+      ? 404
+      : isGoogle
+        ? 261.458
+        : undefined
+  const sponsorBoxStyle =
+    isAmd || isGoogle
+      ? {
+          width: cq(zpx(278)),
+          height: cq(zpx(96)),
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }
+      : undefined
+  const isLargeHashtagCard = isLogitech || isAmd || isGoogle
+  const hashtagBoxWidth = isAmd ? 572 : isGoogle ? 493 : undefined
+  const contentTop = isGoogle ? '14%' : '9%'
+  const contentGap = isLogitech || isGoogle ? 13 : 18
+  const noticeBoxStyle = isGoogle
+    ? {
+        width: cq(zpx(325)),
+        height: cq(zpx(96)),
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }
+    : undefined
+
   return (
     <div className="animate-fade-in absolute inset-0">
       {/* 白卡（360:377） */}
@@ -128,14 +168,14 @@ function ZoomedFace({
 
       {/* 內容直排，置中對齊，於白卡上緣起算 */}
       <div
-        className="absolute top-[9%] left-1/2 flex w-[72.46%] -translate-x-1/2 flex-col items-center"
-        style={{ gap: cq(zpx(18)) }}
+        className="absolute left-1/2 flex w-[72.46%] -translate-x-1/2 flex-col items-center"
+        style={{ top: contentTop, gap: cq(zpx(contentGap)) }}
       >
         {/* 企業 logo：以固定高度盒 + object-contain，寬 logo 受寬度上限、
             高 logo（聚陽、愛德萬）受高度上限，皆比先前放大許多 */}
         <div
           className="flex w-full items-center justify-center"
-          style={{ height: cq(zpx(120)), gap: cq(zpx(20)) }}
+          style={{ height: cq(zpx(logoBoxHeight)), gap: cq(zpx(20)) }}
         >
           {problem.logos.map((logo) => (
             <img
@@ -143,6 +183,11 @@ function ZoomedFace({
               src={logo}
               alt={problem.sponsor}
               className="max-h-full max-w-[46%] object-contain"
+              style={
+                logoImageWidth
+                  ? { width: cq(zpx(logoImageWidth)), maxWidth: '100%' }
+                  : undefined
+              }
             />
           ))}
         </div>
@@ -150,7 +195,11 @@ function ZoomedFace({
         {/* 企業名（三級標題：Noto Sans SemiBold 30/44，輔助文字色 #A5BDE2） */}
         <p
           className="font-noto text-periwinkle text-center font-semibold"
-          style={{ fontSize: cq(zpx(30)), lineHeight: cq(zpx(44)) }}
+          style={{
+            ...sponsorBoxStyle,
+            fontSize: cq(zpx(30)),
+            lineHeight: cq(zpx(44)),
+          }}
         >
           {problem.sponsor}
         </p>
@@ -159,9 +208,19 @@ function ZoomedFace({
         {problem.note && (
           <p
             className="font-noto text-darkblue text-center font-semibold"
-            style={{ fontSize: cq(zpx(20)), lineHeight: cq(zpx(26)) }}
+            style={{
+              width: isLogitech ? cq(zpx(480)) : undefined,
+              fontSize: cq(zpx(20)),
+              lineHeight: cq(zpx(26)),
+            }}
           >
-            {problem.note}
+            {isLogitech
+              ? logitechNoteLines.map((line) => (
+                  <span key={line} className="block">
+                    {line}
+                  </span>
+                ))
+              : problem.note}
           </p>
         )}
 
@@ -175,8 +234,16 @@ function ZoomedFace({
 
         {/* hashtag（小標題：Noto Sans SemiBold 25/40，主色 #2D3E63） */}
         <div
-          className="font-noto text-darkblue flex flex-col items-center text-center font-semibold"
-          style={{ fontSize: cq(zpx(25)), lineHeight: cq(zpx(40)) }}
+          className={`text-darkblue flex flex-col items-center text-center ${
+            isLargeHashtagCard
+              ? 'font-zen font-normal'
+              : 'font-noto font-semibold'
+          }`}
+          style={{
+            width: hashtagBoxWidth ? cq(zpx(hashtagBoxWidth)) : undefined,
+            fontSize: cq(zpx(isLargeHashtagCard ? 35 : 25)),
+            lineHeight: cq(zpx(isLargeHashtagCard ? 44 : 40)),
+          }}
         >
           {problem.hashtags.map((tag, index) => (
             <p key={`${tag}-${index}`}>{tag}</p>
@@ -186,9 +253,13 @@ function ZoomedFace({
         {/* 完整題目將於比賽當日公開（內文 20/26，輔助文字色 #A5BDE2） */}
         <p
           className="font-noto text-periwinkle text-center font-semibold"
-          style={{ fontSize: cq(zpx(20)), lineHeight: cq(zpx(26)) }}
+          style={{
+            ...noticeBoxStyle,
+            fontSize: cq(zpx(isLargeHashtagCard ? 25 : 20)),
+            lineHeight: cq(zpx(isLargeHashtagCard ? 40 : 26)),
+          }}
         >
-          {HASHTAG_NOTE}
+          {isLogitech || isGoogle ? '完整題目將於當天公告' : HASHTAG_NOTE}
         </p>
       </div>
 
