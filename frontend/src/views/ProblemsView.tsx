@@ -2,7 +2,6 @@ import Footer from '../components/layout/Footer'
 import ProblemDeck from '../components/problems/ProblemDeck'
 import ProblemStars from '../components/problems/ProblemStars'
 import MakerCta from '../components/problems/MakerCta'
-import buoyArrow from '../assets/Problems/buoy-arrow.svg'
 import bgGradient from '../assets/Problems/bg-gradient.png'
 import logoNav from '../assets/Problems/logo-nav.png'
 
@@ -21,11 +20,21 @@ function Buoy({
       <span className="font-noto text-xl font-semibold text-white">
         {label}
       </span>
-      <img
-        src={buoyArrow}
-        alt=""
-        className="absolute right-[36px] bottom-[26px] w-[24px] rotate-90"
-      />
+      <svg
+        aria-hidden
+        viewBox="0 0 24 24"
+        className="absolute right-[37px] bottom-[34px] h-[24px] w-[24px]"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M12 18V8M7 13L12 8L17 13"
+          stroke="#A5BDE2"
+          strokeWidth={2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
     </div>
   )
 }
