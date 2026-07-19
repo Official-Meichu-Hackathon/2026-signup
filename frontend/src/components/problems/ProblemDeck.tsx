@@ -134,9 +134,11 @@ function CardFace({ problem, index }: { problem?: Problem; index?: number }) {
 function ZoomedFace({
   problem,
   onClose,
+  contentScale,
 }: {
   problem: Problem
   onClose: () => void
+  contentScale: number
 }) {
   const isLogitech = problem.sponsor === '羅技'
   const isAmd = problem.sponsor === 'AMD'
@@ -188,115 +190,123 @@ function ZoomedFace({
 
       {/* 內容直排，置中對齊，於白卡上緣起算 */}
       <div
-        className="absolute left-1/2 flex w-[72.46%] -translate-x-1/2 flex-col items-center"
-        style={{ top: contentTop, gap: zoomCq(zpx(contentGap)) }}
+        className="absolute inset-0"
+        style={{
+          transform: `scale(${contentScale})`,
+          transformOrigin: 'top center',
+        }}
       >
-        {/* 企業 logo：以固定高度盒 + object-contain，寬 logo 受寬度上限、
-            高 logo（聚陽、愛德萬）受高度上限，皆比先前放大許多 */}
         <div
-          className="flex w-full items-center justify-center"
-          style={{ height: zoomCq(zpx(logoBoxHeight)), gap: zoomCq(zpx(20)) }}
+          className="absolute left-1/2 flex w-[72.46%] -translate-x-1/2 flex-col items-center"
+          style={{ top: contentTop, gap: zoomCq(zpx(contentGap)) }}
         >
-          {problem.logos.map((logo) => (
-            <img
-              key={logo}
-              src={logo}
-              alt={problem.sponsor}
-              className="max-h-full max-w-[46%] object-contain"
-              style={
-                logoImageWidth
-                  ? { width: zoomCq(zpx(logoImageWidth)), maxWidth: '100%' }
-                  : undefined
-              }
-            />
-          ))}
-        </div>
+          {/* 企業 logo：以固定高度盒 + object-contain，寬 logo 受寬度上限、
+            高 logo（聚陽、愛德萬）受高度上限，皆比先前放大許多 */}
+          <div
+            className="flex w-full items-center justify-center"
+            style={{ height: zoomCq(zpx(logoBoxHeight)), gap: zoomCq(zpx(20)) }}
+          >
+            {problem.logos.map((logo) => (
+              <img
+                key={logo}
+                src={logo}
+                alt={problem.sponsor}
+                className="max-h-full max-w-[46%] object-contain"
+                style={
+                  logoImageWidth
+                    ? { width: zoomCq(zpx(logoImageWidth)), maxWidth: '100%' }
+                    : undefined
+                }
+              />
+            ))}
+          </div>
 
-        {/* 企業名（三級標題：Noto Sans SemiBold 30/44，輔助文字色 #A5BDE2） */}
-        <p
-          className="font-noto text-periwinkle text-center font-semibold"
-          style={{
-            ...sponsorBoxStyle,
-            fontSize: zoomCq(zpx(30)),
-            lineHeight: zoomCq(zpx(44)),
-          }}
-        >
-          {problem.sponsor}
-        </p>
-
-        {/* 保密說明（內文 20/26，主色 #2D3E63），只有部分企業有 */}
-        {problem.note && (
+          {/* 企業名（三級標題：Noto Sans SemiBold 30/44，輔助文字色 #A5BDE2） */}
           <p
-            className="font-noto text-darkblue text-center font-semibold"
+            className="font-noto text-periwinkle text-center font-semibold"
             style={{
-              width: isLogitech ? zoomCq(zpx(480)) : undefined,
+              ...sponsorBoxStyle,
+              fontSize: zoomCq(zpx(30)),
+              lineHeight: zoomCq(zpx(44)),
+            }}
+          >
+            {problem.sponsor}
+          </p>
+
+          {/* 保密說明（內文 20/26，主色 #2D3E63），只有部分企業有 */}
+          {problem.note && (
+            <p
+              className="font-noto text-darkblue text-center font-semibold"
+              style={{
+                width: isLogitech ? zoomCq(zpx(480)) : undefined,
+                maxWidth: '100%',
+                fontSize: zoomCq(zpx(20)),
+                lineHeight: zoomCq(zpx(26)),
+                overflowWrap: 'anywhere',
+              }}
+            >
+              {isLogitech
+                ? logitechNoteLines.map((line) => (
+                    <span key={line} className="block">
+                      {line}
+                    </span>
+                  ))
+                : problem.note}
+            </p>
+          )}
+
+          {/* 分隔線（Line 33，#A5BDE2 2px） */}
+          <img
+            src={zoomDivider}
+            alt=""
+            className="w-full"
+            style={{ height: zoomCq(zpx(2)) }}
+          />
+
+          {/* hashtag（小標題：Noto Sans SemiBold 25/40，主色 #2D3E63） */}
+          <div
+            className={`text-darkblue flex flex-col items-center text-center ${
+              isLargeHashtagCard
+                ? 'font-zen font-normal'
+                : 'font-noto font-semibold'
+            }`}
+            style={{
+              width: hashtagBoxWidth ? zoomCq(zpx(hashtagBoxWidth)) : undefined,
               maxWidth: '100%',
-              fontSize: zoomCq(zpx(20)),
-              lineHeight: zoomCq(zpx(26)),
+              fontSize: zoomCq(zpx(isLargeHashtagCard ? 35 : 25)),
+              lineHeight: zoomCq(zpx(isLargeHashtagCard ? 44 : 40)),
               overflowWrap: 'anywhere',
             }}
           >
-            {isLogitech
-              ? logitechNoteLines.map((line) => (
-                  <span key={line} className="block">
-                    {line}
-                  </span>
-                ))
-              : problem.note}
+            {problem.hashtags.map((tag, index) => (
+              <p key={`${tag}-${index}`}>
+                {isGoogle && index === 1 ? (
+                  <>
+                    #Multimodal Reasoning
+                    <br />
+                    （多模態推理）
+                  </>
+                ) : (
+                  tag
+                )}
+              </p>
+            ))}
+          </div>
+
+          {/* 完整題目將於比賽當日公開（內文 20/26，輔助文字色 #A5BDE2） */}
+          <p
+            className="font-noto text-periwinkle text-center font-semibold"
+            style={{
+              ...noticeBoxStyle,
+              maxWidth: '100%',
+              fontSize: zoomCq(zpx(isLargeHashtagCard ? 25 : 20)),
+              lineHeight: zoomCq(zpx(isLargeHashtagCard ? 40 : 26)),
+              overflowWrap: 'anywhere',
+            }}
+          >
+            {isLogitech ? '完整題目將於當天公告' : HASHTAG_NOTE}
           </p>
-        )}
-
-        {/* 分隔線（Line 33，#A5BDE2 2px） */}
-        <img
-          src={zoomDivider}
-          alt=""
-          className="w-full"
-          style={{ height: zoomCq(zpx(2)) }}
-        />
-
-        {/* hashtag（小標題：Noto Sans SemiBold 25/40，主色 #2D3E63） */}
-        <div
-          className={`text-darkblue flex flex-col items-center text-center ${
-            isLargeHashtagCard
-              ? 'font-zen font-normal'
-              : 'font-noto font-semibold'
-          }`}
-          style={{
-            width: hashtagBoxWidth ? zoomCq(zpx(hashtagBoxWidth)) : undefined,
-            maxWidth: '100%',
-            fontSize: zoomCq(zpx(isLargeHashtagCard ? 35 : 25)),
-            lineHeight: zoomCq(zpx(isLargeHashtagCard ? 44 : 40)),
-            overflowWrap: 'anywhere',
-          }}
-        >
-          {problem.hashtags.map((tag, index) => (
-            <p key={`${tag}-${index}`}>
-              {isGoogle && index === 1 ? (
-                <>
-                  #Multimodal Reasoning
-                  <br />
-                  （多模態推理）
-                </>
-              ) : (
-                tag
-              )}
-            </p>
-          ))}
         </div>
-
-        {/* 完整題目將於比賽當日公開（內文 20/26，輔助文字色 #A5BDE2） */}
-        <p
-          className="font-noto text-periwinkle text-center font-semibold"
-          style={{
-            ...noticeBoxStyle,
-            maxWidth: '100%',
-            fontSize: zoomCq(zpx(isLargeHashtagCard ? 25 : 20)),
-            lineHeight: zoomCq(zpx(isLargeHashtagCard ? 40 : 26)),
-            overflowWrap: 'anywhere',
-          }}
-        >
-          {isLogitech ? '完整題目將於當天公告' : HASHTAG_NOTE}
-        </p>
       </div>
 
       <button
@@ -379,6 +389,11 @@ export default function ProblemDeck() {
   const responsiveZoomHeight = getResponsiveZoomHeight(
     responsiveZoomWidth,
     viewportHeight,
+  )
+  const responsiveZoomAspectHeight = responsiveZoomWidth * (ZOOM_H / ZOOM_W)
+  const contentScale = Math.min(
+    1,
+    responsiveZoomHeight / responsiveZoomAspectHeight,
   )
   const responsiveZoomRise = getResponsiveZoomRise(
     deckWidth,
@@ -471,7 +486,11 @@ export default function ProblemDeck() {
                 className="absolute inset-0 h-full w-full object-cover"
               />
               {isZoomed ? (
-                <ZoomedFace problem={problem} onClose={() => setZoomed(null)} />
+                <ZoomedFace
+                  problem={problem}
+                  onClose={() => setZoomed(null)}
+                  contentScale={contentScale}
+                />
               ) : (
                 <>
                   <CardFace
