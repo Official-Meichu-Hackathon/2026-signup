@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import logo14th from '../../assets/Problems/logo-14th.svg'
 import ctaSparkle from '../../assets/Problems/cta-sparkle.svg'
+import cardDecor from '../../assets/Problems/maker-panel-decor.svg'
 import orgWda from '../../assets/Problems/org-wda.png'
 import orgCity from '../../assets/Problems/org-city.png'
 import orgYouth from '../../assets/Problems/org-youth.png'
@@ -108,7 +109,7 @@ export default function MakerCta() {
   // （108.16/108.16/7.04/108.16 之於 961.28 寬）
   const cardRadius = '11.252cqw 11.252cqw 0.732cqw 11.252cqw'
   const cardShape =
-    'glass-dark relative block aspect-[961/538] w-full overflow-hidden'
+    'maker-panel relative block aspect-[961/538] w-full overflow-hidden'
 
   return (
     // @container 在外層，卡片自己的圓角才能用 cqw（cqw 不能參照自己）
@@ -122,6 +123,11 @@ export default function MakerCta() {
         className={`${cardShape} cursor-pointer`}
         style={{ borderRadius: cardRadius }}
       >
+        <img
+          src={cardDecor}
+          alt=""
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-65 mix-blend-screen"
+        />
         {/* 書法字 logo（810:2643）。過場時與其他起始內容一起放大淡出 */}
         <div
           className="ease-out-strong absolute inset-0 transition-all"

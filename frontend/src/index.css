@@ -83,6 +83,29 @@ body {
     0 10px 30px rgba(0, 0, 0, 0.25);
 }
 
+.maker-panel {
+  background:
+    radial-gradient(
+      72% 118% at 8% 100%,
+      rgba(126, 145, 218, 0.62) 0%,
+      rgba(79, 96, 163, 0.36) 42%,
+      transparent 76%
+    ),
+    linear-gradient(
+      132deg,
+      rgba(38, 49, 101, 0.58) 0%,
+      rgba(29, 29, 57, 0.48) 42%,
+      rgba(11, 8, 14, 0.82) 100%
+    );
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  backdrop-filter: blur(42px) saturate(125%);
+  -webkit-backdrop-filter: blur(42px) saturate(125%);
+  box-shadow:
+    inset 0 1px 8px rgba(255, 255, 255, 0.48),
+    inset 0 -24px 48px rgba(86, 103, 180, 0.16),
+    0 10px 30px rgba(0, 0, 0, 0.28);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-twinkle {
     animation: none;
