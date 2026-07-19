@@ -23,21 +23,41 @@ const CARD_H = px(434.223) // 290.9
 const STACK_OFFSET = px(27) // 18.1
 const CARD_RADIUS = px(24.486) // 16.4
 
-// 放大卡（zoomin1–7）。設計稿為母卡的 2.7324 倍，此處放大到 3.1 倍。
+// 放大卡（zoomin1–7）。使用設計稿的母卡放大比例。
 // 注意：設計稿裡放大卡的內文是「絕對的 20px」（與收合卡上的提示同級），
 // 並非隨卡寬縮放，照設計稿換算只有 13px。故放大卡內部一律改用 zpx —
 // 相當於把設計稿的放大卡整張等比放大，字級才會跟著變大（內文 ≈15px）。
-const ZOOM = 3.1
+const ZOOM = 2.7324
 const ZOOM_W = CARD_W * ZOOM // 503.4
-const ZOOM_H = CARD_H * ZOOM // 901.8
+const ZOOM_H = CARD_H * ZOOM
 const zpx = (n: number) => n * S * (ZOOM / 2.7324)
+const zoomCq = (n: number) => `${((n / ZOOM_W) * 100).toFixed(4)}cqw`
 const ZOOM_RADIUS = zpx(15.671) // 11.9
 
 // 放大卡與卡列之間的間距
 const ROW_GAP = px(94) // 63
-// 放大卡往「上」長：卡列的位置完全不動，放大卡以負偏移浮在上方的空白區。
-// 若改成往下長，卡列會被推走近千 px，收合時就變成從畫面外飛回來而非平移。
-const ZOOM_RISE = ZOOM_H + ROW_GAP
+const MOBILE_BREAKPOINT = 768
+const MOBILE_GUTTER = 48
+
+const getResponsiveZoomWidth = (deckWidth: number, viewportWidth: number) =>
+  viewportWidth < MOBILE_BREAKPOINT
+    ? Math.max(0, viewportWidth - MOBILE_GUTTER)
+    : (ZOOM_W / DECK_W) * deckWidth
+
+const getResponsiveZoomHeight = (zoomWidth: number, viewportHeight: number) =>
+  Math.min(zoomWidth * (ZOOM_H / ZOOM_W), Math.max(0, viewportHeight - 48))
+
+const getResponsiveZoomRise = (
+  deckWidth: number,
+  viewportWidth: number,
+  viewportHeight: number,
+) => {
+  const zoomWidth = getResponsiveZoomWidth(deckWidth, viewportWidth)
+  return (
+    getResponsiveZoomHeight(zoomWidth, viewportHeight) +
+    (ROW_GAP / DECK_W) * deckWidth
+  )
+}
 
 // 白卡光暈（390:377）：0 4px 50px / 0 4px 40px / 0 0 20px，白色 50%
 const PANEL_GLOW = [
@@ -137,8 +157,8 @@ function ZoomedFace({
   const sponsorBoxStyle =
     isAmd || isGoogle
       ? {
-          width: cq(zpx(278)),
-          height: cq(zpx(96)),
+          width: zoomCq(zpx(278)),
+          height: zoomCq(zpx(96)),
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -150,8 +170,8 @@ function ZoomedFace({
   const contentGap = isLogitech || isGoogle ? 13 : 18
   const noticeBoxStyle = isGoogle
     ? {
-        width: cq(zpx(325)),
-        height: cq(zpx(96)),
+        width: zoomCq(zpx(325)),
+        height: zoomCq(zpx(96)),
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -163,19 +183,19 @@ function ZoomedFace({
       {/* 白卡（360:377） */}
       <div
         className="absolute top-[3.57%] left-[6.86%] h-[93.05%] w-[86.19%] bg-white"
-        style={{ borderRadius: cq(zpx(13.059)) }}
+        style={{ borderRadius: zoomCq(zpx(13.059)) }}
       />
 
       {/* 內容直排，置中對齊，於白卡上緣起算 */}
       <div
         className="absolute left-1/2 flex w-[72.46%] -translate-x-1/2 flex-col items-center"
-        style={{ top: contentTop, gap: cq(zpx(contentGap)) }}
+        style={{ top: contentTop, gap: zoomCq(zpx(contentGap)) }}
       >
         {/* 企業 logo：以固定高度盒 + object-contain，寬 logo 受寬度上限、
             高 logo（聚陽、愛德萬）受高度上限，皆比先前放大許多 */}
         <div
           className="flex w-full items-center justify-center"
-          style={{ height: cq(zpx(logoBoxHeight)), gap: cq(zpx(20)) }}
+          style={{ height: zoomCq(zpx(logoBoxHeight)), gap: zoomCq(zpx(20)) }}
         >
           {problem.logos.map((logo) => (
             <img
@@ -185,7 +205,7 @@ function ZoomedFace({
               className="max-h-full max-w-[46%] object-contain"
               style={
                 logoImageWidth
-                  ? { width: cq(zpx(logoImageWidth)), maxWidth: '100%' }
+                  ? { width: zoomCq(zpx(logoImageWidth)), maxWidth: '100%' }
                   : undefined
               }
             />
@@ -197,8 +217,8 @@ function ZoomedFace({
           className="font-noto text-periwinkle text-center font-semibold"
           style={{
             ...sponsorBoxStyle,
-            fontSize: cq(zpx(30)),
-            lineHeight: cq(zpx(44)),
+            fontSize: zoomCq(zpx(30)),
+            lineHeight: zoomCq(zpx(44)),
           }}
         >
           {problem.sponsor}
@@ -209,9 +229,11 @@ function ZoomedFace({
           <p
             className="font-noto text-darkblue text-center font-semibold"
             style={{
-              width: isLogitech ? cq(zpx(480)) : undefined,
-              fontSize: cq(zpx(20)),
-              lineHeight: cq(zpx(26)),
+              width: isLogitech ? zoomCq(zpx(480)) : undefined,
+              maxWidth: '100%',
+              fontSize: zoomCq(zpx(20)),
+              lineHeight: zoomCq(zpx(26)),
+              overflowWrap: 'anywhere',
             }}
           >
             {isLogitech
@@ -229,7 +251,7 @@ function ZoomedFace({
           src={zoomDivider}
           alt=""
           className="w-full"
-          style={{ height: cq(zpx(2)) }}
+          style={{ height: zoomCq(zpx(2)) }}
         />
 
         {/* hashtag（小標題：Noto Sans SemiBold 25/40，主色 #2D3E63） */}
@@ -240,9 +262,11 @@ function ZoomedFace({
               : 'font-noto font-semibold'
           }`}
           style={{
-            width: hashtagBoxWidth ? cq(zpx(hashtagBoxWidth)) : undefined,
-            fontSize: cq(zpx(isLargeHashtagCard ? 35 : 25)),
-            lineHeight: cq(zpx(isLargeHashtagCard ? 44 : 40)),
+            width: hashtagBoxWidth ? zoomCq(zpx(hashtagBoxWidth)) : undefined,
+            maxWidth: '100%',
+            fontSize: zoomCq(zpx(isLargeHashtagCard ? 35 : 25)),
+            lineHeight: zoomCq(zpx(isLargeHashtagCard ? 44 : 40)),
+            overflowWrap: 'anywhere',
           }}
         >
           {problem.hashtags.map((tag, index) => (
@@ -265,8 +289,10 @@ function ZoomedFace({
           className="font-noto text-periwinkle text-center font-semibold"
           style={{
             ...noticeBoxStyle,
-            fontSize: cq(zpx(isLargeHashtagCard ? 25 : 20)),
-            lineHeight: cq(zpx(isLargeHashtagCard ? 40 : 26)),
+            maxWidth: '100%',
+            fontSize: zoomCq(zpx(isLargeHashtagCard ? 25 : 20)),
+            lineHeight: zoomCq(zpx(isLargeHashtagCard ? 40 : 26)),
+            overflowWrap: 'anywhere',
           }}
         >
           {isLogitech ? '完整題目將於當天公告' : HASHTAG_NOTE}
@@ -277,7 +303,7 @@ function ZoomedFace({
         type="button"
         onClick={onClose}
         className="font-noto text-periwinkle absolute top-[85.58%] left-1/2 flex h-[8.09%] w-[41.97%] -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center text-center font-semibold transition hover:opacity-70"
-        style={{ fontSize: cq(zpx(30)), lineHeight: cq(zpx(44)) }}
+        style={{ fontSize: zoomCq(zpx(30)), lineHeight: zoomCq(zpx(44)) }}
       >
         閱讀完畢
       </button>
@@ -312,8 +338,25 @@ interface Placement {
 export default function ProblemDeck() {
   const [isOpen, setIsOpen] = useState(false)
   const [zoomed, setZoomed] = useState<number | null>(null)
+  const [viewportWidth, setViewportWidth] = useState(() => window.innerWidth)
+  const [viewportHeight, setViewportHeight] = useState(() => window.innerHeight)
   const deckRef = useRef<HTMLDivElement>(null)
+  const [deckWidth, setDeckWidth] = useState(DECK_W)
   const prevZoomed = useRef<number | null>(null)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setViewportWidth(window.innerWidth)
+      setViewportHeight(window.innerHeight)
+      const width = deckRef.current?.getBoundingClientRect().width
+      if (width) setDeckWidth(width)
+    }
+
+    const width = deckRef.current?.getBoundingClientRect().width
+    if (width) setDeckWidth(width)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   // 卡列的位置固定不動，放大卡是往「上」長的（見 placement），所以放大時
   // 往上捲到放大卡、收合時往下捲回卡列。升起的高度隨容器寬度縮放，故要依
@@ -327,10 +370,21 @@ export default function ProblemDeck() {
     if (!deck) return
     const box = deck.getBoundingClientRect()
     const deckTop = box.top + window.scrollY
-    const rise = (ZOOM_RISE / DECK_W) * box.width
+    const rise = getResponsiveZoomRise(box.width, viewportWidth, viewportHeight)
     const target = zoomed === null ? deckTop : deckTop - rise
     window.scrollTo({ top: Math.max(0, target - 32), behavior: 'smooth' })
-  }, [zoomed])
+  }, [zoomed, viewportWidth, viewportHeight])
+
+  const responsiveZoomWidth = getResponsiveZoomWidth(deckWidth, viewportWidth)
+  const responsiveZoomHeight = getResponsiveZoomHeight(
+    responsiveZoomWidth,
+    viewportHeight,
+  )
+  const responsiveZoomRise = getResponsiveZoomRise(
+    deckWidth,
+    viewportWidth,
+    viewportHeight,
+  )
 
   // 一列共 7 格、首尾切齊容器；第 slot 格的左緣
   const rowCard = (slot: number): Placement => ({
@@ -347,11 +401,11 @@ export default function ProblemDeck() {
     // 格子就空著）；收合時再原路縮回同一格。已公開／未公開流程相同。
     if (zoomed === index) {
       return {
-        left: `calc(50% - ${cq(ZOOM_W / 2)})`,
-        top: `calc(-1 * ${cq(ZOOM_RISE)})`,
-        width: cq(ZOOM_W),
-        height: cq(ZOOM_H),
-        radius: cq(ZOOM_RADIUS),
+        left: `calc(50% - ${responsiveZoomWidth / 2}px)`,
+        top: `-${responsiveZoomRise}px`,
+        width: `${responsiveZoomWidth}px`,
+        height: `${responsiveZoomHeight}px`,
+        radius: `${(ZOOM_RADIUS / ZOOM_W) * responsiveZoomWidth}px`,
         zIndex: PROBLEMS.length + 1,
       }
     }
@@ -398,8 +452,8 @@ export default function ProblemDeck() {
             // 且外層一旦 disabled 會連子元素的點擊一起吃掉。
             <div
               key={problem.sponsor}
-              className={`ease-out-strong absolute overflow-hidden transition-all duration-700 ${
-                isZoomed ? '' : 'hover:-translate-y-2'
+              className={`ease-out-strong absolute max-w-[calc(100vw-3rem)] overflow-hidden transition-all duration-700 ${
+                isZoomed ? '@container' : 'hover:-translate-y-2'
               }`}
               style={{
                 left: spot.left,

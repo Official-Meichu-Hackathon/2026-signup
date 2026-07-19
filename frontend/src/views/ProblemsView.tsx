@@ -79,9 +79,9 @@ export default function ProblemsView() {
             上方留白除了設計稿的保密聲明預留空間（48rem）外，另外加寬到
             63rem，讓題目卡放大時能往上升起而不壓到「題目説明」標題
             （放大卡需要 ProblemDeck 的 ZOOM_RISE ≈ 965px）。 */}
-        <section className="mt-[63rem] flex w-full max-w-[1262px] flex-col">
+        <section className="mt-[28rem] flex w-full max-w-[1262px] flex-col md:mt-[63rem]">
           <ProblemDeck />
-          <Buoy label="黑客組" className="mt-52 self-start" />
+          <Buoy label="黑客組" className="mt-28 self-start md:mt-52" />
         </section>
 
         {/* 創客交流組（810:3525 元件組）。點擊會播設計稿的過場並帶出說明文字
