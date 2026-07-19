@@ -11,6 +11,7 @@ import figmaStar5 from '../../assets/Problems/figma-star-5.svg'
 import figmaStar6 from '../../assets/Problems/figma-star-6.svg'
 import figmaStar7 from '../../assets/Problems/figma-star-7.svg'
 import figmaStar8 from '../../assets/Problems/figma-star-8.svg'
+import meteorLine from '../../assets/Problems/meteor-line.svg'
 
 interface Star {
   src: string
@@ -254,6 +255,26 @@ export default function ProblemStars() {
       aria-hidden
       className="pointer-events-none absolute top-[4.08%] left-[2.22%] h-[79.24%] w-[95.58%]"
     >
+      {/* 流星線（1577:63535）。連接 黑客組 標籤旁的 figmaStar7 與右上方的
+          figmaStar6，故用同一個星星容器的座標系定位，隨捲動與星星同步縮放。
+          曲線原本頭高尾低（左高右低的微笑弧），但目標的右邊星星比左邊高，
+          故用 scaleX(-1) 左右翻轉（保留原本中間下凹的弧形，只是換邊），
+          而非上下翻轉（那樣會把弧形整個倒過來變成拱形）。頭尾各留一小段
+          不接到星星本體，讓星芒自己的光暈接住，不直接疊在線段末端上。 */}
+      <div
+        className="absolute"
+        style={{
+          left: '25.68%',
+          top: '71.00%',
+          width: '57.52%',
+          height: '12.30%',
+          transform: 'scaleX(-1)',
+        }}
+      >
+        <div className="absolute inset-[-21.22%_-2.23%_-25.41%_-2.25%]">
+          <img src={meteorLine} alt="" className="block size-full max-w-none" />
+        </div>
+      </div>
       {LEGACY_STARS.map((star) => (
         <div
           key={star.src}
