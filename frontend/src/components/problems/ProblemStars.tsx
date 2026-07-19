@@ -199,7 +199,7 @@ const FIGMA_STARS: OverflowStar[] = [
   {
     src: figmaStar6,
     left: 82.45,
-    top: 54.5,
+    top: 64.5,
     width: 16.31,
     height: 16.16,
     rotate: 33.13,
@@ -215,7 +215,7 @@ const FIGMA_STARS: OverflowStar[] = [
   {
     src: figmaStar7,
     left: 19.8,
-    top: 66.5,
+    top: 76.5,
     width: 7.8,
     height: 8.34,
     rotate: 77.93,

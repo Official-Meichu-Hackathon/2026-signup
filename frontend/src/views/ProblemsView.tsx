@@ -15,7 +15,7 @@ function Buoy({
 }) {
   return (
     <div
-      className={`glass-dark pointer-events-none relative flex h-[100px] w-[183px] items-center justify-center rounded-t-[40px] rounded-br-[40px] rounded-bl-[2px] ${className}`}
+      className={`glass-dark pointer-events-none relative flex h-[100px] w-[183px] items-center justify-center gap-1 rounded-t-[40px] rounded-br-[40px] rounded-bl-[2px] ${className}`}
     >
       <span className="font-noto text-xl font-semibold text-white">
         {label}
@@ -23,7 +23,7 @@ function Buoy({
       <svg
         aria-hidden
         viewBox="0 0 24 24"
-        className="absolute right-[37px] bottom-[34px] h-[24px] w-[24px]"
+        className="h-5 w-5 shrink-0"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -87,7 +87,7 @@ export default function ProblemsView() {
         {/* 創客交流組（810:3525 元件組）。點擊會播設計稿的過場並帶出說明文字
             與題目 PDF 連結；未公開時是靜態的「尚未公開」。 */}
         <section className="mt-10 flex w-full max-w-[961px] flex-col items-center">
-          <Buoy label="創客組" className="self-end md:mr-2" />
+          <div aria-hidden className="h-[100px] w-[183px] self-end md:mr-2" />
           <div className="mt-6 w-full">
             <MakerCta />
           </div>
