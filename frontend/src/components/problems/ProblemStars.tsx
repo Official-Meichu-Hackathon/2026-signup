@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 import star1 from '../../assets/Problems/star-1.svg'
 import star2 from '../../assets/Problems/star-2.svg'
 import star3 from '../../assets/Problems/star-3.svg'
@@ -12,6 +13,8 @@ import figmaStar6 from '../../assets/Problems/figma-star-6.svg'
 import figmaStar7 from '../../assets/Problems/figma-star-7.svg'
 import figmaStar8 from '../../assets/Problems/figma-star-8.svg'
 import meteorLine from '../../assets/Problems/meteor-line.svg'
+import meteorLine2 from '../../assets/Problems/meteor-line-2.svg'
+import meteorLine3 from '../../assets/Problems/meteor-line-3.svg'
 
 interface Star {
   src: string
@@ -249,35 +252,175 @@ const FIGMA_STARS: OverflowStar[] = [
 
 const FIGMA_STAR_SCALE = 0.55
 
+// 流星線：連接兩顆星星的裝飾曲線（1577:63535、63527、63529）。
+// 星星的 left/top 是「頁面高度」的百分比、卡片與其他元件卻是各自寬度的
+// cqw，兩套縮放基準不同，導致視窗寬度一變，星星之間的實際像素距離跟
+// 「用百分比撐開的線框」就會兜不起來（線被拉成細長的 V，見對話中的截圖）。
+// 故改用 JS 在掛載/resize 時量測兩顆星星的實際像素中心，再用「等比縮放
+// ＋旋轉」把線的原始外框（保留設計稿真實長寬比，不被拉伸變形）貼到兩點
+// 之間，頭尾各留一點空隙不直接碰到星芒本體。
+interface MeteorLineDef {
+  src: string
+  viewBoxWidth: number
+  viewBoxHeight: number
+  startX: number
+  startY: number
+  endX: number
+  endY: number
+  startSrc: string
+  endSrc: string
+  gap: number
+  horizontalOffset: number
+  verticalOffset: number
+}
+
+const METEOR_LINES: MeteorLineDef[] = [
+  {
+    // 1577:63535，連接 黑客組 標籤旁的 figmaStar7 與右上方的 figmaStar6
+    src: meteorLine,
+    viewBoxWidth: 763.404,
+    viewBoxHeight: 114.873,
+    startX: 16.4114,
+    startY: 16.6224,
+    endX: 747.085,
+    endY: 72.1443,
+    startSrc: figmaStar7,
+    endSrc: figmaStar6,
+    gap: 0.0575,
+    horizontalOffset: 0,
+    verticalOffset: -0.01,
+  },
+  {
+    // 1577:63527，題目説明標題下方，figmaStar3 → figmaStar4
+    src: meteorLine3,
+    viewBoxWidth: 282,
+    viewBoxHeight: 224,
+    startX: 16.6289,
+    startY: 16.3672,
+    endX: 265.687,
+    endY: 204.399,
+    startSrc: figmaStar3,
+    endSrc: figmaStar4,
+    gap: 0.057,
+    horizontalOffset: -0.015,
+    verticalOffset: 0.015,
+  },
+  {
+    // 1577:63529，跟上面那條幾乎重疊，設計稿本來就是雙線效果
+    src: meteorLine2,
+    viewBoxWidth: 251,
+    viewBoxHeight: 226,
+    startX: 16.6338,
+    startY: 16.3496,
+    endX: 233.802,
+    endY: 206.059,
+    startSrc: figmaStar3,
+    endSrc: figmaStar4,
+    gap: 0.057,
+    horizontalOffset: -0.015,
+    verticalOffset: 0.015,
+  },
+]
+
 export default function ProblemStars() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const starRefs = useRef(new Map<string, HTMLDivElement>())
+  const [lineStyles, setLineStyles] = useState<(CSSProperties | null)[]>(() =>
+    METEOR_LINES.map(() => null),
+  )
+
+  useLayoutEffect(() => {
+    const recompute = () => {
+      const container = containerRef.current
+      if (!container) return
+      const containerRect = container.getBoundingClientRect()
+      const centerOf = (src: string) => {
+        const el = starRefs.current.get(src)
+        if (!el) return null
+        const r = el.getBoundingClientRect()
+        return {
+          x: r.left + r.width / 2 - containerRect.left,
+          y: r.top + r.height / 2 - containerRect.top,
+        }
+      }
+
+      setLineStyles(
+        METEOR_LINES.map((line) => {
+          const start = centerOf(line.startSrc)
+          const end = centerOf(line.endSrc)
+          if (!start || !end) return null
+
+          const fullDx = end.x - start.x
+          const fullDy = end.y - start.y
+          const fullDist = Math.hypot(fullDx, fullDy)
+          if (fullDist === 0) return null
+          const ux = fullDx / fullDist
+          const uy = fullDy / fullDist
+          const gapPx = fullDist * line.gap
+          const pStart = { x: start.x + ux * gapPx, y: start.y + uy * gapPx }
+          const pEnd = { x: end.x - ux * gapPx, y: end.y - uy * gapPx }
+
+          const vx = pEnd.x - pStart.x
+          const vy = pEnd.y - pStart.y
+          const targetDist = Math.hypot(vx, vy)
+
+          const localVx = line.endX - line.startX
+          const localVy = line.endY - line.startY
+          const localDist = Math.hypot(localVx, localVy)
+
+          const scale = targetDist / localDist
+          const angle = Math.atan2(vy, vx) - Math.atan2(localVy, localVx)
+          const cos = Math.cos(angle)
+          const sin = Math.sin(angle)
+          const localStartX = scale * (line.startX * cos - line.startY * sin)
+          const localStartY = scale * (line.startX * sin + line.startY * cos)
+
+          return {
+            position: 'absolute',
+            left:
+              pStart.x -
+              localStartX +
+              containerRect.width * line.horizontalOffset,
+            top:
+              pStart.y -
+              localStartY +
+              containerRect.height * line.verticalOffset,
+            width: line.viewBoxWidth * scale,
+            height: line.viewBoxHeight * scale,
+            transformOrigin: '0 0',
+            transform: `rotate(${angle}rad)`,
+            pointerEvents: 'none',
+          }
+        }),
+      )
+    }
+
+    recompute()
+    window.addEventListener('resize', recompute)
+    return () => window.removeEventListener('resize', recompute)
+  }, [])
+
   return (
     <div
+      ref={containerRef}
       aria-hidden
       className="pointer-events-none absolute top-[4.08%] left-[2.22%] h-[79.24%] w-[95.58%]"
     >
-      {/* 流星線（1577:63535）。連接 黑客組 標籤旁的 figmaStar7 與右上方的
-          figmaStar6，故用同一個星星容器的座標系定位，隨捲動與星星同步縮放。
-          曲線原本頭高尾低（左高右低的微笑弧），但目標的右邊星星比左邊高，
-          故用 scaleX(-1) 左右翻轉（保留原本中間下凹的弧形，只是換邊），
-          而非上下翻轉（那樣會把弧形整個倒過來變成拱形）。頭尾各留一小段
-          不接到星星本體，讓星芒自己的光暈接住，不直接疊在線段末端上。 */}
-      <div
-        className="absolute"
-        style={{
-          left: '25.68%',
-          top: '71.00%',
-          width: '57.52%',
-          height: '12.30%',
-          transform: 'scaleX(-1)',
-        }}
-      >
-        <div className="absolute inset-[-21.22%_-2.23%_-25.41%_-2.25%]">
-          <img src={meteorLine} alt="" className="block size-full max-w-none" />
+      {METEOR_LINES.map((line, index) => (
+        <div
+          key={line.src}
+          className="absolute"
+          style={lineStyles[index] ?? { opacity: 0 }}
+        >
+          <img src={line.src} alt="" className="block size-full max-w-none" />
         </div>
-      </div>
+      ))}
       {LEGACY_STARS.map((star) => (
         <div
           key={star.src}
+          ref={(el) => {
+            if (el) starRefs.current.set(star.src, el)
+          }}
           className="absolute"
           style={{
             left: `${star.left}%`,
@@ -314,6 +457,9 @@ export default function ProblemStars() {
       {FIGMA_STARS.map((star) => (
         <div
           key={star.src}
+          ref={(el) => {
+            if (el) starRefs.current.set(star.src, el)
+          }}
           className="absolute"
           style={{
             left: `${star.left}%`,

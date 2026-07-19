@@ -5,40 +5,6 @@ import MakerCta from '../components/problems/MakerCta'
 import bgGradient from '../assets/Problems/bg-gradient.png'
 import logoNav from '../assets/Problems/logo-nav.png'
 
-// 浮標（題目說明_浮標 838:19509 / 838:27446）：玻璃質感導引標籤。
-function Buoy({
-  label,
-  className = '',
-}: {
-  label: string
-  className?: string
-}) {
-  return (
-    <div
-      className={`glass-dark pointer-events-none relative flex h-[100px] w-[183px] items-center justify-center gap-1 rounded-t-[40px] rounded-br-[40px] rounded-bl-[2px] ${className}`}
-    >
-      <span className="font-noto text-xl font-semibold text-white">
-        {label}
-      </span>
-      <svg
-        aria-hidden
-        viewBox="0 0 24 24"
-        className="h-5 w-5 shrink-0"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M12 18V8M7 13L12 8L17 13"
-          stroke="#A5BDE2"
-          strokeWidth={2}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </div>
-  )
-}
-
 export default function ProblemsView() {
   return (
     <div className="relative min-h-svh overflow-hidden bg-black">
@@ -81,7 +47,10 @@ export default function ProblemsView() {
             （放大卡需要 ProblemDeck 的 ZOOM_RISE ≈ 965px）。 */}
         <section className="mt-[28rem] flex w-full max-w-[1262px] flex-col md:mt-[63rem]">
           <ProblemDeck />
-          <Buoy label="黑客組" className="mt-28 self-start md:mt-52" />
+          <div
+            aria-hidden
+            className="mt-28 h-[100px] w-[183px] self-start md:mt-52"
+          />
         </section>
 
         {/* 創客交流組（810:3525 元件組）。點擊會播設計稿的過場並帶出說明文字
