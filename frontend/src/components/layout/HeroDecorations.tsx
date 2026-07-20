@@ -1,6 +1,12 @@
 // Decorative meteor streaks + 4-point stars around the 報名黑客松 hero title.
 // Purely decorative (aria-hidden). Two variants: mobile and desktop.
-export default function HeroDecorations() {
+// variant="success" shifts the mobile sparkles: 流星1 up, the rest down.
+export default function HeroDecorations({
+  variant = 'form',
+}: {
+  variant?: 'form' | 'success'
+}) {
+  const success = variant === 'success'
   return (
     <>
       {/* Mobile hero decorations — the 5 流星 (流星1-4 + 流星線) around the title.
@@ -14,14 +20,14 @@ export default function HeroDecorations() {
           src="/deco/meteor-line.svg"
           alt=""
           draggable={false}
-          className="absolute top-1/2 left-1/2 mt-[2.8rem] -ml-[4.7rem] w-[11rem] -translate-x-1/2 -translate-y-1/2"
+          className={`absolute top-1/2 left-1/2 ${success ? 'mt-[4.8rem]' : 'mt-[2.8rem]'} -ml-[4.7rem] w-[11rem] -translate-x-1/2 -translate-y-1/2`}
         />
         {/* 流星1 — large sparkle far right, just above centre */}
         <img
           src="/deco/meteor-dot.svg"
           alt=""
           draggable={false}
-          className="twinkle absolute top-1/2 left-1/2 -mt-[1.5rem] ml-[8.3rem] w-[3.08rem] -translate-x-1/2 -translate-y-1/2"
+          className={`twinkle absolute top-1/2 left-1/2 ${success ? '-mt-[3.5rem]' : '-mt-[1.5rem]'} ml-[8.3rem] w-[3.08rem] -translate-x-1/2 -translate-y-1/2`}
           style={{ animation: 'twinkle 3.6s ease-in-out infinite 0.2s' }}
         />
         {/* 流星3 — mid sparkle far left, at title height */}
@@ -29,7 +35,7 @@ export default function HeroDecorations() {
           src="/deco/meteor-dot.svg"
           alt=""
           draggable={false}
-          className="twinkle absolute top-1/2 left-1/2 mt-[1.3rem] -ml-[10.4rem] w-[2.28rem] -translate-x-1/2 -translate-y-1/2"
+          className={`twinkle absolute top-1/2 left-1/2 ${success ? 'mt-[3.3rem]' : 'mt-[1.3rem]'} -ml-[10.4rem] w-[2.28rem] -translate-x-1/2 -translate-y-1/2`}
           style={{ animation: 'twinkle 4.1s ease-in-out infinite 1.1s' }}
         />
         {/* 流星2 — small sparkle left of centre */}
@@ -37,7 +43,7 @@ export default function HeroDecorations() {
           src="/deco/meteor-dot.svg"
           alt=""
           draggable={false}
-          className="twinkle absolute top-1/2 left-1/2 mt-[0.72rem] -ml-[9.7rem] w-[1.39rem] -translate-x-1/2 -translate-y-1/2"
+          className={`twinkle absolute top-1/2 left-1/2 ${success ? 'mt-[2.72rem]' : 'mt-[0.72rem]'} -ml-[9.7rem] w-[1.39rem] -translate-x-1/2 -translate-y-1/2`}
           style={{ animation: 'twinkle 5s ease-in-out infinite 0.6s' }}
         />
         {/* 流星4 — small sparkle just right of centre, below the streak */}
@@ -45,7 +51,7 @@ export default function HeroDecorations() {
           src="/deco/meteor-dot.svg"
           alt=""
           draggable={false}
-          className="twinkle absolute top-1/2 left-1/2 mt-[2.85rem] ml-[1.2rem] w-[1.39rem] -translate-x-1/2 -translate-y-1/2"
+          className={`twinkle absolute top-1/2 left-1/2 ${success ? 'mt-[4.85rem]' : 'mt-[2.85rem]'} ml-[1.2rem] w-[1.39rem] -translate-x-1/2 -translate-y-1/2`}
           style={{ animation: 'twinkle 3.2s ease-in-out infinite 1.6s' }}
         />
       </div>
@@ -60,7 +66,7 @@ export default function HeroDecorations() {
           src="/deco/sparkle-cluster.svg"
           alt=""
           draggable={false}
-          className="twinkle-soft absolute top-1/2 left-1/2 -mt-[1.625rem] -ml-[3.125rem] w-[30rem] -translate-x-1/2 -translate-y-1/2 rotate-[110deg] opacity-60"
+          className="twinkle-soft absolute top-1/2 left-1/2 -mt-[1.625rem] -ml-[2.125rem] w-[30rem] -translate-x-1/2 -translate-y-1/2 rotate-[110deg] opacity-60"
           style={{ animation: 'twinkle-soft 6s ease-in-out infinite' }}
         />
         {/* meteor streak sweeping in under the title */}
