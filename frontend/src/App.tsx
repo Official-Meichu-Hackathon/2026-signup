@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import ProblemsView from './views/ProblemsView'
+import MobileProblemsView from './views/MobileProblemsView'
 import StatsView from './views/StatsView'
 
 function HomeView() {
@@ -17,6 +18,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomeView />} />
         <Route path="/problems" element={<ProblemsView />} />
+        <Route path="/problems/mobile" element={<MobileProblemsView />} />
         <Route path="/stats" element={<StatsView />} />
       </Routes>
     </BrowserRouter>

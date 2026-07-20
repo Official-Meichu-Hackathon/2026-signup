@@ -85,7 +85,13 @@ const LOGO_BOXES: { left: number; top: number; w: number; h: number }[][] = [
 
 // 題目卡廠商背景電腦版（390:437）：白卡 + 星星裝飾，於卡片內佔
 // left 3.3% / top 17.81% / 92.97%×64.55%。收合狀態依設計稿不放 logo。
-function CardFace({ problem, index }: { problem?: Problem; index?: number }) {
+export function ProblemCardFace({
+  problem,
+  index,
+}: {
+  problem?: Problem
+  index?: number
+}) {
   return (
     <div className="pointer-events-none absolute inset-0">
       <div className="absolute top-[17.81%] left-[3.3%] h-[64.55%] w-[92.97%]">
@@ -131,7 +137,7 @@ function CardFace({ problem, index }: { problem?: Problem; index?: number }) {
 // 企業 logo、企業名、（保密說明，部分企業才有）、分隔線、hashtag、「完整題目
 // 將於比賽當日公開」，閱讀完畢固定在底部。內容區改用 flex 直排（非絕對定位），
 // 因各企業有無保密說明、hashtag 數量不一，流式堆疊才能自動適應。
-function ZoomedFace({
+export function ZoomedFace({
   problem,
   onClose,
   contentScale,
@@ -493,7 +499,7 @@ export default function ProblemDeck() {
                 />
               ) : (
                 <>
-                  <CardFace
+                  <ProblemCardFace
                     problem={isOpen ? problem : undefined}
                     index={index}
                   />

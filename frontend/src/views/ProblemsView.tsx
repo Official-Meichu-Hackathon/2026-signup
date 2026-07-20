@@ -1,11 +1,26 @@
+import { useEffect, useState } from 'react'
 import Footer from '../components/layout/Footer'
 import ProblemDeck from '../components/problems/ProblemDeck'
+import MobileProblemsView from './MobileProblemsView'
 import ProblemStars from '../components/problems/ProblemStars'
 import MakerCta from '../components/problems/MakerCta'
 import bgGradient from '../assets/Problems/bg-gradient.png'
 import logoNav from '../assets/Problems/logo-nav.png'
 
 export default function ProblemsView() {
+  const [isMobile, setIsMobile] = useState(
+    () => window.matchMedia('(max-width: 767px)').matches,
+  )
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 767px)')
+    const onChange = (event: MediaQueryListEvent) => setIsMobile(event.matches)
+    mediaQuery.addEventListener('change', onChange)
+    return () => mediaQuery.removeEventListener('change', onChange)
+  }, [])
+
+  if (isMobile) return <MobileProblemsView />
+
   return (
     <div className="relative min-h-svh overflow-hidden bg-black">
       {/* 背景漸層（360:309 / 360:310）：同一張素材，下半部那張旋轉 180°。
