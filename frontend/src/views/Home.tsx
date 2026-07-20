@@ -2,6 +2,8 @@ import heroBg from '../assets/home/hero-bg-plain.jpg'
 import heroTitle from '../assets/home/hero-title-overlay.png'
 import heroCta from '../assets/home/hero-cta-overlay.png'
 import bgGroupRules from '../assets/home/bg-groupintro-rules.png'
+import bgAwards from '../assets/home/awards-gradient.png'
+import EventVision from '../components/home/EventVision'
 import GroupIntro from '../components/home/GroupIntro'
 import Rules from '../components/home/Rules'
 import Awards from '../components/home/Awards'
@@ -37,6 +39,8 @@ export default function Home() {
         />
       </section>
 
+      <EventVision />
+
       <section className="relative bg-black">
         <img
           src={bgGroupRules}
@@ -49,13 +53,27 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="awards" className="bg-black">
-        <Awards />
+      <section id="awards" className="relative bg-black">
+        <img
+          src={bgAwards}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="relative">
+          <Awards />
+        </div>
       </section>
 
-      <section className="bg-white" data-nav-theme="light">
-        <PartnerLogos />
-        <StaffAndThanks />
+      <section className="relative bg-white" data-nav-theme="light">
+        <img
+          src={bgAwards}
+          alt=""
+          className="pointer-events-none absolute inset-x-0 top-0 h-[60vh] w-full [mask-image:linear-gradient(to_bottom,black,transparent)] object-cover object-bottom"
+        />
+        <div className="relative">
+          <PartnerLogos />
+          <StaffAndThanks />
+        </div>
       </section>
     </div>
   )
