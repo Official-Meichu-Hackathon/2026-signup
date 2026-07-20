@@ -7,6 +7,23 @@ html {
 @theme {
   --font-sans:
     'Noto Sans TC', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --font-chiron: 'Chiron Hei HK', sans-serif;
+  --font-noto-tc: 'Noto Sans TC', sans-serif;
+
+  /* Placeholder design tokens — replace values when the 2026 Canva design
+     tokens arrive. Components reference these names, not raw hex. */
+  --color-darkblue: #2d3e63;
+  --color-lightblue: #d3e4fc;
+  --font-zen: 'Zen Antique', serif;
+  --font-noto: 'Noto Sans', 'Noto Sans TC', sans-serif;
+  /* Strong ease-out — built-in CSS easings are too weak for UI motion */
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  /* Schedule-page StarField pulse. Named twinkle-star so it never collides
+     with the hero/form `twinkle` keyframe below (which is opacity-only and
+     must not clobber the stars' inline positioning transforms). */
+  --animate-twinkle: twinkle-star 3s ease-in-out infinite;
+  --animate-fade-in: fade-in 0.35s ease-out;
 }
 
 @keyframes pop-in-right {
@@ -22,4 +39,99 @@ html {
 
 .animate-pop-in-right {
   animation: pop-in-right 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+  @keyframes twinkle-star {
+    0%,
+    100% {
+      opacity: 0.1;
+      transform: scale(0.7);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+/* Fluid scaling engine — the whole page is sized in rem, so scaling the root
+   font-size makes every rem-based measure (title, nav, rail, card, fields,
+   footer, spacing) shrink/grow together with the viewport, matching the two
+   Figma frames as reference widths and interpolating smoothly between them.
+   Mobile frame = 390px, desktop frame = 1440px, both authored at a 16px base.
+   Container max-widths stay in px (upper bounds only) so they don't
+   double-shrink. Breakpoint layout switch stays at Tailwind's md (768px). */
+:root {
+  /* 390px mobile frame at a 16px base → 1rem = 100vw/24.375 (390 ÷ 16). */
+  font-size: clamp(13px, calc(100vw / 24.375), 16px);
+}
+@media (min-width: 768px) {
+  :root {
+    /* Continuous across the whole desktop range (≈768–1800px) so every
+       rem-based element — including the rem-width side rail — scales with the
+       window instead of freezing. 1440px frame at 16px base → 100vw/90. */
+    font-size: clamp(8.5px, calc(100vw / 90), 20px);
+  }
+}
+
+body {
+  @apply font-noto bg-white text-neutral-900;
+}
+
+/* Glowing title text per the 2026 design (報名方式 / 報名黑客松 heroes) */
+.glow-text {
+  text-shadow:
+    0 0 12px rgba(255, 255, 255, 0.8),
+    0 0 40px rgba(255, 255, 255, 0.45),
+    0 0 80px rgba(160, 180, 255, 0.35);
+}
+
+.glow-text-subtle {
+  text-shadow:
+    0 0 12px rgba(255, 255, 255, 0.45),
+    0 0 30px rgba(160, 180, 255, 0.22);
+}
+
+/* Twinkle — opacity-only so it never fights the stars' rotate/translate
+   transforms or drop-shadow filters. Per-star duration + delay (set inline)
+   keep the whole field blinking out of sync. `-soft` keeps the faint sparkle
+   cluster faint. */
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.05;
+  }
+}
+@keyframes twinkle-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.05;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .twinkle,
+  .twinkle-soft {
+    animation: none !important;
+  }
+  .animate-twinkle {
+    animation: none;
+    opacity: 0.8;
+  }
+  .animate-fade-in {
+    animation: none;
+  }
 }
