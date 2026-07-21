@@ -23,15 +23,15 @@ export default function SuccessView() {
 
       <main className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 text-center">
         {/* Full-width hero so HeroDecorations anchors to page edges like /signup */}
-        <section className="relative flex w-full items-center justify-center">
+        <section className="relative flex w-full translate-y-[4rem] items-center justify-center">
           <HeroDecorations variant="success" />
           {/* Font sizes scale fluidly with the viewport via clamp() (40→100px
               title, 11→25px subtitle) rather than a single md: breakpoint jump. */}
-          <div className="relative z-10 flex flex-col gap-6">
-            <h1 className="font-zen text-center text-[clamp(2.5rem,1.1rem+5.71vw,6.25rem)] leading-[clamp(2.75rem,2.29rem+1.9vw,4rem)] tracking-widest text-[#F6F6F6] [text-shadow:0_4px_40px_rgba(255,255,255,0.20),0_0_20px_rgba(255,255,255,0.35)]">
+          <div className="relative z-10 flex flex-col gap-2 md:gap-8">
+            <h1 className="font-zen -translate-y-4 text-center text-[clamp(2.5rem,1.1rem+5.71vw,6.25rem)] leading-[clamp(2.75rem,2.29rem+1.9vw,4rem)] tracking-widest text-[#F6F6F6] [text-shadow:0_4px_40px_rgba(255,255,255,0.20),0_0_20px_rgba(255,255,255,0.35)]">
               報名成功!
             </h1>
-            <p className="text-[clamp(0.6875rem,0.36rem+1.33vw,1.5625rem)] leading-[clamp(0.8125rem,0.19rem+2.57vw,2.5rem)] font-medium whitespace-nowrap text-white/80 md:font-semibold">
+            <p className="text-[clamp(0.6875rem,0.36rem+1.33vw,1.5625rem)] leading-tight font-medium whitespace-nowrap text-white/80 md:font-semibold">
               我們已收到您的報名資料，請留意後續的 email 通知。
             </p>
           </div>
