@@ -61,32 +61,44 @@ export default function HeroDecorations({
         aria-hidden
         className="pointer-events-none absolute inset-0 hidden overflow-visible select-none md:block"
       >
-        {/* faint sparkle cluster drifting behind / around the title */}
+        {/* faint sparkle cluster (left trio) drifting beside the title.
+            The upper-right pair was split out into sparkle-pair.svg below so it
+            can be positioned independently; margins move each in screen space
+            (they're applied pre-rotation), so this one keeps the left text gap. */}
         <img
           src="/deco/sparkle-cluster.svg"
           alt=""
           draggable={false}
-          className="twinkle-soft absolute top-1/2 left-1/2 -mt-[1.625rem] -ml-[2.125rem] w-[30rem] -translate-x-1/2 -translate-y-1/2 rotate-[110deg] opacity-60"
+          className="twinkle-soft absolute top-1/2 left-1/2 -mt-[1.625rem] -ml-[5rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rotate-[110deg] opacity-60"
           style={{ animation: 'twinkle-soft 6s ease-in-out infinite' }}
+        />
+        {/* upper-right sparkle pair (big + small), split from the cluster so it
+            can sit further up/right without dragging the left sparkles */}
+        <img
+          src="/deco/sparkle-pair.svg"
+          alt=""
+          draggable={false}
+          className="twinkle-soft absolute top-1/2 left-1/2 -mt-[5rem] -ml-[2rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rotate-[110deg] opacity-60"
+          style={{ animation: 'twinkle-soft 6s ease-in-out infinite 0.4s' }}
         />
         {/* meteor streak sweeping in under the title */}
         <img
           src="/deco/meteor-line.svg"
           alt=""
           draggable={false}
-          className="absolute top-1/2 left-1/2 mt-[6.875rem] -ml-[9.1875rem] w-[23.125rem] -translate-x-1/2 -translate-y-1/2 rotate-[5deg]"
+          className="absolute top-1/2 left-1/2 mt-[6.875rem] -ml-[10.75rem] w-[23.125rem] -translate-x-1/2 -translate-y-1/2 rotate-[5deg]"
         />
         {/* small meteor just right of centre */}
         <img
           src="/deco/meteor-dot.svg"
           alt=""
           draggable={false}
-          className="twinkle absolute top-1/2 left-1/2 mt-[7.8125rem] ml-[3.4375rem] w-[3.75rem] -translate-x-1/2 -translate-y-1/2"
+          className="twinkle absolute top-1/2 left-1/2 mt-[7.8125rem] ml-[1.25rem] w-[3.75rem] -translate-x-1/2 -translate-y-1/2"
           style={{ animation: 'twinkle 5.5s ease-in-out infinite 0.3s' }}
         />
         {/* bright 4-point star on the right — shadow lives on the un-rotated
           wrapper so it drops straight down; the img alone carries the rotation */}
-        <div className="absolute top-1/2 right-[7.5%] translate-y-[8.75rem] drop-shadow-[0_10px_4px_rgba(0,0,0,0.25)]">
+        <div className="absolute top-1/2 right-[2%] translate-y-[1rem] drop-shadow-[0_10px_4px_rgba(0,0,0,0.25)]">
           <img
             src="/deco/star-02.png"
             alt=""
@@ -103,6 +115,16 @@ export default function HeroDecorations({
           className="twinkle absolute top-1/2 left-[7%] w-[72.849px] -translate-y-[17.5rem] rotate-[-10deg] drop-shadow-[0_10px_4px_rgba(0,0,0,0.25)]"
           style={{ animation: 'twinkle 3s ease-in-out infinite' }}
         />
+        {/* small lower-left star (Figma 1757:87510) */}
+        <div className="absolute top-1/2 left-[7%] translate-y-[19rem] drop-shadow-[0_10px_4px_rgba(0,0,0,0.25)]">
+          <img
+            src="/deco/star-02.png"
+            alt=""
+            draggable={false}
+            className="twinkle w-[2.42rem] -rotate-[15deg]"
+            style={{ animation: 'twinkle 4.4s ease-in-out infinite 1.2s' }}
+          />
+        </div>
       </div>
     </>
   )
