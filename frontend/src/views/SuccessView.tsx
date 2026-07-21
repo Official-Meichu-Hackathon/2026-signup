@@ -3,27 +3,46 @@ import Footer from '../components/layout/Footer'
 import HeroDecorations from '../components/layout/HeroDecorations'
 
 const BG_MASK = 'linear-gradient(to bottom, black 55%, transparent 100%)'
+// Mobile bottom nebula fade — tighter than the form's 85% to shrink the black gap.
+const BG2_MASK = 'linear-gradient(to bottom, transparent 0%, black 70%)'
 
 export default function SuccessView() {
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden text-white">
       {/* black backdrop behind everything */}
       <div className="fixed inset-0 -z-20 bg-black" />
-      {/* bg-1 nebula, faded at the bottom */}
+      {/* Desktop nebula — bg-top shows more of bg-1's top than bg-center */}
       <div
-        className="absolute inset-0 -z-10 bg-cover bg-center"
+        className="absolute inset-0 -z-10 hidden bg-cover bg-top md:block"
         style={{
           backgroundImage: 'url(/bg-1.png)',
           maskImage: BG_MASK,
           WebkitMaskImage: BG_MASK,
         }}
       />
+      {/* Mobile nebula — form-style bg-1 top + bg-2 bottom, reduced centre gap */}
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden md:hidden">
+        <img
+          src="/bg-1.png"
+          alt=""
+          draggable={false}
+          className="absolute inset-x-0 top-0 block h-auto w-full max-w-none select-none"
+          style={{ maskImage: BG_MASK, WebkitMaskImage: BG_MASK }}
+        />
+        <img
+          src="/bg-2.png"
+          alt=""
+          draggable={false}
+          className="absolute inset-x-0 bottom-0 block h-auto w-full max-w-none select-none"
+          style={{ maskImage: BG2_MASK, WebkitMaskImage: BG2_MASK }}
+        />
+      </div>
 
       <Navbar />
 
       <main className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 text-center">
         {/* Full-width hero so HeroDecorations anchors to page edges like /signup */}
-        <section className="relative flex w-full translate-y-[4rem] items-center justify-center">
+        <section className="relative flex w-full translate-y-[0.5rem] items-center justify-center md:translate-y-[4rem]">
           <HeroDecorations variant="success" />
           {/* Font sizes scale fluidly with the viewport via clamp() (40→100px
               title, 11→25px subtitle) rather than a single md: breakpoint jump. */}
