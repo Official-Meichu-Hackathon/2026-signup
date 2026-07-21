@@ -1,10 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { PROBLEMS } from '../../data/problems'
 import cardBack from '../../assets/Problems/card-back.png'
 import cardDecor from '../../assets/Problems/card-decor.svg'
-import { ProblemCardFace, ZoomedFace } from './ProblemDeck'
+import {
+  ProblemCardFace,
+  ZOOM_CARD_HEIGHT_PER_WIDTH,
+  ZoomedFace,
+} from './ProblemDeck'
 
-const ZOOM_RATIO = 794.9 / 503.4
 const REVEAL_DELAY_MS = 120
 
 const CARD_POSITIONS = [
@@ -36,13 +40,16 @@ function MobileZoomOverlay({
     return () => window.removeEventListener('resize', onResize)
   }, [])
 
-  const width = Math.min(503.4, Math.max(0, viewport.width - 32))
-  const aspectHeight = width * ZOOM_RATIO
-  const height = Math.min(aspectHeight, Math.max(0, viewport.height - 32))
-  const contentScale =
-    aspectHeight === 0 ? 1 : Math.min(1, height / aspectHeight)
+  const width = Math.max(
+    0,
+    Math.min(
+      viewport.width - 32,
+      (viewport.height - 32) / ZOOM_CARD_HEIGHT_PER_WIDTH,
+    ),
+  )
+  const height = width * ZOOM_CARD_HEIGHT_PER_WIDTH
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
       <div
         className="@container relative overflow-hidden"
@@ -56,10 +63,11 @@ function MobileZoomOverlay({
         <ZoomedFace
           problem={PROBLEMS[index]}
           onClose={onClose}
-          contentScale={contentScale}
+          contentScale={1}
         />
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }
 
@@ -155,8 +163,14 @@ export default function MobileProblemDeck() {
             </button>
           )
         })}
-        <p className="font-noto text-ink pointer-events-none absolute top-[40%] left-1/2 -translate-x-1/2 text-center text-[12px] font-semibold">
-          Hack group
+        <p
+          className="font-zen pointer-events-none absolute top-[40%] left-1/2 flex h-[54px] w-[170px] -translate-x-1/2 items-center justify-center text-center text-[14px] leading-[15.6px] font-normal text-[#f6f6f6]"
+          style={{
+            textShadow:
+              '0 0 20px rgba(255, 255, 255, 0.35), 0 4px 40px rgba(255, 255, 255, 0.2)',
+          }}
+        >
+          黑客組
         </p>
       </section>
       {selected !== null && (

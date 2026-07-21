@@ -29,7 +29,7 @@ const CARD_RADIUS = px(24.486) // 16.4
 // 相當於把設計稿的放大卡整張等比放大，字級才會跟著變大（內文 ≈15px）。
 const ZOOM = 2.7324
 const ZOOM_W = CARD_W * ZOOM // 503.4
-const ZOOM_H = CARD_H * ZOOM
+export const ZOOM_CARD_HEIGHT_PER_WIDTH = 1181.956 / 662.552
 const zpx = (n: number) => n * S * (ZOOM / 2.7324)
 const zoomCq = (n: number) => `${((n / ZOOM_W) * 100).toFixed(4)}cqw`
 const ZOOM_RADIUS = zpx(15.671) // 11.9
@@ -39,24 +39,38 @@ const ROW_GAP = px(94) // 63
 const MOBILE_BREAKPOINT = 768
 const MOBILE_GUTTER = 48
 
-const getResponsiveZoomWidth = (deckWidth: number, viewportWidth: number) =>
-  viewportWidth < MOBILE_BREAKPOINT
-    ? Math.max(0, viewportWidth - MOBILE_GUTTER)
-    : (ZOOM_W / DECK_W) * deckWidth
+const getResponsiveZoomWidth = (
+  deckWidth: number,
+  viewportWidth: number,
+  viewportHeight: number,
+) => {
+  const idealWidth =
+    viewportWidth < MOBILE_BREAKPOINT
+      ? Math.max(0, viewportWidth - MOBILE_GUTTER)
+      : (ZOOM_W / DECK_W) * deckWidth
 
-const getResponsiveZoomHeight = (zoomWidth: number, viewportHeight: number) =>
-  Math.min(zoomWidth * (ZOOM_H / ZOOM_W), Math.max(0, viewportHeight - 48))
+  const heightLimitedWidth = Math.max(
+    0,
+    (viewportHeight - 48) / ZOOM_CARD_HEIGHT_PER_WIDTH,
+  )
+
+  return Math.min(idealWidth, heightLimitedWidth)
+}
+
+const getResponsiveZoomHeight = (zoomWidth: number) =>
+  zoomWidth * ZOOM_CARD_HEIGHT_PER_WIDTH
 
 const getResponsiveZoomRise = (
   deckWidth: number,
   viewportWidth: number,
   viewportHeight: number,
 ) => {
-  const zoomWidth = getResponsiveZoomWidth(deckWidth, viewportWidth)
-  return (
-    getResponsiveZoomHeight(zoomWidth, viewportHeight) +
-    (ROW_GAP / DECK_W) * deckWidth
+  const zoomWidth = getResponsiveZoomWidth(
+    deckWidth,
+    viewportWidth,
+    viewportHeight,
   )
+  return getResponsiveZoomHeight(zoomWidth) + (ROW_GAP / DECK_W) * deckWidth
 }
 
 // 白卡光暈（390:377）：0 4px 50px / 0 4px 40px / 0 0 20px，白色 50%
@@ -391,12 +405,14 @@ export default function ProblemDeck() {
     window.scrollTo({ top: Math.max(0, target - 32), behavior: 'smooth' })
   }, [zoomed, viewportWidth, viewportHeight])
 
-  const responsiveZoomWidth = getResponsiveZoomWidth(deckWidth, viewportWidth)
-  const responsiveZoomHeight = getResponsiveZoomHeight(
-    responsiveZoomWidth,
+  const responsiveZoomWidth = getResponsiveZoomWidth(
+    deckWidth,
+    viewportWidth,
     viewportHeight,
   )
-  const responsiveZoomAspectHeight = responsiveZoomWidth * (ZOOM_H / ZOOM_W)
+  const responsiveZoomHeight = getResponsiveZoomHeight(responsiveZoomWidth)
+  const responsiveZoomAspectHeight =
+    responsiveZoomWidth * ZOOM_CARD_HEIGHT_PER_WIDTH
   const contentScale = Math.min(
     1,
     responsiveZoomHeight / responsiveZoomAspectHeight,

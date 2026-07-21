@@ -18,7 +18,10 @@ function App() {
       <Routes>
         <Route path="/" element={<HomeView />} />
         <Route path="/problems" element={<ProblemsView />} />
-        <Route path="/problems/mobile" element={<MobileProblemsView />} />
+        <Route
+          path="/problems/mobile"
+          element={<MobileProblemsView forcePreview />}
+        />
         <Route path="/stats" element={<StatsView />} />
       </Routes>
     </BrowserRouter>

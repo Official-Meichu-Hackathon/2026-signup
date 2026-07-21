@@ -9,11 +9,11 @@ import logoNav from '../assets/Problems/logo-nav.png'
 
 export default function ProblemsView() {
   const [isMobile, setIsMobile] = useState(
-    () => window.matchMedia('(max-width: 767px)').matches,
+    () => window.matchMedia('(max-width: 480px)').matches,
   )
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(max-width: 767px)')
+    const mediaQuery = window.matchMedia('(max-width: 480px)')
     const onChange = (event: MediaQueryListEvent) => setIsMobile(event.matches)
     mediaQuery.addEventListener('change', onChange)
     return () => mediaQuery.removeEventListener('change', onChange)
