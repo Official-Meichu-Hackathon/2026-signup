@@ -174,19 +174,19 @@ function HeroPhoto({ progress }: { progress: MotionValue<number> }) {
     [HERO_APPEAR_START, HERO_APPEAR_END],
     [0.4, 1],
   )
-  const opacity = useTransform(
+  // 不是淡入/淡出，而是從模糊逐漸變清楚，圖片本身沒有漸層透明度動畫
+  const filter = useTransform(
     progress,
-    [
-      HERO_APPEAR_START,
-      HERO_APPEAR_START + (HERO_APPEAR_END - HERO_APPEAR_START) * 0.4,
-    ],
-    [0, 1],
+    [HERO_APPEAR_START, HERO_APPEAR_END],
+    ['blur(25px)', 'blur(0px)'],
   )
+  // 在照片輪播結束前完全不出現，時間一到才瞬間切換顯示（不是漸層淡入）
+  const opacity = useTransform(progress, (p) => (p < HERO_APPEAR_START ? 0 : 1))
 
   return (
     <motion.div
-      style={{ scale, opacity }}
-      className="absolute top-1/2 left-1/2 z-20 -mt-[17vw] -ml-[27vw] aspect-[16/10] w-[54vw] max-w-[620px] overflow-hidden shadow-[0px_20px_50px_0px_rgba(0,0,0,0.45)]"
+      style={{ scale, filter, opacity }}
+      className="absolute top-1/2 left-1/2 z-20 -mt-[44vh] -ml-[43.5vw] h-[88vh] w-[87vw] overflow-hidden shadow-[0px_20px_50px_0px_rgba(0,0,0,0.45)]"
     >
       {HERO_PHOTO.src ? (
         <img
@@ -210,12 +210,6 @@ export default function EventVision() {
     offset: ['start start', 'end end'],
   })
 
-  const textOpacity = useTransform(
-    scrollYProgress,
-    [0, SEQUENCE_END * 0.85, SEQUENCE_END],
-    [1, 1, 0],
-  )
-
   return (
     <section
       id="vision"
@@ -229,10 +223,7 @@ export default function EventVision() {
           alt=""
           className="absolute inset-0 h-full w-full object-cover"
         />
-        <motion.div
-          style={{ opacity: textOpacity }}
-          className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-6 px-6 text-center"
-        >
+        <div className="pointer-events-none absolute inset-0 z-30 flex flex-col items-center justify-center gap-6 px-6 text-center">
           <div className="relative">
             <Sparkle
               variant="bright"
@@ -251,7 +242,7 @@ export default function EventVision() {
               <p key={paragraph.slice(0, 8)}>{paragraph}</p>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {SEQUENCE_PHOTOS.map((photo, i) => (
           <SequencePhotoItem

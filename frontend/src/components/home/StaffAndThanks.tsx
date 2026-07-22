@@ -6,6 +6,7 @@ import staffEvents from '../../assets/home/staff-events.jpg'
 import staffFinance from '../../assets/home/staff-finance.jpg'
 import staffDesign from '../../assets/home/staff-design.jpg'
 import staffDev from '../../assets/home/staff-dev.jpg'
+import tabsGlow from '../../assets/home/staff-tabs-bg.svg'
 
 const DEPARTMENTS = [
   '行政部',
@@ -113,7 +114,12 @@ export default function StaffAndThanks() {
         className="flex w-full flex-col items-center gap-8 md:gap-[48px]"
       >
         <SectionTitle>工作人員名單</SectionTitle>
-        <div className="w-full">
+        <div className="relative w-full">
+          <img
+            src={tabsGlow}
+            alt=""
+            className="pointer-events-none absolute inset-0 -z-10 h-full w-full"
+          />
           <div className="flex flex-wrap">
             {DEPARTMENTS.map((d) => (
               <button

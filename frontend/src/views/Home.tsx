@@ -59,6 +59,11 @@ export default function Home() {
           alt=""
           className="absolute inset-0 h-full w-full object-cover"
         />
+        <img
+          src={bgGroupRules}
+          alt=""
+          className="pointer-events-none absolute inset-x-0 top-0 h-[50vh] w-full [mask-image:linear-gradient(to_bottom,black,transparent)] object-cover object-bottom"
+        />
         <div className="relative">
           <Awards />
         </div>
