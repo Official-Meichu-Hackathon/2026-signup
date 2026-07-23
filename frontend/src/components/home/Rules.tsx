@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import tabsGlow from '../../assets/home/staff-tabs-bg.svg'
 
 type GroupKey = 'hacker' | 'maker'
 
@@ -19,7 +20,12 @@ export default function Rules() {
         比賽規則
       </p>
 
-      <div className="w-full">
+      <div className="relative w-full">
+        <img
+          src={tabsGlow}
+          alt=""
+          className="pointer-events-none absolute inset-0 -z-10 h-full w-full"
+        />
         <div className="flex flex-wrap">
           {TABS.map(({ key, label }) => (
             <button

@@ -1,7 +1,13 @@
-import heroBg from '../assets/home/hero-bg-plain.jpg'
+import { useEffect, useRef, useState } from 'react'
+import { useMotionValueEvent, useScroll } from 'motion/react'
+import bg1 from '../assets/home/bg-01.jpg'
+import bg2 from '../assets/home/bg-02.jpg'
+import bg3 from '../assets/home/bg-03.jpg'
+import bg4 from '../assets/home/bg-04.png'
+import bg5 from '../assets/home/bg-05.png'
 import heroTitle from '../assets/home/hero-title-overlay.png'
 import heroCta from '../assets/home/hero-cta-overlay.png'
-import bgGroupRules from '../assets/home/bg-groupintro-rules.png'
+import EventVision from '../components/home/EventVision'
 import GroupIntro from '../components/home/GroupIntro'
 import Rules from '../components/home/Rules'
 import Awards from '../components/home/Awards'
@@ -9,20 +15,59 @@ import PartnerLogos from '../components/home/PartnerLogos'
 import StaffAndThanks from '../components/home/StaffAndThanks'
 import FloatingNav from '../components/home/FloatingNav'
 
+const BACKGROUND_SEQUENCE = [bg1, bg2, bg3, bg4, bg5]
+
 export default function Home() {
+  const trackRef = useRef<HTMLDivElement>(null)
+  const [frozenRange, setFrozenRange] = useState({ start: 0, height: 0 })
+  const { scrollY } = useScroll()
+
+  useEffect(() => {
+    function measure() {
+      const vision = document.getElementById('vision')
+      if (!vision) return
+      setFrozenRange({
+        start: vision.offsetTop,
+        height: Math.max(0, vision.offsetHeight - window.innerHeight),
+      })
+    }
+    measure()
+    window.addEventListener('resize', measure)
+    return () => window.removeEventListener('resize', measure)
+  }, [])
+
+  useMotionValueEvent(scrollY, 'change', (y) => {
+    const { start, height } = frozenRange
+    const end = start + height
+    let effective = y
+    if (y > start && y <= end) effective = start
+    else if (y > end) effective = y - height
+    if (trackRef.current) {
+      trackRef.current.style.transform = `translateY(${-effective}px)`
+    }
+  })
+
   return (
-    <div className="font-sans">
+    <div className="relative font-sans">
+      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+        <div ref={trackRef} className="flex w-full flex-col">
+          {BACKGROUND_SEQUENCE.map((bg) => (
+            <img
+              key={bg}
+              src={bg}
+              alt=""
+              className="min-h-0 w-full object-cover"
+            />
+          ))}
+        </div>
+      </div>
+
       <FloatingNav />
 
       <section
         id="intro"
-        className="relative aspect-[1440/1024] w-full overflow-hidden bg-black"
+        className="relative aspect-[1440/1024] w-full overflow-hidden"
       >
-        <img
-          src={heroBg}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover"
-        />
         <img
           src={heroTitle}
           alt="梅竹黑客松 14th"
@@ -37,23 +82,18 @@ export default function Home() {
         />
       </section>
 
-      <section className="relative bg-black">
-        <img
-          src={bgGroupRules}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="relative">
-          <GroupIntro />
-          <Rules />
-        </div>
+      <EventVision />
+
+      <section className="relative">
+        <GroupIntro />
+        <Rules />
       </section>
 
-      <section id="awards" className="bg-black">
+      <section id="awards" className="relative">
         <Awards />
       </section>
 
-      <section className="bg-white" data-nav-theme="light">
+      <section className="relative" data-nav-theme="light">
         <PartnerLogos />
         <StaffAndThanks />
       </section>
