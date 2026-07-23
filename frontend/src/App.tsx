@@ -11,14 +11,21 @@ import SuccessView from './views/SuccessView'
 
 // Owns its own Navbar/Footer rather than relying on a global App-level
 // wrapper — ScheduleView does the same (see its own <Navbar />/<Footer />),
-// since each page places Footer differently (fixed overlay here vs.
-// absolute-positioned over ScheduleView's nebula art).
+// since each page places Footer differently (static, on a purple card here,
+// vs. absolute-positioned over ScheduleView's nebula art). Footer's own text
+// is always white, so it needs a backdrop of its own — Home's last section is
+// `bg-white` (see its `data-nav-theme="light"` section), unlike every other
+// page which stays dark all the way down. The purple frosted-glass card is
+// the same treatment Footer itself used before it was made fully transparent
+// for the dark pages (see git history on Footer.tsx, node 786:4617/1368:61523).
 function HomeView() {
   return (
     <>
       <Navbar />
       <Home />
-      <Footer />
+      <div className="bg-[rgba(177,162,202,0.56)] shadow-[0px_10px_30px_0px_rgba(0,0,0,0.25),inset_0px_1px_8px_0px_rgba(255,255,255,0.5)] backdrop-blur-[35px]">
+        <Footer />
+      </div>
     </>
   )
 }

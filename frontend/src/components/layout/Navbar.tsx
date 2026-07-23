@@ -1,10 +1,41 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import logo from '../../assets/meichuhackathon.png'
 import MobileNavMenu from './MobileNavMenu'
 
+// Header height it's checking against (py-4 + h-12 logo) — keep in sync with
+// the header's own padding/logo size below.
+const NAV_HEIGHT = 80
+
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+  // Mirrors FloatingNav's approach: sections opt into a light background via
+  // `data-nav-theme="light"` (see Home.tsx's white PartnerLogos/StaffAndThanks
+  // section), and the header swaps to dark text/icons while it overlaps one —
+  // otherwise the white logo/button/hamburger disappear against white.
+  const [onLightBg, setOnLightBg] = useState(false)
+
+  useEffect(() => {
+    function checkBackground() {
+      const lightSections = document.querySelectorAll(
+        '[data-nav-theme="light"]',
+      )
+      let over = false
+      lightSections.forEach((el) => {
+        const rect = el.getBoundingClientRect()
+        if (rect.top < NAV_HEIGHT && rect.bottom > 0) over = true
+      })
+      setOnLightBg(over)
+    }
+
+    checkBackground()
+    window.addEventListener('scroll', checkBackground, { passive: true })
+    window.addEventListener('resize', checkBackground)
+    return () => {
+      window.removeEventListener('scroll', checkBackground)
+      window.removeEventListener('resize', checkBackground)
+    }
+  }, [])
 
   return (
     <>
@@ -20,12 +51,20 @@ export default function Navbar() {
           to="/"
           className={`transition duration-300 ${menuOpen ? 'pointer-events-none opacity-30 blur-[2px]' : ''}`}
         >
-          <img src={logo} alt="梅竹黑客松" className="h-12 w-auto" />
+          <img
+            src={logo}
+            alt="梅竹黑客松"
+            className={`h-12 w-auto transition duration-300 ${onLightBg ? 'invert' : ''}`}
+          />
         </Link>
         <div className="flex items-center gap-4">
           <Link
             to="/signup"
-            className={`rounded-full border border-white/20 bg-white/10 px-5 py-1.5 text-sm text-white backdrop-blur transition duration-300 hover:bg-white/20 ${menuOpen ? 'pointer-events-none opacity-30 blur-[2px]' : ''}`}
+            className={`rounded-full border px-5 py-1.5 text-sm backdrop-blur transition duration-300 ${
+              onLightBg
+                ? 'border-black/20 bg-black/5 text-neutral-900 hover:bg-black/10'
+                : 'border-white/20 bg-white/10 text-white hover:bg-white/20'
+            } ${menuOpen ? 'pointer-events-none opacity-30 blur-[2px]' : ''}`}
           >
             點我報名
           </Link>
@@ -34,7 +73,7 @@ export default function Navbar() {
             aria-label={menuOpen ? '關閉選單' : '選單'}
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((open) => !open)}
-            className={`text-white transition duration-300 hover:opacity-70 ${menuOpen ? 'pointer-events-none opacity-30 blur-[2px]' : ''}`}
+            className={`transition duration-300 hover:opacity-70 ${onLightBg ? 'text-neutral-900' : 'text-white'} ${menuOpen ? 'pointer-events-none opacity-30 blur-[2px]' : ''}`}
           >
             <svg
               viewBox="0 0 24 24"
