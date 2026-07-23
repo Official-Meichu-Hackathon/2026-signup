@@ -9,6 +9,7 @@ const PRIORITY_WIDTH = PRIORITY_OPTIONS.length
 // [timestamp, groupName, playerCount, crossDomain, priority1..8,
 //  name, gender, birthday, idNumber, identity, school, department, grade,
 //  occupation, email, phone, dietaryRestrictions, shirtSize,
+//  selfIntro, motivation, project, competitionExp,
 //  assentFirst, assentSecond, lowIncomeProofFilename,
 //  workshopAttendance, ceremonyAttendance]
 // The timestamp cell is filled in by the Apps Script.
@@ -35,6 +36,10 @@ export function buildRows(data: RegistrationData): SheetCell[][] {
     player.phone,
     player.dietaryRestrictions,
     player.shirtSize,
+    player.selfIntro,
+    player.motivation,
+    player.project,
+    player.competitionExp,
   ]
 
   const firstRow: SheetCell[] = [
