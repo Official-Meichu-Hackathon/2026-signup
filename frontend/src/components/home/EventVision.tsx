@@ -14,7 +14,6 @@ import activityImage10 from '../../assets/home/activity/image-10.jpg'
 import activityImage11 from '../../assets/home/activity/image-11.jpg'
 import activityImage12 from '../../assets/home/activity/image-12.jpg'
 import activityHero from '../../assets/home/activity/hero.jpg'
-import visionBackground from '../../assets/home/background-1.png'
 
 const clamp01 = (n: number) => Math.min(1, Math.max(0, n))
 
@@ -214,15 +213,10 @@ export default function EventVision() {
     <section
       id="vision"
       ref={sectionRef}
-      className="relative bg-black"
+      className="relative"
       style={{ height: `${SECTION_HEIGHT_VH}vh` }}
     >
       <div className="sticky top-0 h-screen w-full overflow-hidden">
-        <img
-          src={visionBackground}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover"
-        />
         <div className="pointer-events-none absolute inset-0 z-30 flex flex-col items-center justify-center gap-6 px-6 text-center">
           <div className="relative">
             <Sparkle

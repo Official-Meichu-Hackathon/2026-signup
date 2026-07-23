@@ -18,7 +18,7 @@ function HomeView() {
     <>
       <Navbar />
       <Home />
-      <Footer className="fixed bottom-0 left-0 z-40" />
+      <Footer />
     </>
   )
 }
