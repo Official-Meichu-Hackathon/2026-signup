@@ -8,8 +8,10 @@ import ChoiceQuestion from '../components/form/ChoiceQuestion'
 import SortableQuestion from '../components/form/SortableQuestion'
 import FileUpload from '../components/form/FileUpload'
 import PlayerTabs from '../components/form/PlayerTabs'
+import QuestionHeader from '../components/form/QuestionHeader'
 import {
   createPlayerData,
+  EXPERIENCE_MAX,
   GENDER_OPTIONS,
   IDENTITY_OPTIONS,
   MAKER_PRIORITY_OPTIONS,
@@ -25,6 +27,7 @@ import {
   validateBirthday,
   validateEmail,
   validateGroupName,
+  validateMaxLength,
   validatePhoneNumber,
 } from '../lib/validators'
 import { submitRegistration } from '../lib/submit'
@@ -141,7 +144,15 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
     validateEmail(player.email) &&
     validatePhoneNumber(player.phone) &&
     player.dietaryRestrictions.trim() !== '' &&
-    player.shirtSize !== ''
+    player.shirtSize !== '' &&
+    player.selfIntro.trim() !== '' &&
+    player.motivation.trim() !== '' &&
+    player.project.trim() !== '' &&
+    player.competitionExp.trim() !== '' &&
+    validateMaxLength(EXPERIENCE_MAX)(player.selfIntro) &&
+    validateMaxLength(EXPERIENCE_MAX)(player.motivation) &&
+    validateMaxLength(EXPERIENCE_MAX)(player.project) &&
+    validateMaxLength(EXPERIENCE_MAX)(player.competitionExp)
 
   const assentOk = assentFirst === '是' && assentSecond === '是'
   // 清寒證明 upload is optional despite the design's ★.
@@ -337,6 +348,39 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
             options={SHIRT_SIZE_OPTIONS}
             value={players[index].shirtSize}
             onChange={(v) => updatePlayer(index, 'shirtSize', v)}
+          />
+
+          {/* 參賽者經歷: 4 free-text fields, each ≤100 chars */}
+          <div className="pt-4 md:pt-8">
+            <QuestionHeader title="★參賽者經歷" />
+          </div>
+          <TextQuestion
+            title="1.自介（限100字以內）"
+            value={players[index].selfIntro}
+            onChange={(v) => updatePlayer(index, 'selfIntro', v)}
+            validate={validateMaxLength(EXPERIENCE_MAX)}
+            invalidMessage="字數超過限制！請保持在 100 字以內"
+          />
+          <TextQuestion
+            title="2.參加動機（限100字以內）"
+            value={players[index].motivation}
+            onChange={(v) => updatePlayer(index, 'motivation', v)}
+            validate={validateMaxLength(EXPERIENCE_MAX)}
+            invalidMessage="字數超過限制！請保持在 100 字以內"
+          />
+          <TextQuestion
+            title="3.專案（限100字以內）"
+            value={players[index].project}
+            onChange={(v) => updatePlayer(index, 'project', v)}
+            validate={validateMaxLength(EXPERIENCE_MAX)}
+            invalidMessage="字數超過限制！請保持在 100 字以內"
+          />
+          <TextQuestion
+            title="4.競賽經歷（不限黑客松）（限100字以內）"
+            value={players[index].competitionExp}
+            onChange={(v) => updatePlayer(index, 'competitionExp', v)}
+            validate={validateMaxLength(EXPERIENCE_MAX)}
+            invalidMessage="字數超過限制！請保持在 100 字以內"
           />
         </FormStep>
       ))}
