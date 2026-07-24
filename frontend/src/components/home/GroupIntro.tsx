@@ -57,15 +57,17 @@ export default function GroupIntro() {
       className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 py-16 sm:flex-row sm:gap-10 lg:gap-16 xl:gap-[151px]"
     >
       <div
-        className="flex shrink-0 flex-row px-6 sm:flex-col sm:px-0"
+        className="flex shrink-0 flex-row items-end px-6 sm:relative sm:left-[calc(50%-50vw)] sm:flex-col sm:items-start sm:px-0"
         data-node-id="617:1329"
       >
         {TABS.map(({ key, label }) => (
           <button
             key={key}
             onClick={() => setTab(key)}
-            className={`cursor-pointer rounded-t-[30px] border border-white/20 bg-gradient-to-br from-white/[0.14] to-white/[0.028] px-6 py-4 text-center font-medium text-white shadow-[0px_10px_30px_0px_rgba(0,0,0,0.25)] backdrop-blur-[35px] transition-opacity sm:w-[130px] sm:rounded-t-none sm:rounded-r-[65px] sm:px-[30px] sm:py-[24px] ${
-              tab === key ? 'opacity-100' : 'opacity-60'
+            className={`relative flex cursor-pointer items-center justify-center rounded-t-[30px] border bg-gradient-to-br px-6 py-4 text-center font-semibold text-white backdrop-blur-[35px] transition-all duration-300 ease-out sm:h-[140px] sm:w-[80px] sm:rounded-t-none sm:rounded-r-[50px] sm:border-l-0 sm:px-0 sm:py-6 sm:text-xl sm:leading-none sm:tracking-[0.45em] sm:[writing-mode:vertical-rl] ${
+              tab === key
+                ? 'z-10 border-white/45 from-white/[0.27] to-white/[0.08] opacity-100 shadow-[8px_12px_32px_rgba(0,0,0,0.38),inset_-2px_2px_10px_rgba(255,255,255,0.42),0_0_22px_rgba(176,200,255,0.2)] sm:w-[100px]'
+                : 'z-0 border-white/20 from-white/[0.11] to-white/[0.02] opacity-55 shadow-[6px_8px_20px_rgba(0,0,0,0.24),inset_-1px_1px_6px_rgba(255,255,255,0.14)] hover:opacity-75'
             }`}
           >
             {label}

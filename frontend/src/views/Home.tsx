@@ -15,25 +15,42 @@ import PartnerLogos from '../components/home/PartnerLogos'
 import StaffAndThanks from '../components/home/StaffAndThanks'
 import FloatingNav from '../components/home/FloatingNav'
 
-const BACKGROUND_SEQUENCE = [bg1, bg2, bg3, bg4, bg5]
+const BACKGROUND_SEQUENCE = [bg1, bg2, bg3, bg4]
 
 export default function Home() {
   const trackRef = useRef<HTMLDivElement>(null)
   const [frozenRange, setFrozenRange] = useState({ start: 0, height: 0 })
+  const [bg5Start, setBg5Start] = useState<number | null>(null)
   const { scrollY } = useScroll()
 
   useEffect(() => {
     function measure() {
       const vision = document.getElementById('vision')
-      if (!vision) return
-      setFrozenRange({
-        start: vision.offsetTop,
-        height: Math.max(0, vision.offsetHeight - window.innerHeight),
-      })
+      if (vision) {
+        setFrozenRange({
+          start: vision.offsetTop,
+          height: Math.max(0, vision.offsetHeight - window.innerHeight),
+        })
+      }
+
+      const rules = document.getElementById('rules')
+      if (rules) {
+        const rulesTop = rules.getBoundingClientRect().top + window.scrollY
+        setBg5Start(rulesTop + rules.offsetHeight * 0.7)
+      }
     }
+
     measure()
     window.addEventListener('resize', measure)
-    return () => window.removeEventListener('resize', measure)
+
+    const rules = document.getElementById('rules')
+    const resizeObserver = new ResizeObserver(measure)
+    if (rules) resizeObserver.observe(rules)
+
+    return () => {
+      window.removeEventListener('resize', measure)
+      resizeObserver.disconnect()
+    }
   }, [])
 
   useMotionValueEvent(scrollY, 'change', (y) => {
@@ -49,7 +66,7 @@ export default function Home() {
 
   return (
     <div className="relative font-sans">
-      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-black">
         <div ref={trackRef} className="flex w-full flex-col">
           {BACKGROUND_SEQUENCE.map((bg) => (
             <img
@@ -61,6 +78,24 @@ export default function Home() {
           ))}
         </div>
       </div>
+
+      {bg5Start !== null && (
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-0 overflow-hidden bg-white"
+          style={{ top: `${bg5Start}px` }}
+        >
+          <img src={bg5} alt="" className="h-auto w-full" />
+          <div
+            className="absolute inset-x-0 top-0 h-[min(28vw,400px)] bg-black"
+            style={{
+              maskImage:
+                'linear-gradient(to bottom, black 0%, transparent 100%)',
+              WebkitMaskImage:
+                'linear-gradient(to bottom, black 0%, transparent 100%)',
+            }}
+          />
+        </div>
+      )}
 
       <FloatingNav />
 

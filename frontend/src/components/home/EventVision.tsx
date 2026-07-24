@@ -231,7 +231,7 @@ export default function EventVision() {
               活動願景
             </p>
           </div>
-          <div className="flex max-w-[720px] flex-col gap-4 text-justify text-sm leading-[1.9] text-white/90 md:text-base">
+          <div className="flex max-w-[1200px] flex-col gap-4 px-[60px] text-justify text-base leading-[1.9] text-white/90 md:text-[20px]">
             {VISION_PARAGRAPHS.map((paragraph) => (
               <p key={paragraph.slice(0, 8)}>{paragraph}</p>
             ))}

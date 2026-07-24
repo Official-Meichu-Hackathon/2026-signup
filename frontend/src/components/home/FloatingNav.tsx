@@ -59,7 +59,7 @@ export default function FloatingNav() {
   }, [])
 
   return (
-    <nav className="group fixed bottom-6 left-6 z-50" style={cssVars}>
+    <nav className="group fixed bottom-10 left-6 z-50" style={cssVars}>
       <div
         className={`flex h-[var(--nav-h)] max-w-[var(--nav-collapsed-w)] items-center gap-[var(--nav-gap)] overflow-hidden rounded-full border border-white/10 px-[var(--nav-px)] shadow-[0px_4px_12px_0px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-[max-width,background-color] duration-500 ease-out group-hover:max-w-[var(--nav-expanded-w)] ${
           onLightBg
