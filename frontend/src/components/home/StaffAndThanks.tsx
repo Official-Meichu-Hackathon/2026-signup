@@ -65,7 +65,7 @@ const STAFF: Record<
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-center font-['Zen_Antique'] text-2xl text-[#b1a2ca] [text-shadow:0px_0px_20px_rgba(255,255,255,0.35),0px_4px_40px_rgba(255,255,255,0.2)] md:text-[35px]">
+    <p className="staff-section-title text-center font-['Zen_Antique'] text-2xl text-[#b1a2ca] [text-shadow:0px_0px_20px_rgba(255,255,255,0.35),0px_4px_40px_rgba(255,255,255,0.2)] md:text-[35px]">
       {children}
     </p>
   )
@@ -73,11 +73,14 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 
 export default function StaffAndThanks() {
   const [dept, setDept] = useState<(typeof DEPARTMENTS)[number]>('行政部')
+  const [mobileDept, setMobileDept] = useState<
+    (typeof DEPARTMENTS)[number] | null
+  >(null)
   const { photo, members } = STAFF[dept]
 
   return (
-    <div className="mx-auto flex w-full max-w-[1113px] flex-col items-center gap-16 px-6 py-16 md:gap-[80px]">
-      <div className="flex flex-col items-center gap-8 text-center md:gap-[48px]">
+    <div className="staff-and-thanks mx-auto flex w-full max-w-[1113px] flex-col items-center gap-16 px-6 py-16 md:gap-[80px]">
+      <div className="thanks-block flex flex-col items-center gap-8 text-center md:gap-[48px]">
         <p className="font-['Zen_Antique'] text-2xl text-[#b1a2ca] [text-shadow:0px_0px_20px_rgba(255,255,255,0.5),0px_4px_40px_rgba(255,255,255,0.5)] md:text-[35px]">
           協辦單位
         </p>
@@ -87,7 +90,7 @@ export default function StaffAndThanks() {
         </div>
       </div>
 
-      <div className="flex flex-col items-center gap-8 text-center md:gap-[48px]">
+      <div className="thanks-block flex flex-col items-center gap-8 text-center md:gap-[48px]">
         <p className="font-['Zen_Antique'] text-2xl text-[#b1a2ca] [text-shadow:0px_0px_20px_rgba(255,255,255,0.5),0px_4px_40px_rgba(255,255,255,0.5)] md:text-[35px]">
           特別感謝
         </p>
@@ -98,19 +101,19 @@ export default function StaffAndThanks() {
         </div>
       </div>
 
-      <div className="flex w-full max-w-[917px] flex-col items-center gap-8 md:gap-[49px]">
+      <div className="media-block flex w-full max-w-[917px] flex-col items-center gap-8 md:gap-[49px]">
         <SectionTitle>企業廣告</SectionTitle>
         <div className="h-[300px] w-full bg-[#f4f5f5] md:h-[491px]" />
       </div>
 
-      <div className="flex w-full max-w-[917px] flex-col items-center gap-8 md:gap-[49px]">
+      <div className="media-block flex w-full max-w-[917px] flex-col items-center gap-8 md:gap-[49px]">
         <SectionTitle>YouTube影片</SectionTitle>
         <div className="h-[300px] w-full bg-[#f4f5f5] md:h-[491px]" />
       </div>
 
       <div
         id="staff"
-        className="flex w-full flex-col items-center gap-8 md:gap-[48px]"
+        className="staff-desktop flex w-full flex-col items-center gap-8 md:gap-[48px]"
       >
         <SectionTitle>工作人員名單</SectionTitle>
         <div className="relative w-full">
@@ -142,6 +145,37 @@ export default function StaffAndThanks() {
               ))}
             </div>
           </div>
+        </div>
+      </div>
+
+      <div className="staff-mobile">
+        <SectionTitle>工作人員名單</SectionTitle>
+        <div className="staff-mobile-list">
+          {DEPARTMENTS.map((department) => {
+            const expanded = mobileDept === department
+            return (
+              <div
+                key={department}
+                className={`staff-mobile-row ${expanded ? 'is-expanded' : ''}`}
+              >
+                <button
+                  type="button"
+                  aria-expanded={expanded}
+                  onClick={() => setMobileDept(expanded ? null : department)}
+                >
+                  <span>{department}</span>
+                  <span aria-hidden>{expanded ? '−' : '+'}</span>
+                </button>
+                {expanded && (
+                  <div className="staff-mobile-members">
+                    {STAFF[department].members.map((line) => (
+                      <p key={line}>{line}</p>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )
+          })}
         </div>
       </div>
     </div>

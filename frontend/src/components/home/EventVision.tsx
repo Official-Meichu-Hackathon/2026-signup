@@ -213,10 +213,23 @@ export default function EventVision() {
     <section
       id="vision"
       ref={sectionRef}
-      className="relative"
+      className="home-vision-section relative"
       style={{ height: `${SECTION_HEIGHT_VH}vh` }}
     >
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
+      <div className="vision-mobile">
+        <img
+          src={HERO_PHOTO.src}
+          alt="梅竹黑客松活動大合照"
+          className="vision-mobile-photo"
+        />
+        <div className="vision-mobile-copy">
+          {VISION_PARAGRAPHS.map((paragraph) => (
+            <p key={paragraph.slice(0, 8)}>{paragraph}</p>
+          ))}
+        </div>
+      </div>
+
+      <div className="vision-desktop sticky top-0 h-screen w-full overflow-hidden">
         <div className="pointer-events-none absolute inset-0 z-30 flex flex-col items-center justify-center gap-6 px-6 text-center">
           <div className="relative">
             <Sparkle

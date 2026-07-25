@@ -65,9 +65,12 @@ export default function Home() {
   })
 
   return (
-    <div className="relative font-sans">
-      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-black">
-        <div ref={trackRef} className="flex w-full flex-col">
+    <div className="home-page relative font-sans">
+      <div className="home-background pointer-events-none fixed inset-0 z-0 overflow-hidden bg-black">
+        <div
+          ref={trackRef}
+          className="home-background-track flex w-full flex-col"
+        >
           {BACKGROUND_SEQUENCE.map((bg) => (
             <img
               key={bg}
@@ -81,7 +84,7 @@ export default function Home() {
 
       {bg5Start !== null && (
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-0 overflow-hidden bg-white"
+          className="home-light-background pointer-events-none absolute inset-x-0 bottom-0 z-0 overflow-hidden bg-white"
           style={{ top: `${bg5Start}px` }}
         >
           <img src={bg5} alt="" className="h-auto w-full" />
@@ -101,18 +104,18 @@ export default function Home() {
 
       <section
         id="intro"
-        className="relative aspect-[1440/1024] w-full overflow-hidden"
+        className="home-hero relative aspect-[1440/1024] w-full overflow-hidden"
       >
         <img
           src={heroTitle}
           alt="梅竹黑客松 14th"
-          className="animate-pop-in-right absolute top-[11.9%] left-[15.14%] w-[82.75%]"
+          className="home-hero-title animate-pop-in-right absolute top-[11.9%] left-[15.14%] w-[82.75%]"
           style={{ animationDelay: '0.1s' }}
         />
         <img
           src={heroCta}
           alt="準備好創造未來了嗎？"
-          className="animate-pop-in-right absolute top-[50.98%] left-[56.11%] w-[42.13%]"
+          className="home-hero-cta animate-pop-in-right absolute top-[50.98%] left-[56.11%] w-[42.13%]"
           style={{ animationDelay: '0.4s' }}
         />
       </section>
@@ -125,10 +128,10 @@ export default function Home() {
       </section>
 
       <section id="awards" className="relative">
-        <Awards />
+        <Awards lightBackgroundStart={bg5Start} />
       </section>
 
-      <section className="relative" data-nav-theme="light">
+      <section className="home-light-section relative" data-nav-theme="light">
         <PartnerLogos />
         <StaffAndThanks />
       </section>
