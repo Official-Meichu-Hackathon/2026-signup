@@ -2,7 +2,6 @@ import './index.css'
 import Home from './views/Home'
 import { useState } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import CursorTrail from './components/layout/CursorTrail'
 import Footer from './components/layout/Footer'
 import Navbar from './components/layout/Navbar'
 import RegistrationMethodView from './views/RegistrationMethodView'
@@ -24,10 +23,7 @@ function HomeView() {
     <>
       <Navbar />
       <Home />
-      <div
-        data-trail="off"
-        className="bg-[rgba(177,162,202,0.56)] shadow-[0px_10px_30px_0px_rgba(0,0,0,0.25),inset_0px_1px_8px_0px_rgba(255,255,255,0.5)] backdrop-blur-[35px]"
-      >
+      <div className="bg-[rgba(177,162,202,0.56)] shadow-[0px_10px_30px_0px_rgba(0,0,0,0.25),inset_0px_1px_8px_0px_rgba(255,255,255,0.5)] backdrop-blur-[35px]">
         <Footer />
       </div>
     </>
@@ -47,9 +43,6 @@ function SignupPage() {
 function App() {
   return (
     <BrowserRouter>
-      {/* Global — one instance covers every route and survives navigation.
-          Self-gates to fine-pointer, non-reduced-motion clients. */}
-      <CursorTrail />
       <Routes>
         <Route path="/" element={<HomeView />} />
         <Route path="/signup" element={<SignupPage />} />
