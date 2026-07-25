@@ -11,7 +11,7 @@ import logoPhison from '../../assets/home/logo-phison.png'
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-center font-['Zen_Antique'] text-2xl text-[#b1a2ca] [text-shadow:0px_0px_20px_rgba(255,255,255,0.35),0px_4px_40px_rgba(255,255,255,0.2)] md:text-[35px]">
+    <p className="partner-section-title text-center font-['Zen_Antique'] text-2xl text-[#b1a2ca] [text-shadow:0px_0px_20px_rgba(255,255,255,0.35),0px_4px_40px_rgba(255,255,255,0.2)] md:text-[35px]">
       {children}
     </p>
   )
@@ -19,13 +19,13 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 
 function LogoGrid({ logos }: { logos: { src: string; alt: string }[] }) {
   return (
-    <div className="grid w-full grid-cols-2 items-center justify-items-center gap-x-10 gap-y-12 md:grid-cols-2 md:gap-x-24 md:gap-y-16">
+    <div className="partner-logo-grid grid w-full grid-cols-2 items-center justify-items-center gap-x-10 gap-y-12 md:grid-cols-2 md:gap-x-24 md:gap-y-16">
       {logos.map((logo) => (
         <img
           key={logo.alt}
           src={logo.src}
           alt={logo.alt}
-          className="h-16 w-full max-w-[220px] object-contain md:h-24"
+          className="partner-logo h-16 w-full max-w-[220px] object-contain md:h-24"
         />
       ))}
     </div>
@@ -33,15 +33,19 @@ function LogoGrid({ logos }: { logos: { src: string; alt: string }[] }) {
 }
 
 function ComingSoon() {
-  return <p className="py-6 text-center text-black/30">尚無資料，敬請期待</p>
+  return (
+    <p className="partner-coming-soon py-6 text-center text-black/30">
+      尚無資料，敬請期待
+    </p>
+  )
 }
 
 export default function PartnerLogos() {
   return (
-    <div className="mx-auto flex w-full max-w-[1093px] flex-col items-center gap-20 px-6 py-16 md:gap-[90px]">
+    <div className="partner-sections mx-auto flex w-full max-w-[1093px] flex-col items-center gap-20 px-6 py-16 md:gap-[90px]">
       <div
         id="partners"
-        className="flex w-full flex-col items-center gap-12 md:gap-[90px]"
+        className="partner-block partner-main flex w-full flex-col items-center gap-12 md:gap-[90px]"
       >
         <SectionTitle>合作企業</SectionTitle>
         <LogoGrid
@@ -57,14 +61,18 @@ export default function PartnerLogos() {
         />
       </div>
 
-      <div className="flex w-full flex-col items-center gap-12 md:gap-[90px]">
+      <div className="partner-block partner-special flex w-full flex-col items-center gap-12 md:gap-[90px]">
         <SectionTitle>特別合作企業</SectionTitle>
-        <img src={logoWtmicro} alt="文曄科技" className="h-40 object-contain" />
+        <img
+          src={logoWtmicro}
+          alt="文曄科技"
+          className="partner-special-logo h-40 object-contain"
+        />
       </div>
 
       <div
         id="sponsors"
-        className="flex w-full flex-col items-center gap-12 md:gap-[90px]"
+        className="partner-block partner-sponsors flex w-full flex-col items-center gap-12 md:gap-[90px]"
       >
         <SectionTitle>贊助企業</SectionTitle>
         <LogoGrid
@@ -75,12 +83,12 @@ export default function PartnerLogos() {
         />
       </div>
 
-      <div className="flex w-full flex-col items-center gap-6">
+      <div className="partner-block partner-placeholder flex w-full flex-col items-center gap-6">
         <SectionTitle>特殊贊助</SectionTitle>
         <ComingSoon />
       </div>
 
-      <div className="flex w-full flex-col items-center gap-6">
+      <div className="partner-block partner-placeholder flex w-full flex-col items-center gap-6">
         <SectionTitle>媒體合作</SectionTitle>
         <ComingSoon />
       </div>
