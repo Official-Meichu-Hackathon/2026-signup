@@ -1,37 +1,36 @@
 import { useEffect, useRef, useState } from 'react'
 import { SPARKLE_PATH } from './StarField'
 
-// White sparkles falling from the cursor. Same containment approach as
-// 2025-signup's #light-cursor: mounted inside a page's background wrapper and
-// layered under content, so it can't cover a block or a word.
+// White sparkles falling from the cursor, on /signup. Mounted inside the page's
+// background wrapper and layered under content, like 2025-signup's
+// #light-cursor, so it can't cover a block or a word.
 //
-// There is no rAF loop. Each star's full 2.5s tween is handed to the
-// compositor via el.animate(), so JS touches a node once per spawn instead of
-// once per frame per star. Nothing animates but transform and opacity, and the
-// element's box never changes size — scale does the shrinking, so no layout
-// and no SVG re-rasterisation.
+// No rAF loop: each star's whole tween goes to the compositor via el.animate(),
+// so JS touches a node once per spawn rather than once per frame per star.
 
-const COUNT = 60 // pool size; recycled round-robin
-const SPAWN_DIST = 14 // px of cursor travel between spawns
-const LIFE_MS = 2500
-const BOX = 24 // fixed element size; variety comes from the start scale
-const SCALE_MIN = 0.4
-const SCALE_MAX = 0.6
-const FALL = 150 // px travelled downward over a full life
-const DRIFT = 45 // ± horizontal travel over a full life
-const FADE_AT = 0.75 // hold opacity 1 until this fraction of life has passed
+const COUNT = 60
+// Re-rolled per spawn so stars don't land at even intervals; the delay
+// scatters them in time too.
+const SPAWN_DIST_MIN = 9
+const SPAWN_DIST_MAX = 34
+const DELAY_MAX_MS = 120
+const LIFE_MS = 1800
+const BOX = 24 // fixed box; size variety comes from scale, so no layout
+// Cycled, not random — random sizes clump and read as one size.
+const SCALE_TIERS = [0.4, 0.85, 0.55, 1]
+const SCALE_JITTER = 0.08
+const FALL = 150 // px down over a full life
+const DRIFT = 45 // ± px sideways over a full life
+const FADE_AT = 0.6 // opacity holds at 1 until this fraction of life
 
-// Backdrop brightness gate. The artwork's blue/lavender tops out at 173 and
-// its white blooms run 208-250, so 190 keeps the colour and drops only white.
-// CSS can't tell these apart — both live inside one <img> — so the image is
-// sampled directly. Untagged areas are the bg-black base and always pass.
+// Brightness gate. Blue/lavender in the artwork tops out at 173, white blooms
+// run 208-250. Sampled from the image because both live inside one <img>.
 const BG_SELECTOR = '[data-trail-bg]'
 const MAP_W = 64
 const LUM_MAX = 190
 
-// The sparkle as a background image rather than an inline <svg>: the raster is
-// decoded once and reused by all 60 nodes, and a plain div's transform gets
-// promoted to the compositor, which an animated <svg> does not reliably do.
+// Background image, not inline <svg>: decoded once for all nodes, and a div's
+// transform gets composited where an animated <svg>'s does not.
 const SPARKLE_URL = `url("data:image/svg+xml,${encodeURIComponent(
   `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='#fff' d='${SPARKLE_PATH}'/></svg>`,
 )}")`
@@ -85,8 +84,7 @@ export default function CursorTrail() {
   const nodesRef = useRef<(HTMLDivElement | null)[]>([])
 
   useEffect(() => {
-    // No cursor on touch, and mousemove fires on tap — without this every tap
-    // would burst stars.
+    // Touch has no cursor, and mousemove fires on tap — every tap would burst.
     if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
@@ -103,12 +101,15 @@ export default function CursorTrail() {
 
     const anims: (Animation | null)[] = new Array(COUNT).fill(null)
     let next = 0
+    let spawnCount = 0
+    const rollGap = () =>
+      SPAWN_DIST_MIN + Math.random() * (SPAWN_DIST_MAX - SPAWN_DIST_MIN)
+    let gap = rollGap()
     let lastX = 0
     let lastY = 0
     let havePointer = false
 
-    // Background rects are cached and only refreshed on scroll/resize, so the
-    // spawn path does no layout reads at all.
+    // Rects cached, invalidated on scroll/resize — spawn does no layout reads.
     const bgEls = Array.from(
       document.querySelectorAll<HTMLImageElement>(BG_SELECTOR),
     )
@@ -146,7 +147,8 @@ export default function CursorTrail() {
       const el = nodesRef.current[slot]
       if (!el) return
 
-      const scale = SCALE_MIN + Math.random() * (SCALE_MAX - SCALE_MIN)
+      const tier = SCALE_TIERS[spawnCount++ % SCALE_TIERS.length]
+      const scale = tier * (1 + (Math.random() - 0.5) * 2 * SCALE_JITTER)
       const rot = Math.random() * 360
       const dx = (Math.random() - 0.5) * 2 * DRIFT
       const half = BOX / 2
@@ -154,9 +156,7 @@ export default function CursorTrail() {
       const sy = y - half + (Math.random() - 0.5) * 8
 
       anims[slot]?.cancel()
-      // No `fill`, so the animation releases the node on finish and the base
-      // opacity: 0 applies again — a filled animation would stay live forever
-      // and keep the element in the style-recalc set.
+      // No `fill` — it would keep every finished animation live forever.
       const anim = el.animate(
         [
           {
@@ -169,7 +169,11 @@ export default function CursorTrail() {
             opacity: 0,
           },
         ],
-        { duration: LIFE_MS, easing: 'linear' },
+        {
+          duration: LIFE_MS,
+          delay: Math.random() * DELAY_MAX_MS,
+          easing: 'linear',
+        },
       )
       anim.onfinish = () => anim.cancel()
       anims[slot] = anim
@@ -186,9 +190,10 @@ export default function CursorTrail() {
       }
       const dx = x - lastX
       const dy = y - lastY
-      if (dx * dx + dy * dy < SPAWN_DIST * SPAWN_DIST) return
+      if (dx * dx + dy * dy < gap * gap) return
       lastX = x
       lastY = y
+      gap = rollGap()
       if (!tooBright(x, y)) spawn(x, y)
     }
 
