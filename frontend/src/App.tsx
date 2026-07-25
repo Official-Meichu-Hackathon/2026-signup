@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import ProblemsView from './views/ProblemsView'
 import MobileProblemsView from './views/MobileProblemsView'
 import StatsView from './views/StatsView'
+import MobileStatsView from './views/MobileStatsView'
 
 function HomeView() {
   return (
@@ -23,6 +24,10 @@ function App() {
           element={<MobileProblemsView forcePreview />}
         />
         <Route path="/stats" element={<StatsView />} />
+        <Route
+          path="/stats/mobile"
+          element={<MobileStatsView forcePreview />}
+        />
       </Routes>
     </BrowserRouter>
   )

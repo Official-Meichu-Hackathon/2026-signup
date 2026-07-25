@@ -9,6 +9,7 @@ import pieSchool from '../../assets/Stats/pie-school.svg'
 import pieDeptHacker from '../../assets/Stats/pie-dept-hacker.svg'
 import pieDeptMaker from '../../assets/Stats/pie-dept-maker.svg'
 import carouselArrow from '../../assets/Stats/carousel-arrow.svg'
+import { TESTIMONIALS } from './testimonials'
 
 // 參賽數據(電腦) 378:362。設計稿元件寬 1222.14，頁面上的 instance（378:632）
 // 放大到 1394（1440 版面左右各留 23）。故一律以元件座標系為基準，用 cq()
@@ -57,16 +58,6 @@ const barTitleGlow = [
   `0 ${cq(12.439)} ${cq(124.391)} rgba(255,255,255,0.5)`,
   `0 ${cq(12.439)} ${cq(155.489)} rgba(255,255,255,0.5)`,
 ].join(', ')
-
-// 參賽者感言 — 設計稿目前僅一則示意文字，之後換成歷屆參賽者真實回饋。
-const TESTIMONIALS: Record<'hacker' | 'maker', string[]> = {
-  hacker: [
-    '“參加梅竹黑客松讓我們非常有成就感！我們花了很多時間鑽研自己未曾涉足的領域，通過團隊討論與協作嘗試新技術，也從中收穫不少知識和經驗，並且也順利在比賽中取得佳績，這讓大家都很滿足。”',
-  ],
-  maker: [
-    '“參加梅竹黑客松讓我們非常有成就感！我們花了很多時間鑽研自己未曾涉足的領域，通過團隊討論與協作嘗試新技術，也從中收穫不少知識和經驗，並且也順利在比賽中取得佳績，這讓大家都很滿足。”',
-  ],
-}
 
 // 圓餅圖面板（Frame 39 378:422）：941×673.79 的深色圓角面板，四張圓餅並非
 // 整齊的 2×2，下排整體往左偏約半格，是設計稿刻意的錯落排列。座標與尺寸都

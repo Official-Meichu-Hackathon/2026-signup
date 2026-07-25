@@ -1,9 +1,26 @@
+import { useEffect, useState } from 'react'
 import Footer from '../components/layout/Footer'
 import StatsAccordion from '../components/stats/StatsAccordion'
+import StatsStars from '../components/stats/StatsStars'
+import MobileStatsView from './MobileStatsView'
 import bgGradient from '../assets/Problems/bg-gradient.png'
 import logoNav from '../assets/Problems/logo-nav.png'
 
 export default function StatsView() {
+  // 與題目說明頁同一個切換點：480px 以下改用手機版版面。
+  const [isMobile, setIsMobile] = useState(
+    () => window.matchMedia('(max-width: 480px)').matches,
+  )
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 480px)')
+    const onChange = (event: MediaQueryListEvent) => setIsMobile(event.matches)
+    mediaQuery.addEventListener('change', onChange)
+    return () => mediaQuery.removeEventListener('change', onChange)
+  }, [])
+
+  if (isMobile) return <MobileStatsView />
+
   return (
     <div className="relative min-h-svh overflow-hidden bg-black">
       {/* 背景漸層（參賽數據背景電腦 378:351）：與題目說明頁共用同一組素材。 */}
@@ -17,6 +34,10 @@ export default function StatsView() {
         alt=""
         className="pointer-events-none absolute bottom-0 left-[-9.44%] h-[1064px] w-[109.44%] max-w-none rotate-180 select-none"
       />
+      {/* 參賽數據電腦_星星閃爍（570:1341）：7 顆帶光暈的星，各自不同的閃爍
+          相位差。鋪在背景漸層之上、內容之下。 */}
+      <StatsStars />
+
       {/* 左上角梅竹黑客松 logo（1366:61551），與題目說明頁同一組素材。navbar
           其餘元件（報名按鈕、選單）屬他人負責範圍，此處不實作。 */}
       <img
