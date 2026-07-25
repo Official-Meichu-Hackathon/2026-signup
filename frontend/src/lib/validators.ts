@@ -87,6 +87,12 @@ export const isValidId = (id: string): boolean =>
 export const validateGroupName = (name: string): boolean =>
   !name || name.length <= 20
 
+// Length cap for free-text fields (e.g. 參賽者經歷, ≤100 chars).
+export const validateMaxLength =
+  (max: number) =>
+  (value: string): boolean =>
+    value.length <= max
+
 export const validateEmail = (email: string): boolean =>
   /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)
 

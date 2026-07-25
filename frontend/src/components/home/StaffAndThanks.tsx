@@ -65,7 +65,7 @@ const STAFF: Record<
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-center font-['Zen_Antique'] text-2xl text-[#b1a2ca] [text-shadow:0px_0px_20px_rgba(255,255,255,0.35),0px_4px_40px_rgba(255,255,255,0.2)] md:text-[35px]">
+    <p className="staff-section-title text-center font-['Zen_Antique'] text-2xl text-[#b1a2ca] [text-shadow:0px_0px_20px_rgba(255,255,255,0.35),0px_4px_40px_rgba(255,255,255,0.2)] md:text-[35px]">
       {children}
     </p>
   )
@@ -73,72 +73,109 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 
 export default function StaffAndThanks() {
   const [dept, setDept] = useState<(typeof DEPARTMENTS)[number]>('行政部')
+  const [mobileDept, setMobileDept] = useState<
+    (typeof DEPARTMENTS)[number] | null
+  >(null)
   const { photo, members } = STAFF[dept]
 
   return (
-    <div className="mx-auto flex w-full max-w-[1113px] flex-col items-center gap-16 px-6 py-16 md:gap-[80px]">
-      <div className="flex flex-col items-center gap-8 text-center md:gap-[48px]">
+    <div className="staff-and-thanks mx-auto flex w-full max-w-[1113px] flex-col items-center gap-16 px-6 py-16 md:gap-[80px]">
+      <div className="thanks-block flex flex-col items-center gap-8 text-center md:gap-[48px]">
         <p className="font-['Zen_Antique'] text-2xl text-[#b1a2ca] [text-shadow:0px_0px_20px_rgba(255,255,255,0.5),0px_4px_40px_rgba(255,255,255,0.5)] md:text-[35px]">
           協辦單位
         </p>
-        <div className="flex flex-col gap-2 text-xl text-[#b1a2ca] md:text-[40px]">
+        <div className="flex flex-col gap-2 text-xl text-[#4664AC] md:text-[40px]">
           <p>國立陽明交通大學資訊工程學系</p>
           <p>財團法人交大思源基金會</p>
         </div>
       </div>
 
-      <div className="flex flex-col items-center gap-8 text-center md:gap-[48px]">
+      <div className="thanks-block flex flex-col items-center gap-8 text-center md:gap-[48px]">
         <p className="font-['Zen_Antique'] text-2xl text-[#b1a2ca] [text-shadow:0px_0px_20px_rgba(255,255,255,0.5),0px_4px_40px_rgba(255,255,255,0.5)] md:text-[35px]">
           特別感謝
         </p>
-        <div className="flex flex-col gap-2 text-xl text-[#b1a2ca] md:text-[40px]">
+        <div className="flex flex-col gap-2 text-xl text-[#4664AC] md:text-[40px]">
           <p>國立陽明交通大學產學運籌中心</p>
           <p>國立陽明交通大學電機工程學系</p>
           <p>Colde Garage</p>
         </div>
       </div>
 
-      <div className="flex w-full max-w-[917px] flex-col items-center gap-8 md:gap-[49px]">
+      <div className="media-block flex w-full max-w-[917px] flex-col items-center gap-8 md:gap-[49px]">
         <SectionTitle>企業廣告</SectionTitle>
         <div className="h-[300px] w-full bg-[#f4f5f5] md:h-[491px]" />
       </div>
 
-      <div className="flex w-full max-w-[917px] flex-col items-center gap-8 md:gap-[49px]">
+      <div className="media-block flex w-full max-w-[917px] flex-col items-center gap-8 md:gap-[49px]">
         <SectionTitle>YouTube影片</SectionTitle>
         <div className="h-[300px] w-full bg-[#f4f5f5] md:h-[491px]" />
       </div>
 
       <div
         id="staff"
-        className="flex w-full flex-col items-center gap-8 md:gap-[48px]"
+        className="staff-desktop flex w-full flex-col items-center gap-8 md:gap-[48px]"
       >
         <SectionTitle>工作人員名單</SectionTitle>
-        <div className="w-full">
-          <div className="flex flex-wrap">
+        <div className="relative w-full">
+          <div className="relative z-20 flex w-full items-end">
             {DEPARTMENTS.map((d) => (
               <button
                 key={d}
                 onClick={() => setDept(d)}
-                className={`cursor-pointer rounded-t-2xl px-5 py-3 font-semibold text-white transition-colors ${
-                  dept === d ? 'bg-[#b1a2ca]' : 'bg-[#b1a2ca]/50'
+                className={`relative flex h-[42px] min-w-0 flex-1 cursor-pointer items-center justify-center rounded-t-[18px] px-1 text-xs leading-none font-semibold text-white transition-all duration-300 sm:h-[48px] sm:rounded-t-[24px] sm:text-base md:h-[52px] md:rounded-t-[30px] md:text-[24px] md:leading-[40px] ${
+                  dept === d
+                    ? 'z-20 bg-[linear-gradient(to_bottom,#d9cfea_0%,#b1a2ca_100%)] shadow-[0_-8px_24px_rgba(255,255,255,1),-7px_0_18px_rgba(255,255,255,0.7),7px_0_18px_rgba(255,255,255,0.55),inset_0_3px_8px_rgba(255,255,255,0.85)]'
+                    : 'z-0 bg-[#b1a2ca]/75 shadow-[inset_0_2px_5px_rgba(255,255,255,0.28)] hover:bg-[#b1a2ca]/90'
                 }`}
               >
                 {d}
               </button>
             ))}
           </div>
-          <div className="flex flex-col items-start gap-8 rounded-tr-[30px] rounded-b-[30px] bg-[#b1a2ca] p-8 sm:flex-row sm:items-center md:p-12">
+
+          <div className="relative z-10 -mt-px flex min-h-[300px] flex-col items-start gap-8 rounded-b-[30px] bg-[#b1a2ca] p-8 shadow-[0_0_24px_rgba(255,255,255,0.95),0_8px_0_rgba(151,135,180,0.72),0_14px_28px_rgba(0,0,0,0.3),inset_1px_0_rgba(255,255,255,0.75),inset_-1px_0_rgba(255,255,255,0.75),inset_0_-1px_rgba(255,255,255,0.75)] sm:flex-row sm:items-center md:min-h-[347px] md:gap-[65px] md:px-[65px] md:py-[48px]">
             <img
               src={photo}
               alt={`${dept}合照`}
-              className="h-[150px] w-full max-w-[260px] shrink-0 rounded-[30px] object-cover"
+              className="h-[180px] w-full shrink-0 rounded-[30px] object-cover sm:w-[42%] md:h-[251px] md:w-[406px]"
             />
-            <div className="flex flex-col gap-1 text-lg font-semibold text-[#4664ac]">
+            <div className="flex min-w-0 flex-1 flex-col text-lg leading-[1.6] font-semibold text-[#4664ac] md:text-[25px] md:leading-[40px]">
               {members.map((line) => (
                 <p key={line}>{line}</p>
               ))}
             </div>
           </div>
+        </div>
+      </div>
+
+      <div className="staff-mobile">
+        <SectionTitle>工作人員名單</SectionTitle>
+        <div className="staff-mobile-list">
+          {DEPARTMENTS.map((department) => {
+            const expanded = mobileDept === department
+            return (
+              <div
+                key={department}
+                className={`staff-mobile-row ${expanded ? 'is-expanded' : ''}`}
+              >
+                <button
+                  type="button"
+                  aria-expanded={expanded}
+                  onClick={() => setMobileDept(expanded ? null : department)}
+                >
+                  <span>{department}</span>
+                  <span aria-hidden>{expanded ? '−' : '+'}</span>
+                </button>
+                {expanded && (
+                  <div className="staff-mobile-members">
+                    {STAFF[department].members.map((line) => (
+                      <p key={line}>{line}</p>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )
+          })}
         </div>
       </div>
     </div>

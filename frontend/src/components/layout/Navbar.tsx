@@ -39,7 +39,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 z-50 flex w-full items-center justify-between bg-black/5 px-6 py-4 backdrop-blur-[2px]">
+      <header className="site-header fixed top-0 left-0 z-50 flex w-full items-center justify-between bg-black/5 px-6 py-4 backdrop-blur-[2px]">
         {/* Faded/blurred (not literally layered under the drawer — `fixed`
             elements always open their own stacking context, so nesting these
             under a lower z-index header would trap them there too) to look
@@ -54,13 +54,13 @@ export default function Navbar() {
           <img
             src={logo}
             alt="梅竹黑客松"
-            className={`h-12 w-auto transition duration-300 ${onLightBg ? 'invert' : ''}`}
+            className={`site-logo h-12 w-auto transition duration-300 ${onLightBg ? 'invert' : ''}`}
           />
         </Link>
-        <div className="flex items-center gap-4">
+        <div className="site-header-actions flex items-center gap-4">
           <Link
             to="/signup"
-            className={`rounded-full border px-5 py-1.5 text-sm backdrop-blur transition duration-300 ${
+            className={`site-signup rounded-full border px-5 py-1.5 text-sm backdrop-blur transition duration-300 ${
               onLightBg
                 ? 'border-black/20 bg-black/5 text-neutral-900 hover:bg-black/10'
                 : 'border-white/20 bg-white/10 text-white hover:bg-white/20'
@@ -73,14 +73,14 @@ export default function Navbar() {
             aria-label={menuOpen ? '關閉選單' : '選單'}
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((open) => !open)}
-            className={`transition duration-300 hover:opacity-70 ${onLightBg ? 'text-neutral-900' : 'text-white'} ${menuOpen ? 'pointer-events-none opacity-30 blur-[2px]' : ''}`}
+            className={`site-menu-button transition duration-300 hover:opacity-70 ${onLightBg ? 'text-neutral-900' : 'text-white'} ${menuOpen ? 'pointer-events-none opacity-30 blur-[2px]' : ''}`}
           >
             <svg
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
-              className="h-6 w-6"
+              className="site-menu-icon h-6 w-6"
             >
               <path strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />
             </svg>

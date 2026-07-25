@@ -133,7 +133,7 @@ export default function MobileNavMenu({
         aria-label="收起選單背景"
         tabIndex={open ? 0 : -1}
         onClick={onClose}
-        className={`fixed inset-0 z-30 cursor-default transition-opacity duration-300 ${open ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+        className={`fixed inset-0 z-30 cursor-default bg-gray-500/40 transition-opacity duration-300 ${open ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
       />
       <nav
         aria-hidden={!open}
