@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import MobileFooter from '../components/layout/MobileFooter'
+import Navbar from '../components/layout/Navbar'
 import MakerCta from '../components/problems/MakerCta'
 import MobileProblemDeck from '../components/problems/MobileProblemDeck'
 import bgGradient from '../assets/Problems/bg-gradient.png'
-import logoNav from '../assets/Problems/logo-nav.png'
 import star1 from '../assets/Problems/star-1.svg'
 import star2 from '../assets/Problems/star-2.svg'
 import star3 from '../assets/Problems/star-3.svg'
@@ -151,6 +151,7 @@ export default function MobileProblemsView({
 
   return (
     <main className="min-h-svh bg-black">
+      <Navbar />
       <div
         className="relative mx-auto overflow-hidden"
         style={{ width: canvasWidth, height: DESIGN_HEIGHT * scale }}
@@ -171,14 +172,6 @@ export default function MobileProblemsView({
           />
           <MobileStars />
           <TitleStars />
-
-          <header className="absolute top-0 left-0 z-10 flex h-[55px] w-full items-center justify-between px-[14px]">
-            <img
-              src={logoNav}
-              alt="2026 Meichu Hackathon"
-              className="h-[31px] w-[64px] object-cover object-bottom"
-            />
-          </header>
 
           <h1 className="glow-text font-zen text-ink absolute top-[7.76%] left-1/2 -translate-x-1/2 text-[32px] leading-[54px] whitespace-nowrap">
             題目說明

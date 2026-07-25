@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import Footer from '../components/layout/Footer'
+import Navbar from '../components/layout/Navbar'
 import ProblemDeck from '../components/problems/ProblemDeck'
 import MobileProblemsView from './MobileProblemsView'
 import ProblemStars from '../components/problems/ProblemStars'
 import MakerCta from '../components/problems/MakerCta'
 import bgGradient from '../assets/Problems/bg-gradient.png'
-import logoNav from '../assets/Problems/logo-nav.png'
 
 export default function ProblemsView() {
   const [isMobile, setIsMobile] = useState(
@@ -23,6 +23,7 @@ export default function ProblemsView() {
 
   return (
     <div className="relative min-h-svh overflow-hidden bg-black">
+      <Navbar />
       {/* 背景漸層（360:309 / 360:310）：同一張素材，下半部那張旋轉 180°。
           設計稿把它拉寬到 1576/1440 並壓成 1064 高，故此處不維持原比例。 */}
       <img
@@ -41,12 +42,6 @@ export default function ProblemsView() {
       {/* 左上角梅竹黑客松 logo（1366:61503：x47 y13 148×67）。設計稿以
           object-cover 貼齊底部，故頂端星芒被裁切。navbar 其餘元件（報名
           按鈕、選單）屬他人負責範圍，此處不實作。 */}
-      <img
-        src={logoNav}
-        alt="梅竹黑客松"
-        className="absolute top-[13px] left-[47px] z-10 h-[67px] w-[148px] object-cover object-bottom"
-      />
-
       <main className="relative z-10 flex flex-col items-center px-6 pt-28 pb-16">
         <h1 className="glow-text font-zen text-ink text-center text-6xl md:text-8xl">
           題目説明

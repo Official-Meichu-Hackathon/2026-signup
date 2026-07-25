@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import MobileFooter from '../components/layout/MobileFooter'
+import Navbar from '../components/layout/Navbar'
 import MobileStatsAccordion from '../components/stats/MobileStatsAccordion'
 import MobileStatsStars from '../components/stats/MobileStatsStars'
 import bgGradient from '../assets/Problems/bg-gradient.png'
-import logoNav from '../assets/Problems/logo-nav.png'
 
 // 參賽數據(手機) 165:1219 只涵蓋手風琴本身（393 寬），頁面外框（logo、主標
 // 題、背景漸層、footer）設計稿沒有另開節點，故沿用題目說明手機版的同一套
@@ -33,6 +33,7 @@ export default function MobileStatsView({
 
   return (
     <main className="min-h-svh bg-black">
+      <Navbar />
       <div
         className="relative mx-auto flex min-h-svh flex-col overflow-hidden bg-black"
         style={{ width: canvasWidth }}
@@ -50,13 +51,7 @@ export default function MobileStatsView({
         />
         <MobileStatsStars />
 
-        <header className="relative z-10 flex h-[55px] w-full shrink-0 items-center px-[14px]">
-          <img
-            src={logoNav}
-            alt="2026 Meichu Hackathon"
-            className="h-[31px] w-[64px] object-cover object-bottom"
-          />
-        </header>
+        <div aria-hidden className="h-[55px] w-full shrink-0" />
 
         <h1 className="glow-text font-zen text-ink relative z-10 mt-[86px] text-center text-[32px] leading-[54px] whitespace-nowrap">
           參賽數據

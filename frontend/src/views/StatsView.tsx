@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import Footer from '../components/layout/Footer'
+import Navbar from '../components/layout/Navbar'
 import StatsAccordion from '../components/stats/StatsAccordion'
 import StatsStars from '../components/stats/StatsStars'
 import MobileStatsView from './MobileStatsView'
 import bgGradient from '../assets/Problems/bg-gradient.png'
-import logoNav from '../assets/Problems/logo-nav.png'
 
 export default function StatsView() {
   // 與題目說明頁同一個切換點：480px 以下改用手機版版面。
@@ -23,6 +23,7 @@ export default function StatsView() {
 
   return (
     <div className="relative min-h-svh overflow-hidden bg-black">
+      <Navbar />
       {/* 背景漸層（參賽數據背景電腦 378:351）：與題目說明頁共用同一組素材。 */}
       <img
         src={bgGradient}
@@ -40,12 +41,6 @@ export default function StatsView() {
 
       {/* 左上角梅竹黑客松 logo（1366:61551），與題目說明頁同一組素材。navbar
           其餘元件（報名按鈕、選單）屬他人負責範圍，此處不實作。 */}
-      <img
-        src={logoNav}
-        alt="梅竹黑客松"
-        className="absolute top-[13px] left-[47px] z-10 h-[67px] w-[148px] object-cover object-bottom"
-      />
-
       <main className="relative z-10 flex flex-col items-center px-6 pt-32 pb-24 md:pt-[220px]">
         {/* 主標題(電腦版)：Zen Antique 100 / 行高 64（378:306） */}
         <h1 className="glow-text font-zen text-ink text-center text-6xl leading-[64px] md:text-[100px]">
