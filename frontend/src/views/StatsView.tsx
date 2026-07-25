@@ -1,5 +1,4 @@
 import Footer from '../components/layout/Footer'
-import StarField from '../components/layout/StarField'
 import StatsAccordion from '../components/stats/StatsAccordion'
 import bgGradient from '../assets/Problems/bg-gradient.png'
 import logoNav from '../assets/Problems/logo-nav.png'
@@ -18,8 +17,6 @@ export default function StatsView() {
         alt=""
         className="pointer-events-none absolute bottom-0 left-[-9.44%] h-[1064px] w-[109.44%] max-w-none rotate-180 select-none"
       />
-      <StarField count={28} seed={2027} />
-
       {/* 左上角梅竹黑客松 logo（1366:61551），與題目說明頁同一組素材。navbar
           其餘元件（報名按鈕、選單）屬他人負責範圍，此處不實作。 */}
       <img

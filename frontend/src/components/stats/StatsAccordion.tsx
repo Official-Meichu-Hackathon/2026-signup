@@ -73,13 +73,23 @@ const TESTIMONIALS: Record<'hacker' | 'maker', string[]> = {
 // 換算成面板自身的百分比，面板縮放時才會整體等比跟著動。
 const PIE_PANEL_W = 940.998
 const PIE_PANEL_H = 673.792
+
+// 圓的直徑 = 設計稿 Frame 90–93（378:423 等）的邊長。
 const PIE_BOX = 239.467
 
 const px = (n: number) => `${((n / PIE_PANEL_W) * 100).toFixed(4)}%`
 const py = (n: number) => `${((n / PIE_PANEL_H) * 100).toFixed(4)}%`
 
-// 圓餅素材的 viewBox 是 478.935 見方，圓本身只占中間約一半，四周留白是給
-// 光暈用的，所以整張圖照 239.4674 見方擺就會與設計稿一致。
+// 圓餅素材的 viewBox 是 478.935 見方，圓本身只占正中央的 239.467，四周留白是
+// 給 filter0_ddd 光暈用的。故整張圖要照 478.935 擺（= 圓的兩倍），再把左上角
+// 往回推一整圈留白，圓才會落在設計稿標定的位置與大小；直接照 239.467 擺會讓
+// 圓只剩設計稿的一半大。
+const PIE_SVG = 478.935
+
+// 圓心在 viewBox 裡是 (239.467, 229.889)：水平置中，垂直則因為兩層陰影的
+// dy=9.5787 讓 Figma 把匯出範圍往下擴，圓相對整張圖偏上，故上下留白不等寬。
+const PIE_PAD_X = 239.467 - PIE_BOX / 2
+const PIE_PAD_Y = 229.889 - PIE_BOX / 2
 const PIES = [
   {
     src: pieGrade,
@@ -126,6 +136,36 @@ const PIES = [
 
 const PIE_LABEL_SIZE = 20.021
 const PIE_LABEL_LEADING = 30.802
+
+// 感言區塊（黑客組感言電腦 570:1405、創客組感言電腦 570:1413，同一個元件）。
+// 元件框是 843.452×786.462，但卡片只占其中 y=166.258 起的 444.522——上下那
+// 兩段透明留白是設計稿拿來讓【黑客組】標題壓上去的，兩個 instance 因此在設計
+// 稿裡是互相重疊的。這裡只實作看得見的這一列，標題間距仍交給外層的 flex gap。
+const QUOTE_ROW_W = 843.452
+const QUOTE_CARD_W = 645.127
+const QUOTE_CARD_H = 444.522
+const QUOTE_CARD_LEFT = 95.742
+const QUOTE_CARD_RADIUS = 93.293
+
+// 箭頭（Polygon 1/2）：節點框未旋轉時是 52.431×38.753，設計稿把它轉 ∓90°，
+// 故實際占 38.753 寬、52.431 高。素材的 viewBox 是 273.366×257.025，三角形
+// （45.406×29.064）只占正中央一小塊，其餘全是光暈留白——與圓餅同一個坑：
+// 素材要照原尺寸擺、再把左上角推回一整圈留白，直接照節點框尺寸擺會讓箭頭
+// 縮成幾個 px 的小點。
+const QUOTE_ARROW_W = 52.431
+const QUOTE_ARROW_H = 38.753
+const QUOTE_ARROW_SVG_W = 273.366
+const QUOTE_ARROW_SVG_H = 257.025
+const QUOTE_ARROW_PAD_X = (QUOTE_ARROW_SVG_W - QUOTE_ARROW_W) / 2
+// 三角形頂端貼齊節點框頂端，且陰影往下擴，故上下留白不等寬、不能用 /2。
+const QUOTE_ARROW_PAD_Y = 104.862
+const QUOTE_ARROW_LEFT = 36.473
+const QUOTE_ARROW_RIGHT_LEFT = 761.386
+
+// 內文（378:496）：Noto Sans 20 / 行高 26 / 輔助文字色02，靠左對齊。
+const QUOTE_TEXT_W = 533.426
+const QUOTE_TEXT_SIZE = 20
+const QUOTE_TEXT_LEADING = 26
 
 // 手風琴橫幅：金屬漸層 SVG 作為底、標題排在亮面、右側 +/− 按鈕。
 function AccordionBar({
@@ -201,8 +241,10 @@ function Collapsible({
 
 function PiePanel() {
   return (
+    // 圓餅素材放大到 478.935 後，光暈會溢出面板 12–47px；設計稿的 Frame 39
+    // 本身會裁切內容，故這裡也要 overflow-hidden，讓光暈收在圓角面板內。
     <div
-      className="glass-dark relative mx-auto"
+      className="glass-dark relative mx-auto overflow-hidden"
       style={{
         width: pctW(PIE_PANEL_W),
         ...ratio(PIE_PANEL_W, PIE_PANEL_H),
@@ -216,9 +258,9 @@ function PiePanel() {
             alt={pie.label + pie.tag}
             className="absolute"
             style={{
-              left: px(pie.left),
-              top: py(pie.top),
-              width: px(PIE_BOX),
+              left: px(pie.left - PIE_PAD_X),
+              top: py(pie.top - PIE_PAD_Y),
+              width: px(PIE_SVG),
               aspectRatio: '1 / 1',
             }}
           />
@@ -243,6 +285,52 @@ function PiePanel() {
   )
 }
 
+// 左右切換鈕。外層 button 就是設計稿旋轉後的節點框（38.753×52.431），內層
+// span 是未旋轉的節點框，img 則照素材原尺寸擺、往回推一圈光暈留白。
+function QuoteArrow({
+  side,
+  onClick,
+}: {
+  side: 'prev' | 'next'
+  onClick: () => void
+}) {
+  const isPrev = side === 'prev'
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={isPrev ? '上一則感言' : '下一則感言'}
+      className="absolute top-1/2 -translate-y-1/2 cursor-pointer transition hover:scale-110"
+      style={{
+        left: cq(isPrev ? QUOTE_ARROW_LEFT : QUOTE_ARROW_RIGHT_LEFT),
+        width: cq(QUOTE_ARROW_H),
+        height: cq(QUOTE_ARROW_W),
+      }}
+    >
+      <span
+        className="absolute top-1/2 left-1/2 block"
+        style={{
+          width: cq(QUOTE_ARROW_W),
+          height: cq(QUOTE_ARROW_H),
+          transform: `translate(-50%, -50%) rotate(${isPrev ? -90 : 90}deg)`,
+        }}
+      >
+        <img
+          src={carouselArrow}
+          alt=""
+          className="absolute max-w-none"
+          style={{
+            left: cq(-QUOTE_ARROW_PAD_X),
+            top: cq(-QUOTE_ARROW_PAD_Y),
+            width: cq(QUOTE_ARROW_SVG_W),
+            height: cq(QUOTE_ARROW_SVG_H),
+          }}
+        />
+      </span>
+    </button>
+  )
+}
+
 function TestimonialCarousel({ quotes }: { quotes: string[] }) {
   const [index, setIndex] = useState(0)
   const step = (delta: number) =>
@@ -250,55 +338,32 @@ function TestimonialCarousel({ quotes }: { quotes: string[] }) {
 
   return (
     <div
-      className="mx-auto flex items-center justify-center"
-      style={{ width: pctW(843.45), gap: cq(24) }}
+      className="relative mx-auto"
+      style={{ width: pctW(QUOTE_ROW_W), height: cq(QUOTE_CARD_H) }}
     >
-      <button
-        type="button"
-        onClick={() => step(-1)}
-        aria-label="上一則感言"
-        className="shrink-0 cursor-pointer transition hover:scale-110"
-      >
-        <img
-          src={carouselArrow}
-          alt=""
-          className="-rotate-90"
-          style={{ width: cq(46), ...ratio(273.366, 257.025) }}
-        />
-      </button>
-      {/* 感言卡（黑客組感言電腦 570:1405）：設計稿是深色圓角卡，不是亮面玻璃 */}
+      <QuoteArrow side="prev" onClick={() => step(-1)} />
+      {/* 感言卡（感言背景電腦 1991:77616）：深色玻璃 + 93.293 大圓角 */}
       <div
-        className="glass-dark flex flex-1 items-center justify-center"
+        className="glass-dark absolute top-0"
         style={{
-          borderRadius: cq(40),
-          paddingInline: cq(56),
-          paddingBlock: cq(48),
-          minHeight: cq(300),
+          left: cq(QUOTE_CARD_LEFT),
+          width: cq(QUOTE_CARD_W),
+          height: cq(QUOTE_CARD_H),
+          borderRadius: cq(QUOTE_CARD_RADIUS),
         }}
       >
         <p
-          className="font-noto text-ink text-center font-semibold"
+          className="font-noto text-periwinkle absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-semibold [word-break:break-word]"
           style={{
-            fontSize: cq(PIE_LABEL_SIZE),
-            lineHeight: cq(PIE_LABEL_LEADING),
+            width: cq(QUOTE_TEXT_W),
+            fontSize: cq(QUOTE_TEXT_SIZE),
+            lineHeight: cq(QUOTE_TEXT_LEADING),
           }}
         >
           {quotes[index]}
         </p>
       </div>
-      <button
-        type="button"
-        onClick={() => step(1)}
-        aria-label="下一則感言"
-        className="shrink-0 cursor-pointer transition hover:scale-110"
-      >
-        <img
-          src={carouselArrow}
-          alt=""
-          className="rotate-90"
-          style={{ width: cq(46), ...ratio(273.366, 257.025) }}
-        />
-      </button>
+      <QuoteArrow side="next" onClick={() => step(1)} />
     </div>
   )
 }
