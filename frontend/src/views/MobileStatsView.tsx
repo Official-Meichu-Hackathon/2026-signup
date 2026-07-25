@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import MobileFooter from '../components/layout/MobileFooter'
 import MobileStatsAccordion from '../components/stats/MobileStatsAccordion'
+import MobileStatsStars from '../components/stats/MobileStatsStars'
 import bgGradient from '../assets/Problems/bg-gradient.png'
 import logoNav from '../assets/Problems/logo-nav.png'
 
@@ -47,6 +48,7 @@ export default function MobileStatsView({
           alt=""
           className="pointer-events-none absolute bottom-[3%] left-0 h-[34%] w-full rotate-180 object-cover select-none"
         />
+        <MobileStatsStars />
 
         <header className="relative z-10 flex h-[55px] w-full shrink-0 items-center px-[14px]">
           <img
