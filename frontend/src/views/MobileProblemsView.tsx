@@ -8,9 +8,95 @@ import star1 from '../assets/Problems/star-1.svg'
 import star2 from '../assets/Problems/star-2.svg'
 import star3 from '../assets/Problems/star-3.svg'
 import star4 from '../assets/Problems/star-4.svg'
+import mobileStar1 from '../assets/Problems/mobile-star-1.svg'
+import mobileStar3 from '../assets/Problems/mobile-star-3.svg'
 
 const DESIGN_WIDTH = 390
 const DESIGN_HEIGHT = 1816
+
+// 題目說明手機版_星星閃爍（664:1558）：標題區塊周圍的 3 顆大星，素材本身
+// 外擴以容納光暈，故沿用 ProblemStars.tsx 同一套「inset 換算 left/top/
+// width/height，img 再用負 inset 撐出光暈」的量測結果。容器本身比 390 寬的
+// 畫布更大（424px）且往左超出 12px，故用設計稿原始 px 定位，不轉換成 %。
+interface TitleStar {
+  src: string
+  left: number
+  top: number
+  width: number
+  height: number
+  rotate: number
+  imgLeft: number
+  imgTop: number
+  imgW: number
+  imgH: number
+}
+
+const TITLE_STARS: TitleStar[] = [
+  {
+    src: mobileStar1,
+    left: 0,
+    top: 82.42,
+    width: 56.16,
+    height: 17.58,
+    rotate: 77.31,
+    imgLeft: -48.19,
+    imgTop: -20.84,
+    imgW: 196.38,
+    imgH: 145.3,
+  },
+  {
+    src: mobileStar3,
+    left: 33.73,
+    top: 89.11,
+    width: 21.49,
+    height: 7.51,
+    rotate: 77.31,
+    imgLeft: -106.65,
+    imgTop: -55.51,
+    imgW: 313.3,
+    imgH: 220.68,
+  },
+]
+
+function TitleStars() {
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute overflow-hidden"
+      style={{ left: -12, top: 45, width: 424, height: 851.724 }}
+    >
+      {TITLE_STARS.map((star) => (
+        <div
+          key={star.src}
+          className="absolute flex items-center justify-center"
+          style={{
+            left: `${star.left}%`,
+            top: `${star.top}%`,
+            width: `${star.width}%`,
+            height: `${star.height}%`,
+          }}
+        >
+          <div
+            className="relative size-full"
+            style={{ transform: `rotate(${star.rotate}deg)` }}
+          >
+            <img
+              src={star.src}
+              alt=""
+              className="animate-star-twinkle absolute max-w-none"
+              style={{
+                left: `${star.imgLeft}%`,
+                top: `${star.imgTop}%`,
+                width: `${star.imgW}%`,
+                height: `${star.imgH}%`,
+              }}
+            />
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
 
 function MobileStars() {
   return (
@@ -84,6 +170,7 @@ export default function MobileProblemsView({
             className="pointer-events-none absolute bottom-[3%] left-0 h-[34%] w-full rotate-180 object-cover"
           />
           <MobileStars />
+          <TitleStars />
 
           <header className="absolute top-0 left-0 z-10 flex h-[55px] w-full items-center justify-between px-[14px]">
             <img
@@ -91,24 +178,6 @@ export default function MobileProblemsView({
               alt="2026 Meichu Hackathon"
               className="h-[31px] w-[64px] object-cover object-bottom"
             />
-            <div className="flex items-center gap-[10px]">
-              <button
-                type="button"
-                aria-label="Registration"
-                className="font-zen h-[31px] rounded-full border border-[#d3e4fc]/80 bg-[#f4f5f5]/20 px-[13px] text-[12px] leading-[12px] text-white shadow-[0_4px_10px_-2px_rgba(28,27,31,0.2)]"
-              >
-                報名表格
-              </button>
-              <button
-                type="button"
-                aria-label="Open navigation menu"
-                className="flex h-[31px] w-[27px] flex-col items-center justify-center gap-[3px]"
-              >
-                <span className="h-px w-[17px] bg-white" />
-                <span className="h-px w-[17px] bg-white" />
-                <span className="h-px w-[17px] bg-white" />
-              </button>
-            </div>
           </header>
 
           <h1 className="glow-text font-zen text-ink absolute top-[7.76%] left-1/2 -translate-x-1/2 text-[32px] leading-[54px] whitespace-nowrap">

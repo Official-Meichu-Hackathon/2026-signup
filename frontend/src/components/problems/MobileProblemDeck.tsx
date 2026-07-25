@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { PROBLEMS } from '../../data/problems'
 import cardBack from '../../assets/Problems/card-back.png'
 import cardDecor from '../../assets/Problems/card-decor.svg'
+import logo14th from '../../assets/Problems/logo-14th.svg'
 import {
   ProblemCardFace,
   ZOOM_CARD_HEIGHT_PER_WIDTH,
@@ -11,14 +12,17 @@ import {
 
 const REVEAL_DELAY_MS = 120
 
+// 手機版黑客組題目牌組（1608:87833 實際 instance，390 寬畫布座標系）。
+// 設計稿裡 7 張卡不是整齊的兩排，而是每張各自微調過的扇形散開（中間那張
+// 上排卡明顯高一點、下排四張也左右交錯），故逐張量測、不能假設對稱。
 const CARD_POSITIONS = [
-  { left: '18.46%', top: '0%' },
-  { left: '42.82%', top: '0%' },
-  { left: '67.18%', top: '0%' },
-  { left: '7.69%', top: '59%' },
-  { left: '31.79%', top: '59%' },
-  { left: '55.9%', top: '59%' },
-  { left: '80%', top: '59%' },
+  { left: '18.72%', top: '-4.27%' },
+  { left: '42.65%', top: '-10.03%' },
+  { left: '66.58%', top: '-4.27%' },
+  { left: '8.72%', top: '71.33%' },
+  { left: '32.05%', top: '62.13%' },
+  { left: '54.45%', top: '62.13%' },
+  { left: '78.38%', top: '71.33%' },
 ]
 
 function MobileZoomOverlay({
@@ -111,6 +115,18 @@ export default function MobileProblemDeck() {
         className="relative h-full w-full"
         aria-label="Hack group problems"
       >
+        {CARD_POSITIONS.map((position, index) => (
+          <div
+            key={`glow-${index}`}
+            aria-hidden
+            className="pointer-events-none absolute w-[14.42%] rounded-full bg-white/50 blur-2xl"
+            style={{
+              left: position.left,
+              top: position.top,
+              aspectRatio: '56.228 / 100.718',
+            }}
+          />
+        ))}
         {PROBLEMS.map((problem, index) => {
           const position = CARD_POSITIONS[index]
           const isRevealed = index < revealedCount
@@ -149,6 +165,13 @@ export default function MobileProblemDeck() {
                     src={cardDecor}
                     alt=""
                     className="pointer-events-none absolute -top-[18%] -left-[25%] h-[145%] w-[155%] max-w-none opacity-90"
+                  />
+                  {/* 「梅竹黑客松 14th」書法字（與 MakerCta 同一份素材），牌面覆蓋
+                      （未翻開）時就要顯示，設計稿裡疊在星星裝飾之上 */}
+                  <img
+                    src={logo14th}
+                    alt="梅竹黑客松 14th"
+                    className="pointer-events-none absolute top-1/2 left-1/2 w-[75%] -translate-x-1/2 -translate-y-1/2"
                   />
                 </div>
                 <div className="absolute inset-0 [transform:rotateY(180deg)] overflow-hidden rounded-[inherit] [backface-visibility:hidden]">
