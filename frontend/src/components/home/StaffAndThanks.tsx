@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import staffAdmin from '../../assets/home/staff-admin.jpg'
-import staffMarketing from '../../assets/home/staff-marketing.jpg'
-import staffPr from '../../assets/home/staff-pr.jpg'
-import staffEvents from '../../assets/home/staff-events.jpg'
-import staffFinance from '../../assets/home/staff-finance.jpg'
-import staffDesign from '../../assets/home/staff-design.jpg'
-import staffDev from '../../assets/home/staff-dev.jpg'
+import staffAdmin from '../../assets/home/staff-admin.webp'
+import staffMarketing from '../../assets/home/staff-marketing.webp'
+import staffPr from '../../assets/home/staff-pr.webp'
+import staffEvents from '../../assets/home/staff-events.webp'
+import staffFinance from '../../assets/home/staff-finance.webp'
+import staffDesign from '../../assets/home/staff-design.webp'
+import staffDev from '../../assets/home/staff-dev.webp'
 
 const DEPARTMENTS = [
   '行政部',
@@ -65,7 +65,7 @@ const STAFF: Record<
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <p className="staff-section-title text-center font-['Zen_Antique'] text-2xl text-[#b1a2ca] [text-shadow:0px_0px_20px_rgba(255,255,255,0.35),0px_4px_40px_rgba(255,255,255,0.2)] md:text-[35px]">
+    <p className="staff-section-title text-center font-['Zen_Antique'] text-2xl text-[#b1a2ca] [text-shadow:0px_0px_20px_rgba(255,255,255,0.5),0px_4px_40px_rgba(255,255,255,0.5),0px_4px_50px_rgba(255,255,255,0.5)] md:text-[35px] md:leading-[44px]">
       {children}
     </p>
   )
@@ -79,41 +79,41 @@ export default function StaffAndThanks() {
   const { photo, members } = STAFF[dept]
 
   return (
-    <div className="staff-and-thanks mx-auto flex w-full max-w-[1113px] flex-col items-center gap-16 px-6 py-16 md:gap-[80px]">
-      <div className="thanks-block flex flex-col items-center gap-8 text-center md:gap-[48px]">
-        <p className="font-['Zen_Antique'] text-2xl text-[#b1a2ca] [text-shadow:0px_0px_20px_rgba(255,255,255,0.5),0px_4px_40px_rgba(255,255,255,0.5)] md:text-[35px]">
+    <div className="staff-and-thanks mx-auto flex w-full max-w-[1113px] flex-col items-center gap-16 px-6 py-16 md:gap-[125px] md:px-0 md:py-0">
+      <div className="thanks-block flex flex-col items-center gap-8 text-center md:w-[570px] md:gap-[50px]">
+        <p className="font-['Zen_Antique'] text-2xl text-[#b1a2ca] [text-shadow:0px_0px_20px_rgba(255,255,255,0.5),0px_4px_40px_rgba(255,255,255,0.5),0px_4px_50px_rgba(255,255,255,0.5)] md:text-[35px] md:leading-[44px]">
           協辦單位
         </p>
-        <div className="flex flex-col gap-2 text-xl text-[#4664AC] md:text-[40px]">
+        <div className="flex flex-col gap-2 font-['Zen_Antique'] text-xl text-[#4664AC] md:text-[40px] md:leading-[44px]">
           <p>國立陽明交通大學資訊工程學系</p>
           <p>財團法人交大思源基金會</p>
         </div>
       </div>
 
-      <div className="thanks-block flex flex-col items-center gap-8 text-center md:gap-[48px]">
-        <p className="font-['Zen_Antique'] text-2xl text-[#b1a2ca] [text-shadow:0px_0px_20px_rgba(255,255,255,0.5),0px_4px_40px_rgba(255,255,255,0.5)] md:text-[35px]">
+      <div className="thanks-block flex flex-col items-center gap-8 text-center md:w-[570px] md:gap-[50px]">
+        <p className="font-['Zen_Antique'] text-2xl text-[#b1a2ca] [text-shadow:0px_0px_20px_rgba(255,255,255,0.5),0px_4px_40px_rgba(255,255,255,0.5),0px_4px_50px_rgba(255,255,255,0.5)] md:text-[35px] md:leading-[44px]">
           特別感謝
         </p>
-        <div className="flex flex-col gap-2 text-xl text-[#4664AC] md:text-[40px]">
+        <div className="flex flex-col gap-2 font-['Zen_Antique'] text-xl text-[#4664AC] md:text-[40px] md:leading-[44px]">
           <p>國立陽明交通大學產學運籌中心</p>
           <p>國立陽明交通大學電機工程學系</p>
           <p>Colde Garage</p>
         </div>
       </div>
 
-      <div className="media-block flex w-full max-w-[917px] flex-col items-center gap-8 md:gap-[49px]">
+      <div className="media-block flex w-full max-w-[917px] flex-col items-center gap-8 md:gap-[50px]">
         <SectionTitle>企業廣告</SectionTitle>
         <div className="h-[300px] w-full bg-[#f4f5f5] md:h-[491px]" />
       </div>
 
-      <div className="media-block flex w-full max-w-[917px] flex-col items-center gap-8 md:gap-[49px]">
+      <div className="media-block flex w-full max-w-[917px] flex-col items-center gap-8 md:gap-[50px]">
         <SectionTitle>YouTube影片</SectionTitle>
         <div className="h-[300px] w-full bg-[#f4f5f5] md:h-[491px]" />
       </div>
 
       <div
         id="staff"
-        className="staff-desktop flex w-full flex-col items-center gap-8 md:gap-[48px]"
+        className="staff-desktop flex w-full flex-col items-center gap-8 md:gap-[50px]"
       >
         <SectionTitle>工作人員名單</SectionTitle>
         <div className="relative w-full">
@@ -137,6 +137,8 @@ export default function StaffAndThanks() {
             <img
               src={photo}
               alt={`${dept}合照`}
+              loading="lazy"
+              decoding="async"
               className="h-[180px] w-full shrink-0 rounded-[30px] object-cover sm:w-[42%] md:h-[251px] md:w-[406px]"
             />
             <div className="flex min-w-0 flex-1 flex-col text-lg leading-[1.6] font-semibold text-[#4664ac] md:text-[25px] md:leading-[40px]">

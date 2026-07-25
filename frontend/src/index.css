@@ -85,6 +85,10 @@ body {
   @apply font-noto bg-white text-neutral-900;
 }
 
+.home-page {
+  overflow-anchor: none;
+}
+
 .vision-mobile,
 .group-intro-mobile,
 .rules-mobile,
@@ -95,6 +99,14 @@ body {
 .group-intro-desktop,
 .rules-desktop {
   display: flex;
+}
+
+/* Keep the group selector attached to the viewport edge on screens wider
+   than the 1440px Figma canvas, while the main content stays centered. */
+@media (min-width: 1440px) {
+  .group-edge-tabs {
+    transform: translateX(calc((1440px - 100vw) / 2));
+  }
 }
 
 .rules-desktop-copy > ul {
@@ -597,6 +609,7 @@ body {
 
   .site-header-actions {
     gap: 10px !important;
+    margin-top: 0 !important;
   }
 
   .site-signup {

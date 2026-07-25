@@ -71,7 +71,7 @@ export default function Rules() {
   )
 
   return (
-    <div id="rules" className="rules-section">
+    <div id="rules" className="rules-section md:mt-[108px]">
       <div className="rules-mobile">
         <p className="mobile-home-title">比賽規則</p>
         <div className={`rules-mobile-panel is-${tab}`}>
@@ -93,12 +93,12 @@ export default function Rules() {
         </div>
       </div>
 
-      <div className="rules-desktop mx-auto w-full max-w-[1019px] flex-col items-center gap-12 px-6 py-16 md:gap-[90px] md:px-0">
-        <p className="text-center font-['Zen_Antique'] text-2xl text-[#f6f6f6] [text-shadow:0px_0px_20px_rgba(255,255,255,0.35),0px_4px_40px_rgba(255,255,255,0.2)] md:text-[35px]">
+      <div className="rules-desktop mx-auto w-full max-w-[1019px] flex-col items-center gap-12 px-6 py-16 md:gap-[90px] md:px-0 md:py-0">
+        <p className="text-center font-['Zen_Antique'] text-2xl text-[#f6f6f6] [text-shadow:0px_0px_20px_rgba(255,255,255,0.35),0px_4px_40px_rgba(255,255,255,0.2)] md:text-[35px] md:leading-[44px]">
           比賽規則
         </p>
 
-        <div className="relative w-full md:px-[25px]">
+        <div className="relative w-full md:h-[908px] md:px-[25px] md:pt-[24px]">
           <div className="relative z-20 flex items-end pl-[5px] md:pl-0">
             {TABS.map(({ key, label }) => (
               <button

@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { useMotionValueEvent, useScroll } from 'motion/react'
-import bg1 from '../assets/home/bg-01.jpg'
-import bg2 from '../assets/home/bg-02.jpg'
-import bg3 from '../assets/home/bg-03.jpg'
-import bg4 from '../assets/home/bg-04.png'
-import bg5 from '../assets/home/bg-05.png'
-import heroTitle from '../assets/home/hero-title-overlay.png'
-import heroCta from '../assets/home/hero-cta-overlay.png'
+import bg1 from '../assets/home/bg-01.webp'
+import bg2 from '../assets/home/bg-02.webp'
+import bg3 from '../assets/home/bg-03.webp'
+import bg4 from '../assets/home/bg-04.webp'
+import bg5 from '../assets/home/bg-05.webp'
+import heroTitle from '../assets/home/hero-title-overlay.webp'
+import heroCta from '../assets/home/hero-cta-overlay.webp'
 import EventVision from '../components/home/EventVision'
 import GroupIntro from '../components/home/GroupIntro'
 import Rules from '../components/home/Rules'
@@ -16,12 +16,197 @@ import StaffAndThanks from '../components/home/StaffAndThanks'
 import FloatingNav from '../components/home/FloatingNav'
 
 const BACKGROUND_SEQUENCE = [bg1, bg2, bg3, bg4]
+const RESIZE_SCROLL_SECTION = '[data-resize-scroll-section]'
+const RESIZE_GESTURE_IDLE_MS = 300
+
+type ResizeScrollAnchor = {
+  section: string
+  progress: number
+  viewportWidth: number
+  viewportHeight: number
+  pixelRatio: number
+}
 
 export default function Home() {
   const trackRef = useRef<HTMLDivElement>(null)
+  const resizeScrollAnchorRef = useRef<ResizeScrollAnchor | null>(null)
   const [frozenRange, setFrozenRange] = useState({ start: 0, height: 0 })
   const [bg5Start, setBg5Start] = useState<number | null>(null)
   const { scrollY } = useScroll()
+
+  useEffect(() => {
+    let resizeFrame = 0
+    let scrollTimer = 0
+    let settleFrame = 0
+    let resizeTimer = 0
+    let isRestoring = false
+    let lastDirectScrollInput = 0
+    let activeResizeAnchor: ResizeScrollAnchor | null = null
+
+    function captureScrollAnchor(force = false) {
+      const previous = resizeScrollAnchorRef.current
+      const viewportWidth = window.innerWidth
+      const viewportHeight = window.innerHeight
+      const pixelRatio = window.devicePixelRatio
+
+      // Zooming can dispatch scroll after the layout has changed but before
+      // resize. Keep the last pre-resize anchor until restoration is complete.
+      if (
+        !force &&
+        previous &&
+        (previous.viewportWidth !== viewportWidth ||
+          previous.viewportHeight !== viewportHeight ||
+          previous.pixelRatio !== pixelRatio)
+      ) {
+        return
+      }
+
+      const sections = Array.from(
+        document.querySelectorAll<HTMLElement>(RESIZE_SCROLL_SECTION),
+      )
+      if (sections.length === 0) return
+
+      const viewportCenter = window.scrollY + viewportHeight / 2
+      const section =
+        sections.find((element) => {
+          const top = element.getBoundingClientRect().top + window.scrollY
+          return (
+            viewportCenter >= top && viewportCenter < top + element.offsetHeight
+          )
+        }) ?? sections.at(-1)
+
+      const sectionName = section?.dataset.resizeScrollSection
+      if (!section || !sectionName) return
+
+      const sectionTop = section.getBoundingClientRect().top + window.scrollY
+      const sectionHeight = Math.max(1, section.offsetHeight)
+
+      resizeScrollAnchorRef.current = {
+        section: sectionName,
+        progress: Math.min(
+          1,
+          Math.max(0, (viewportCenter - sectionTop) / sectionHeight),
+        ),
+        viewportWidth,
+        viewportHeight,
+        pixelRatio,
+      }
+    }
+
+    function restoreScrollAnchor(
+      anchor: ResizeScrollAnchor,
+      captureAfterRestore = true,
+    ) {
+      const section = document.querySelector<HTMLElement>(
+        `[data-resize-scroll-section="${anchor.section}"]`,
+      )
+      if (!section) {
+        captureScrollAnchor(true)
+        return
+      }
+
+      const sectionTop = section.getBoundingClientRect().top + window.scrollY
+      const targetCenter = sectionTop + section.offsetHeight * anchor.progress
+      const maxScroll = Math.max(
+        0,
+        document.documentElement.scrollHeight - window.innerHeight,
+      )
+      const targetScroll = Math.min(
+        maxScroll,
+        Math.max(0, targetCenter - window.innerHeight / 2),
+      )
+
+      isRestoring = true
+      if (Math.abs(window.scrollY - targetScroll) > 0.5) {
+        window.scrollTo(0, targetScroll)
+      }
+      cancelAnimationFrame(settleFrame)
+      settleFrame = requestAnimationFrame(() => {
+        isRestoring = false
+        if (captureAfterRestore) captureScrollAnchor(true)
+      })
+    }
+
+    function handleWheel(event: WheelEvent) {
+      // Ctrl/⌘ + wheel is browser zoom, not page navigation.
+      if (!event.ctrlKey && !event.metaKey) {
+        lastDirectScrollInput = performance.now()
+      }
+    }
+
+    function handleTouchMove() {
+      lastDirectScrollInput = performance.now()
+    }
+
+    function handleScroll() {
+      if (isRestoring) return
+      window.clearTimeout(scrollTimer)
+
+      if (performance.now() - lastDirectScrollInput < 250) {
+        captureScrollAnchor()
+        return
+      }
+
+      // Resize/zoom can emit its own scroll event immediately before resize.
+      // Only commit a new anchor after scrolling has actually settled.
+      scrollTimer = window.setTimeout(() => {
+        captureScrollAnchor()
+      }, 100)
+    }
+
+    function handleResize() {
+      window.clearTimeout(scrollTimer)
+      window.clearTimeout(resizeTimer)
+
+      // Keep the first anchor for the entire zoom gesture. Using each
+      // intermediate correction as the next baseline would accumulate a small
+      // rounding/layout error on every frame.
+      if (!activeResizeAnchor) {
+        activeResizeAnchor = resizeScrollAnchorRef.current
+      }
+
+      // Window and visualViewport can both fire for the same size change.
+      // Coalesce them into one correction per rendered frame to avoid the
+      // visible back-and-forth caused by repeated scrollTo calls.
+      if (!resizeFrame) {
+        resizeFrame = requestAnimationFrame(() => {
+          resizeFrame = 0
+          if (activeResizeAnchor) {
+            restoreScrollAnchor(activeResizeAnchor, false)
+          } else {
+            captureScrollAnchor(true)
+          }
+        })
+      }
+
+      // Finish on the exact anchor and save it as the baseline for the next
+      // resize gesture.
+      resizeTimer = window.setTimeout(() => {
+        if (activeResizeAnchor) restoreScrollAnchor(activeResizeAnchor)
+        activeResizeAnchor = null
+      }, RESIZE_GESTURE_IDLE_MS)
+    }
+
+    captureScrollAnchor(true)
+    const visualViewport = window.visualViewport
+    window.addEventListener('wheel', handleWheel, { passive: true })
+    window.addEventListener('touchmove', handleTouchMove, { passive: true })
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('resize', handleResize)
+    visualViewport?.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('wheel', handleWheel)
+      window.removeEventListener('touchmove', handleTouchMove)
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', handleResize)
+      visualViewport?.removeEventListener('resize', handleResize)
+      window.clearTimeout(scrollTimer)
+      cancelAnimationFrame(resizeFrame)
+      cancelAnimationFrame(settleFrame)
+      window.clearTimeout(resizeTimer)
+    }
+  }, [])
 
   useEffect(() => {
     function measure() {
@@ -71,11 +256,14 @@ export default function Home() {
           ref={trackRef}
           className="home-background-track flex w-full flex-col"
         >
-          {BACKGROUND_SEQUENCE.map((bg) => (
+          {BACKGROUND_SEQUENCE.map((bg, index) => (
             <img
               key={bg}
               src={bg}
               alt=""
+              loading={index === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+              fetchPriority={index === 0 ? 'high' : 'low'}
               className="min-h-0 w-full object-cover"
             />
           ))}
@@ -87,7 +275,14 @@ export default function Home() {
           className="home-light-background pointer-events-none absolute inset-x-0 bottom-0 z-0 overflow-hidden bg-white"
           style={{ top: `${bg5Start}px` }}
         >
-          <img src={bg5} alt="" className="h-auto w-full" />
+          <img
+            src={bg5}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            fetchPriority="low"
+            className="h-auto w-full"
+          />
           <div
             className="absolute inset-x-0 top-0 h-[min(28vw,400px)] bg-black"
             style={{
@@ -104,17 +299,23 @@ export default function Home() {
 
       <section
         id="intro"
+        data-resize-scroll-section="intro"
         className="home-hero relative aspect-[1440/1024] w-full overflow-hidden"
       >
         <img
           src={heroTitle}
           alt="梅竹黑客松 14th"
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
           className="home-hero-title animate-pop-in-right absolute top-[11.9%] left-[15.14%] w-[82.75%]"
           style={{ animationDelay: '0.1s' }}
         />
         <img
           src={heroCta}
           alt="準備好創造未來了嗎？"
+          loading="eager"
+          decoding="async"
           className="home-hero-cta animate-pop-in-right absolute top-[50.98%] left-[56.11%] w-[42.13%]"
           style={{ animationDelay: '0.4s' }}
         />
@@ -122,16 +323,27 @@ export default function Home() {
 
       <EventVision />
 
-      <section className="relative">
+      <section
+        className="relative"
+        data-resize-scroll-section="groups-and-rules"
+      >
         <GroupIntro />
         <Rules />
       </section>
 
-      <section id="awards" className="relative">
+      <section
+        id="awards"
+        className="relative"
+        data-resize-scroll-section="awards"
+      >
         <Awards lightBackgroundStart={bg5Start} />
       </section>
 
-      <section className="home-light-section relative" data-nav-theme="light">
+      <section
+        className="home-light-section relative md:pb-[172px]"
+        data-nav-theme="light"
+        data-resize-scroll-section="partners-and-staff"
+      >
         <PartnerLogos />
         <StaffAndThanks />
       </section>
