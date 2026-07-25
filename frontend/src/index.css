@@ -676,4 +676,10 @@ body {
   .animate-fade-in {
     animation: none;
   }
+  /* CursorTrail already declines to mount under reduced motion; this is a
+     belt-and-braces fallback for the case where the preference is switched on
+     after mount. */
+  .cursor-trail {
+    display: none;
+  }
 }

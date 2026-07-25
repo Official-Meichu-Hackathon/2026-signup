@@ -21,6 +21,13 @@ interface Star {
   duration: number
 }
 
+// 4-point sparkle matching the ✦ shapes in the mock. Exported because
+// CursorTrail draws raw <svg> nodes (it needs refs on each one to write
+// transforms imperatively) rather than rendering <Sparkle> — the shape has to
+// stay identical between the static field and the cursor trail.
+export const SPARKLE_PATH =
+  'M12 0c.6 6.4 5.6 11.4 12 12-6.4.6-11.4 5.6-12 12-.6-6.4-5.6-11.4-12-12C6.4 11.4 11.4 6.4 12 0Z'
+
 export function Sparkle({
   className = '',
   style,
@@ -28,7 +35,6 @@ export function Sparkle({
   className?: string
   style?: CSSProperties
 }) {
-  // 4-point sparkle matching the ✦ shapes in the mock
   return (
     <svg
       viewBox="0 0 24 24"
@@ -36,7 +42,7 @@ export function Sparkle({
       className={className}
       style={style}
     >
-      <path d="M12 0c.6 6.4 5.6 11.4 12 12-6.4.6-11.4 5.6-12 12-.6-6.4-5.6-11.4-12-12C6.4 11.4 11.4 6.4 12 0Z" />
+      <path d={SPARKLE_PATH} />
     </svg>
   )
 }
