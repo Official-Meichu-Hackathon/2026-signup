@@ -64,7 +64,7 @@ export default function FormShell({
       <div className="relative col-start-1 row-start-1 pt-28 md:pt-56">
         {/* lower-left star, far down below the hero star (Figma 894:10450) */}
         <img
-          src="/deco/star-03.png"
+          src="/deco/star-03.svg"
           alt=""
           draggable={false}
           aria-hidden
@@ -105,7 +105,7 @@ export default function FormShell({
             in. Hosts star-04, just below the card (Figma 894:10451). */}
         <div className="relative h-[22rem]">
           <img
-            src="/deco/star-04.png"
+            src="/deco/star-04.svg"
             alt=""
             draggable={false}
             aria-hidden
