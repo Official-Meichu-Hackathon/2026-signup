@@ -14,27 +14,25 @@ interface NavGroup {
 // Two collapsible sections (首頁 / 報名方式), each revealing their own
 // sub-links, plus three flat links that always show. Matches node 190:120's
 // three accordion states (closed / 首頁 open / 報名方式 open).
-// Sub-links point at hash anchors on their parent page per 注意事項.txt
-// ("按 + 可以跳到相對應頁面的那個段落 => 可以用 router 的 hash") — the
-// anchors themselves still need matching ids once those page sections exist.
+// Sub-link hashes match the actual section ids rendered in Home.tsx /
+// RegistrationMethodView.tsx (see FloatingNav.tsx for the same id set used
+// by the desktop floating nav) — the previous Chinese-text hashes here never
+// matched any real id, so every link silently did nothing.
 const GROUPS: NavGroup[] = [
   {
     label: '首頁',
     children: [
-      { label: '活動簡介', href: '/#活動簡介' },
-      { label: '比賽組別、工作坊', href: '/#比賽組別、工作坊' },
-      { label: '比賽規則', href: '/#比賽規則' },
-      { label: '獎項資訊', href: '/#獎項資訊' },
-      { label: '合作、贊助企業與單位', href: '/#合作、贊助企業與單位' },
-      { label: '工作人員名單', href: '/#工作人員名單' },
+      { label: '活動簡介', href: '/#vision' },
+      { label: '比賽組別、工作坊', href: '/#group-intro' },
+      { label: '比賽規則', href: '/#rules' },
+      { label: '獎項資訊', href: '/#awards' },
+      { label: '合作、贊助企業與單位', href: '/#partners' },
+      { label: '工作人員名單', href: '/#staff' },
     ],
   },
   {
     label: '報名方式',
-    children: [
-      { label: '報名時程', href: '/registration#報名時程' },
-      { label: '報名資訊', href: '/registration#報名資訊' },
-    ],
+    children: [{ label: '報名資訊', href: '/registration' }],
   },
 ]
 

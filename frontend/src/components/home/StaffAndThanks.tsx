@@ -111,71 +111,70 @@ export default function StaffAndThanks() {
         <div className="h-[300px] w-full bg-[#f4f5f5] md:h-[491px]" />
       </div>
 
-      <div
-        id="staff"
-        className="staff-desktop flex w-full flex-col items-center gap-8 md:gap-[48px]"
-      >
-        <SectionTitle>工作人員名單</SectionTitle>
-        <div className="relative w-full">
-          <div className="relative z-20 flex w-full items-end">
-            {DEPARTMENTS.map((d) => (
-              <button
-                key={d}
-                onClick={() => setDept(d)}
-                className={`relative flex h-[42px] min-w-0 flex-1 cursor-pointer items-center justify-center rounded-t-[18px] px-1 text-xs leading-none font-semibold text-white transition-all duration-300 sm:h-[48px] sm:rounded-t-[24px] sm:text-base md:h-[52px] md:rounded-t-[30px] md:text-[24px] md:leading-[40px] ${
-                  dept === d
-                    ? 'z-20 bg-[linear-gradient(to_bottom,#d9cfea_0%,#b1a2ca_100%)] shadow-[0_-8px_24px_rgba(255,255,255,1),-7px_0_18px_rgba(255,255,255,0.7),7px_0_18px_rgba(255,255,255,0.55),inset_0_3px_8px_rgba(255,255,255,0.85)]'
-                    : 'z-0 bg-[#b1a2ca]/75 shadow-[inset_0_2px_5px_rgba(255,255,255,0.28)] hover:bg-[#b1a2ca]/90'
-                }`}
-              >
-                {d}
-              </button>
-            ))}
-          </div>
-
-          <div className="relative z-10 -mt-px flex min-h-[300px] flex-col items-start gap-8 rounded-b-[30px] bg-[#b1a2ca] p-8 shadow-[0_0_24px_rgba(255,255,255,0.95),0_8px_0_rgba(151,135,180,0.72),0_14px_28px_rgba(0,0,0,0.3),inset_1px_0_rgba(255,255,255,0.75),inset_-1px_0_rgba(255,255,255,0.75),inset_0_-1px_rgba(255,255,255,0.75)] sm:flex-row sm:items-center md:min-h-[347px] md:gap-[65px] md:px-[65px] md:py-[48px]">
-            <img
-              src={photo}
-              alt={`${dept}合照`}
-              className="h-[180px] w-full shrink-0 rounded-[30px] object-cover sm:w-[42%] md:h-[251px] md:w-[406px]"
-            />
-            <div className="flex min-w-0 flex-1 flex-col text-lg leading-[1.6] font-semibold text-[#4664ac] md:text-[25px] md:leading-[40px]">
-              {members.map((line) => (
-                <p key={line}>{line}</p>
+      <div id="staff" className="w-full">
+        <div className="staff-desktop flex w-full flex-col items-center gap-8 md:gap-[48px]">
+          <SectionTitle>工作人員名單</SectionTitle>
+          <div className="relative w-full">
+            <div className="relative z-20 flex w-full items-end">
+              {DEPARTMENTS.map((d) => (
+                <button
+                  key={d}
+                  onClick={() => setDept(d)}
+                  className={`relative flex h-[42px] min-w-0 flex-1 cursor-pointer items-center justify-center rounded-t-[18px] px-1 text-xs leading-none font-semibold text-white transition-all duration-300 sm:h-[48px] sm:rounded-t-[24px] sm:text-base md:h-[52px] md:rounded-t-[30px] md:text-[24px] md:leading-[40px] ${
+                    dept === d
+                      ? 'z-20 bg-[linear-gradient(to_bottom,#d9cfea_0%,#b1a2ca_100%)] shadow-[0_-8px_24px_rgba(255,255,255,1),-7px_0_18px_rgba(255,255,255,0.7),7px_0_18px_rgba(255,255,255,0.55),inset_0_3px_8px_rgba(255,255,255,0.85)]'
+                      : 'z-0 bg-[#b1a2ca]/75 shadow-[inset_0_2px_5px_rgba(255,255,255,0.28)] hover:bg-[#b1a2ca]/90'
+                  }`}
+                >
+                  {d}
+                </button>
               ))}
+            </div>
+
+            <div className="relative z-10 -mt-px flex min-h-[300px] flex-col items-start gap-8 rounded-b-[30px] bg-[#b1a2ca] p-8 shadow-[0_0_24px_rgba(255,255,255,0.95),0_8px_0_rgba(151,135,180,0.72),0_14px_28px_rgba(0,0,0,0.3),inset_1px_0_rgba(255,255,255,0.75),inset_-1px_0_rgba(255,255,255,0.75),inset_0_-1px_rgba(255,255,255,0.75)] sm:flex-row sm:items-center md:min-h-[347px] md:gap-[65px] md:px-[65px] md:py-[48px]">
+              <img
+                src={photo}
+                alt={`${dept}合照`}
+                className="h-[180px] w-full shrink-0 rounded-[30px] object-cover sm:w-[42%] md:h-[251px] md:w-[406px]"
+              />
+              <div className="flex min-w-0 flex-1 flex-col text-lg leading-[1.6] font-semibold text-[#4664ac] md:text-[25px] md:leading-[40px]">
+                {members.map((line) => (
+                  <p key={line}>{line}</p>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="staff-mobile">
-        <SectionTitle>工作人員名單</SectionTitle>
-        <div className="staff-mobile-list">
-          {DEPARTMENTS.map((department) => {
-            const expanded = mobileDept === department
-            return (
-              <div
-                key={department}
-                className={`staff-mobile-row ${expanded ? 'is-expanded' : ''}`}
-              >
-                <button
-                  type="button"
-                  aria-expanded={expanded}
-                  onClick={() => setMobileDept(expanded ? null : department)}
+        <div className="staff-mobile">
+          <SectionTitle>工作人員名單</SectionTitle>
+          <div className="staff-mobile-list">
+            {DEPARTMENTS.map((department) => {
+              const expanded = mobileDept === department
+              return (
+                <div
+                  key={department}
+                  className={`staff-mobile-row ${expanded ? 'is-expanded' : ''}`}
                 >
-                  <span>{department}</span>
-                  <span aria-hidden>{expanded ? '−' : '+'}</span>
-                </button>
-                {expanded && (
-                  <div className="staff-mobile-members">
-                    {STAFF[department].members.map((line) => (
-                      <p key={line}>{line}</p>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )
-          })}
+                  <button
+                    type="button"
+                    aria-expanded={expanded}
+                    onClick={() => setMobileDept(expanded ? null : department)}
+                  >
+                    <span>{department}</span>
+                    <span aria-hidden>{expanded ? '−' : '+'}</span>
+                  </button>
+                  {expanded && (
+                    <div className="staff-mobile-members">
+                      {STAFF[department].members.map((line) => (
+                        <p key={line}>{line}</p>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
         </div>
       </div>
     </div>
