@@ -32,6 +32,12 @@ const cardPadding = fluid(20, 48)
 const cardGapX = fluid(8, 24) // gap either side of the divider
 const cardGapY = fluid(8, 24) // gap between date rows
 
+// Empirically measured (via rendered getBoundingClientRect, not derived from
+// a formula) gap between the 08.06 and 08.19 circles at the 390/1460 Figma
+// breakpoints — see DateBadge's circleOffset. Purely a visual nudge for the
+// one badge whose column is heightened by the "20:00 前" note.
+const endCircleOffset = fluid(9.25, 13)
+
 // Same +/− glyph as MobileNavMenu's ToggleIcon, duplicated locally rather
 // than exported/shared — this page's accordion opens by index instead of by
 // group label, so the two components don't otherwise share state shape.
@@ -244,18 +250,33 @@ function FaqAccordion() {
 
 // A date + weekday badge, e.g. "08.06 (Thu)" — mirrors the dotted-circle
 // badges in the Figma timeline card (node 107:335 etc).
-function DateBadge({ date, day }: { date: string; day: string }) {
+//
+// circleOffset nudges ONLY the circle down via relative positioning (not
+// the date text, not the row it sits in) — used to correct the 08.19
+// badge, whose circle otherwise sits higher than 08.06's because the
+// "20:00 前" note below it makes that column the tallest thing in its
+// row, so the row's items-center has nothing to center it against.
+function DateBadge({
+  date,
+  day,
+  circleOffset,
+}: {
+  date: string
+  day: string
+  circleOffset?: string
+}) {
   return (
     <span className="inline-flex items-center gap-2">
       <span className="font-zen text-white" style={{ fontSize: dateTextSize }}>
         {date}
       </span>
       <span
-        className="font-zen flex items-center justify-center rounded-full border border-white text-white"
+        className="font-zen relative flex items-center justify-center rounded-full border border-white text-white"
         style={{
           width: circleSize,
           height: circleSize,
           fontSize: dayLabelSize,
+          top: circleOffset,
         }}
       >
         {day}
@@ -320,28 +341,14 @@ function DateRange({ item }: { item: DateItem }) {
     <div className="flex flex-nowrap items-center gap-2">
       {hasRange ? (
         <>
-          {/* Invisible copy of the note gives the start column the same
-              height as the end column (badge + note). Without it, the
-              end column is taller, and the row's items-center centers
-              each column within its own box — leaving the end badge
-              pinned at its column's top while the shorter start badge
-              sinks toward the row's middle, so the two circles end up
-              at different heights. */}
-          <div className="flex flex-col gap-0.5">
-            <DateBadge date={item.date} day={item.day} />
-            {item.note && (
-              <span
-                aria-hidden="true"
-                className="invisible"
-                style={{ fontSize: noteTextSize }}
-              >
-                {item.note}
-              </span>
-            )}
-          </div>
+          <DateBadge date={item.date} day={item.day} />
           <span className="h-px w-6 shrink-0 bg-white/50 md:w-9" />
           <div className="flex flex-col gap-0.5">
-            <DateBadge date={item.endDate!} day={item.endDay!} />
+            <DateBadge
+              date={item.endDate!}
+              day={item.endDay!}
+              circleOffset={item.note ? endCircleOffset : undefined}
+            />
             {item.note && (
               <span
                 className="text-white/80"
