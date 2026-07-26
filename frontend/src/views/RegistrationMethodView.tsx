@@ -320,7 +320,25 @@ function DateRange({ item }: { item: DateItem }) {
     <div className="flex flex-nowrap items-center gap-2">
       {hasRange ? (
         <>
-          <DateBadge date={item.date} day={item.day} />
+          {/* Invisible copy of the note gives the start column the same
+              height as the end column (badge + note). Without it, the
+              end column is taller, and the row's items-center centers
+              each column within its own box — leaving the end badge
+              pinned at its column's top while the shorter start badge
+              sinks toward the row's middle, so the two circles end up
+              at different heights. */}
+          <div className="flex flex-col gap-0.5">
+            <DateBadge date={item.date} day={item.day} />
+            {item.note && (
+              <span
+                aria-hidden="true"
+                className="invisible"
+                style={{ fontSize: noteTextSize }}
+              >
+                {item.note}
+              </span>
+            )}
+          </div>
           <span className="h-px w-6 shrink-0 bg-white/50 md:w-9" />
           <div className="flex flex-col gap-0.5">
             <DateBadge date={item.endDate!} day={item.endDay!} />
