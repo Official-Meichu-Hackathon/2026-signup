@@ -52,8 +52,8 @@ export default function GroupIntro() {
   const { image, intro, workshop } = CONTENT[tab]
 
   return (
-    <>
-      <div id="group-intro" className="group-intro-mobile">
+    <div id="group-intro">
+      <div className="group-intro-mobile">
         <p className="mobile-home-title">組別介紹</p>
         <div className="group-mobile-panel">
           <div className="group-mobile-tabs">
@@ -146,6 +146,6 @@ export default function GroupIntro() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }

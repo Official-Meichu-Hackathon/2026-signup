@@ -44,9 +44,10 @@ export default function Navbar() {
             elements always open their own stacking context, so nesting these
             under a lower z-index header would trap them there too) to look
             covered by the glass panel while it's open, per the reference
-            screenshot. The hamburger itself fades along with the rest of the
-            header when open — closing then goes through the drawer's
-            click-outside backdrop instead, so it doesn't need to stay live. */}
+            screenshot. The hamburger button stays clickable (no
+            pointer-events-none) so it can toggle the drawer closed again —
+            it previously lost pointer events along with the rest of the
+            header, which made it impossible to close via the hamburger. */}
         <Link
           to="/"
           className={`transition duration-300 ${menuOpen ? 'pointer-events-none opacity-30 blur-[2px]' : ''}`}
@@ -73,7 +74,7 @@ export default function Navbar() {
             aria-label={menuOpen ? '關閉選單' : '選單'}
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((open) => !open)}
-            className={`site-menu-button transition duration-300 hover:opacity-70 ${onLightBg ? 'text-neutral-900' : 'text-white'} ${menuOpen ? 'pointer-events-none opacity-30 blur-[2px]' : ''}`}
+            className={`site-menu-button transition duration-300 hover:opacity-70 ${onLightBg ? 'text-neutral-900' : 'text-white'} ${menuOpen ? 'opacity-30 blur-[2px]' : ''}`}
           >
             <svg
               viewBox="0 0 24 24"
