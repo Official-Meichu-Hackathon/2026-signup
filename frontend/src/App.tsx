@@ -8,6 +8,10 @@ import RegistrationMethodView from './views/RegistrationMethodView'
 import ScheduleView from './views/ScheduleView'
 import SignupView from './views/SignupView'
 import SuccessView from './views/SuccessView'
+import ProblemsView from './views/ProblemsView'
+import MobileProblemsView from './views/MobileProblemsView'
+import StatsView from './views/StatsView'
+import MobileStatsView from './views/MobileStatsView'
 
 // Owns its own Navbar/Footer rather than relying on a global App-level
 // wrapper — ScheduleView does the same (see its own <Navbar />/<Footer />),
@@ -48,6 +52,16 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/schedule" element={<ScheduleView />} />
         <Route path="/registration" element={<RegistrationMethodView />} />
+        <Route path="/problems" element={<ProblemsView />} />
+        <Route
+          path="/problems/mobile"
+          element={<MobileProblemsView forcePreview />}
+        />
+        <Route path="/stats" element={<StatsView />} />
+        <Route
+          path="/stats/mobile"
+          element={<MobileStatsView forcePreview />}
+        />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

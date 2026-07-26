@@ -40,8 +40,8 @@ const GROUPS: NavGroup[] = [
 
 const LEAF_LINKS: NavLink[] = [
   { label: '比賽時程', href: '/schedule' },
-  { label: '題目說明', href: '/' },
-  { label: '參賽數據', href: '/' },
+  { label: '題目說明', href: '/problems' },
+  { label: '參賽數據', href: '/stats' },
 ]
 
 // Fluid clamp(min, preferred, max) built from the two Figma frames (mobile:

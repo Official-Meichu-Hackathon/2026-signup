@@ -7,7 +7,7 @@
 .vscode
 .cursor
 .idea
-.claude
+.claude/
 
 # Logs
 *.log
