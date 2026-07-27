@@ -22,6 +22,8 @@ const cssVars = {
   '--nav-links-gap': 'clamp(16px, calc(9.26vw - 55.1px), 56px)',
   '--nav-px': 'clamp(12px, 1.417vw, 17px)',
   '--nav-font': 'clamp(14px, 1.667vw, 20px)',
+  '--nav-logo-offset':
+    'max(0px, calc((var(--nav-collapsed-w) - 2 * var(--nav-px) - var(--nav-logo-w)) / 2))',
 } as React.CSSProperties
 
 const NAV_BOTTOM_OFFSET = 24
@@ -86,16 +88,20 @@ export default function FloatingNav() {
           src={navLogo}
           alt="梅竹黑客松"
           decoding="async"
-          className="h-[var(--nav-logo-h)] w-[var(--nav-logo-w)] shrink-0 object-contain object-left"
+          className="ml-[var(--nav-logo-offset)] h-[var(--nav-logo-h)] w-[var(--nav-logo-w)] shrink-0 object-contain object-center transition-[margin-left] duration-500 ease-out group-focus-within:ml-0 group-hover:ml-0"
         />
         <ul className="flex shrink-0 items-center gap-[var(--nav-links-gap)] whitespace-nowrap opacity-0 transition-opacity delay-150 duration-300 group-focus-within:opacity-100 group-hover:opacity-100">
           {LINKS.map(({ label, href, weight }) => (
             <li key={href}>
               <a
                 href={href}
-                className={`font-noto-tc block w-[4em] text-center text-[length:var(--nav-font)] transition-colors hover:text-white/70 ${
+                className={`font-noto-tc block w-[4em] text-center text-[length:var(--nav-font)] transition-colors ${
                   weight === 'medium' ? 'font-medium' : 'font-normal'
-                } ${activeHref === href ? 'text-[#989898]' : 'text-white'}`}
+                } ${
+                  activeHref === href
+                    ? 'text-[#989898]'
+                    : 'text-white hover:text-white/70'
+                }`}
               >
                 {label}
               </a>

@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import groupHacker from '../../assets/home/group-hacker.webp'
 import groupMaker from '../../assets/home/group-maker.webp'
+import groupMobileBase from '../../assets/home/group-mobile-base.svg'
+import groupMobileHackerShell from '../../assets/home/group-mobile-hacker-shell.svg'
+import groupMobileMakerShell from '../../assets/home/group-mobile-maker-shell.svg'
 import Sparkle from './Sparkle'
 
 type GroupKey = 'hacker' | 'maker'
@@ -55,7 +58,19 @@ export default function GroupIntro() {
     <div id="group-intro">
       <div className="group-intro-mobile">
         <p className="mobile-home-title">組別介紹</p>
-        <div className="group-mobile-panel">
+        <div className={`group-mobile-panel is-${tab}`}>
+          <div className="group-mobile-art" aria-hidden="true">
+            <img src={groupMobileBase} alt="" className="group-mobile-base" />
+            <img
+              src={
+                tab === 'hacker'
+                  ? groupMobileHackerShell
+                  : groupMobileMakerShell
+              }
+              alt=""
+              className="group-mobile-shell"
+            />
+          </div>
           <div className="group-mobile-tabs">
             {TABS.map(({ key, label }) => (
               <button
@@ -81,7 +96,7 @@ export default function GroupIntro() {
         </div>
       </div>
 
-      <div className="group-intro-desktop relative mx-auto h-[1024px] w-full max-w-[1440px] flex-col">
+      <div className="group-intro-desktop relative mx-auto min-h-[1024px] w-full max-w-[1440px] flex-col">
         <div className="absolute top-[155px] left-1/2 -translate-x-1/2">
           <Sparkle
             variant="bright"
@@ -96,7 +111,7 @@ export default function GroupIntro() {
           </p>
         </div>
 
-        <div className="absolute top-[244px] left-[-20px] flex w-[1271px] items-start gap-[151px]">
+        <div className="flex w-full items-start gap-[clamp(48px,10.49vw,151px)] pt-[244px] pr-[clamp(24px,5vw,72px)]">
           <div
             className="group-edge-tabs flex w-[112px] shrink-0 flex-col items-start"
             data-node-id="617:1329"
@@ -117,20 +132,20 @@ export default function GroupIntro() {
             ))}
           </div>
 
-          <div className="flex w-[1008px] shrink-0 flex-col gap-[45px] pt-[45px]">
+          <div className="flex max-w-[1008px] min-w-0 flex-1 flex-col gap-[45px] pt-[45px] pb-[84px]">
             <div className="flex w-full items-start gap-[15px]">
               <p className="font-noto w-[26px] shrink-0 text-center text-[25px] leading-[40px] font-semibold text-white">
                 組別介紹
               </p>
-              <GlassCard className="flex h-[334px] w-[967px] shrink-0 items-center justify-center gap-[54px] py-[72px] pr-[62px] pl-[57px]">
+              <GlassCard className="flex min-h-[334px] min-w-0 flex-1 flex-wrap items-center justify-center gap-[clamp(28px,3.75vw,54px)] px-[clamp(28px,4vw,57px)] py-[clamp(42px,5vw,72px)]">
                 <img
                   src={image}
                   alt=""
                   loading="lazy"
                   decoding="async"
-                  className="h-[208px] w-[340px] shrink-0 rounded-[41px] object-cover"
+                  className="h-[208px] w-[clamp(240px,35%,340px)] shrink-0 rounded-[41px] object-cover"
                 />
-                <p className="font-noto w-[454px] shrink-0 text-[20px] leading-[32px] font-semibold text-white">
+                <p className="font-noto min-w-[260px] flex-1 text-[20px] leading-[32px] font-semibold text-white">
                   {intro}
                 </p>
               </GlassCard>
@@ -140,8 +155,8 @@ export default function GroupIntro() {
               <p className="font-noto w-[26px] shrink-0 text-center text-[25px] leading-[40px] font-semibold text-white">
                 工作坊
               </p>
-              <GlassCard className="relative h-[334px] w-[967px] shrink-0">
-                <div className="absolute top-[88px] left-[57px] flex w-[440px] flex-col gap-px">
+              <GlassCard className="flex min-h-[334px] min-w-0 flex-1 flex-wrap items-center gap-[clamp(28px,3.75vw,54px)] px-[clamp(28px,4vw,57px)] py-[63px]">
+                <div className="flex min-w-[260px] flex-1 flex-col gap-px">
                   <p className="font-noto text-[20px] leading-[32px] font-semibold text-white">
                     {workshop}
                   </p>
@@ -149,7 +164,7 @@ export default function GroupIntro() {
                     點擊查詢詳細內容
                   </p>
                 </div>
-                <div className="absolute top-[63px] left-[551px] h-[208px] w-[340px] rounded-[41px] bg-white" />
+                <div className="h-[208px] w-[clamp(240px,35%,340px)] shrink-0 rounded-[41px] bg-white" />
               </GlassCard>
             </div>
           </div>

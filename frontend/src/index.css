@@ -130,6 +130,7 @@ body {
 }
 
 @media (max-width: 767px) {
+  html,
   body {
     overflow-x: hidden;
   }
@@ -217,76 +218,104 @@ body {
 
   .group-mobile-panel {
     position: relative;
-    width: min(calc(100vw - 32px), 278px);
-    min-height: 469px;
+    isolation: isolate;
+    width: min(calc(100vw - 32px), 284px);
+    height: 469px;
+  }
+
+  .group-mobile-art,
+  .rules-mobile-art {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .group-mobile-base {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 279px;
+    height: 464.011px;
+    max-width: none;
+  }
+
+  .group-mobile-shell {
+    position: absolute;
+    top: -38.8px;
+    left: -43.37px;
+    width: 375.73px;
+    height: 559.58px;
+    max-width: none;
   }
 
   .group-mobile-tabs {
     position: absolute;
-    z-index: 2;
+    z-index: 3;
     top: 0;
     left: 0;
     display: flex;
-    height: 35px;
-    align-items: flex-end;
+    height: 34px;
+    align-items: flex-start;
   }
 
   .group-mobile-tabs button {
-    height: 29px;
-    min-width: 75px;
-    padding: 0 12px;
-    border: 1px solid rgba(244, 245, 245, 0.8);
-    border-bottom: 0;
-    border-radius: 15px 15px 0 0;
-    background: rgba(177, 162, 202, 0.66);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 75px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    background: transparent;
     color: #fff;
     font-family: 'Noto Sans', 'Noto Sans TC', sans-serif;
     font-size: 11px;
     font-weight: 500;
     line-height: 13px;
+    transform: translateY(6px);
   }
 
   .group-mobile-tabs button + button {
-    min-width: 102px;
+    width: 97px;
   }
 
   .group-mobile-tabs button.is-active {
-    height: 35px;
-    background: rgba(198, 184, 218, 0.95);
+    transform: translateY(5px);
   }
 
-  .group-mobile-tabs button:focus-visible,
-  .rules-mobile-tabs button:focus-visible,
   .staff-mobile-row > button:focus-visible,
   .group-mobile-workshop:focus-visible {
     outline: 2px solid rgba(255, 255, 255, 0.85);
     outline-offset: -3px;
   }
 
+  .group-mobile-tabs button:focus-visible,
+  .rules-mobile-tabs button:focus-visible {
+    outline: none;
+  }
+
   .group-mobile-card {
     position: absolute;
-    top: 29px;
-    left: 0;
+    z-index: 2;
+    top: 56.08px;
+    left: 33.5px;
     display: flex;
-    width: calc(100% - 5px);
-    min-height: 434px;
+    width: 212px;
+    height: 401px;
     flex-direction: column;
     align-items: center;
-    padding: 27px 29.5px 20px;
-    overflow: hidden;
-    border: 1px solid rgba(244, 245, 245, 0.75);
-    border-radius: 0 18px 18px 18px;
-    background: rgba(177, 162, 202, 0.78);
-    box-shadow:
-      7px 8px 0 rgba(206, 194, 224, 0.68),
-      0 10px 30px rgba(0, 0, 0, 0.25),
-      inset 0 1px 8px rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(35px);
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
   }
 
   .group-mobile-card > img {
-    width: 100%;
-    max-width: 212px;
+    width: 212px;
+    max-width: none;
     height: 131px;
     flex: none;
     border-radius: 15px;
@@ -307,7 +336,10 @@ body {
   }
 
   .group-mobile-workshop {
+    flex: none;
+    align-self: center;
     margin-top: auto;
+    margin-bottom: 10px;
     padding: 5px 15px;
     border: 1px solid #d27f90;
     border-radius: 40px;
@@ -334,65 +366,98 @@ body {
 
   .rules-mobile-panel {
     position: relative;
-    width: min(calc(100vw - 32px), 279px);
-    min-height: 607px;
-    padding-top: 28px;
+    isolation: isolate;
+    width: min(calc(100vw - 32px), 284px);
+    height: 607px;
   }
 
   .rules-mobile-panel.is-maker {
-    min-height: 363px;
+    height: 363px;
+  }
+
+  .rules-mobile-base {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 278px;
+    height: 601px;
+    max-width: none;
+  }
+
+  .rules-mobile-panel.is-maker .rules-mobile-base {
+    height: 357px;
+  }
+
+  .rules-mobile-shell {
+    position: absolute;
+    top: -37.69px;
+    left: -42.18px;
+    width: 374.37px;
+    height: 696.33px;
+    max-width: none;
+  }
+
+  .rules-mobile-panel.is-maker .rules-mobile-shell {
+    top: -37.49px;
+    height: 451.88px;
   }
 
   .rules-mobile-tabs {
     position: absolute;
-    z-index: 2;
+    z-index: 3;
     top: 0;
     left: 0;
     display: flex;
-    align-items: flex-end;
+    height: 36px;
+    align-items: flex-start;
   }
 
   .rules-mobile-tabs button {
-    height: 28px;
-    padding: 0 14px;
-    border: 1px solid rgba(244, 245, 245, 0.78);
-    border-bottom: 0;
-    border-radius: 14px 14px 0 0;
-    background: rgba(177, 162, 202, 0.68);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 75px;
+    height: 30px;
+    padding: 0;
+    border: 0;
+    background: transparent;
     color: #fff;
     font-family: 'Noto Sans', 'Noto Sans TC', sans-serif;
     font-size: 12px;
     font-weight: 600;
     line-height: 12px;
+    transform: translateY(6px);
+  }
+
+  .rules-mobile-tabs button + button {
+    width: 97px;
   }
 
   .rules-mobile-tabs button.is-active {
-    z-index: 2;
-    background: rgba(198, 184, 218, 0.98);
-    box-shadow: 0 -8px 18px rgba(255, 255, 255, 0.46);
+    transform: translateY(6px);
   }
 
   .rules-mobile-copy {
-    width: calc(100% - 6px);
-    min-height: 579px;
-    padding: 22px 16px 18px 20px;
-    border: 1px solid rgba(244, 245, 245, 0.78);
-    border-radius: 0 16px 16px 16px;
-    background: rgba(193, 178, 213, 0.95);
+    position: absolute;
+    z-index: 2;
+    top: 50px;
+    left: 17px;
+    width: 234px;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
     color: #f6f6f6;
     font-family: 'Noto Sans', 'Noto Sans TC', sans-serif;
     font-size: 10px;
     font-weight: 600;
     line-height: 15px;
     text-align: justify;
-    box-shadow:
-      6px 7px 0 rgba(177, 162, 202, 0.72),
-      0 0 25px rgba(255, 255, 255, 0.68),
-      inset 0 1px 8px rgba(255, 255, 255, 0.42);
+    box-shadow: none;
   }
 
   .rules-mobile-panel.is-maker .rules-mobile-copy {
-    min-height: 335px;
+    min-height: 0;
   }
 
   .rules-mobile-copy > ul,
@@ -481,7 +546,7 @@ body {
 
   .partner-sections {
     width: 100%;
-    gap: 64px !important;
+    gap: 0 !important;
     padding: 48px 0 40px !important;
   }
 
@@ -513,6 +578,116 @@ body {
   .partner-special-logo {
     width: 53px;
     height: 65px !important;
+  }
+
+  .partner-main {
+    position: relative;
+    width: 249px !important;
+    min-height: 299.22px;
+  }
+
+  .partner-main > div {
+    gap: 24px !important;
+  }
+
+  .partner-main-grid {
+    width: 249px !important;
+    height: 259.22px !important;
+    max-width: none !important;
+    aspect-ratio: auto !important;
+  }
+
+  .partner-logo-logitech {
+    top: 0 !important;
+    left: 1px !important;
+    width: 109px !important;
+    height: 52px !important;
+  }
+
+  .partner-logo-amd {
+    top: 5.18px !important;
+    left: 150.5px !important;
+    width: 83px !important;
+    height: 20px !important;
+  }
+
+  .partner-logo-cloudmosa {
+    top: 76px !important;
+    left: 10px !important;
+    width: 91px !important;
+    height: 22px !important;
+  }
+
+  .partner-logo-google {
+    top: 60.18px !important;
+    left: 147.5px !important;
+    width: 89px !important;
+    height: 29px !important;
+  }
+
+  .partner-logo-nxp {
+    top: 122px !important;
+    left: 2px !important;
+    width: 107px !important;
+    height: 52.22px !important;
+  }
+
+  .partner-logo-advantest {
+    top: 124.18px !important;
+    left: 137.5px !important;
+    width: 109px !important;
+    height: 49px !important;
+  }
+
+  .partner-logo-eclat {
+    position: absolute;
+    top: 247.6px;
+    left: 97.5px;
+    width: 55px !important;
+    height: 45.86px !important;
+    margin: 0 !important;
+  }
+
+  .partner-special {
+    margin-top: 71px !important;
+    gap: 24px !important;
+  }
+
+  .partner-special-logo {
+    width: 53px !important;
+    height: 65px !important;
+  }
+
+  .partner-sponsors {
+    margin-top: 41px !important;
+    gap: 24px !important;
+  }
+
+  .partner-sponsors > div {
+    width: 111px;
+    gap: 35px !important;
+  }
+
+  .partner-sponsors > div > div:first-child {
+    width: 97px !important;
+    height: 61px !important;
+    max-width: none !important;
+    aspect-ratio: auto !important;
+  }
+
+  .partner-sponsors > div > div:last-child {
+    width: 111px !important;
+    height: 34.87px !important;
+    max-width: none !important;
+    aspect-ratio: auto !important;
+  }
+
+  .partner-sponsors + .partner-placeholder {
+    margin-top: 56px !important;
+  }
+
+  .partner-placeholder + .partner-placeholder {
+    margin-top: 64px !important;
   }
 
   .partner-sponsors .partner-logo-grid {
@@ -547,7 +722,7 @@ body {
   .thanks-block > div {
     gap: 3px;
     color: #4664ac;
-    font-size: 10px !important;
+    font-size: 14px !important;
     line-height: 15px;
   }
 

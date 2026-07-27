@@ -99,7 +99,7 @@ export default function StaffAndThanks() {
   const { photo, members } = STAFF[dept]
 
   return (
-    <div className="staff-and-thanks mx-auto flex w-full max-w-[1113px] flex-col items-center gap-16 px-6 py-16 md:gap-[125px] md:px-0 md:py-0">
+    <div className="staff-and-thanks mx-auto flex w-full max-w-[1177px] flex-col items-center gap-16 px-6 py-16 md:gap-[125px] md:px-[32px] md:py-0 xl:px-0">
       <div className="thanks-block flex flex-col items-center gap-8 text-center md:w-[570px] md:gap-[50px]">
         <p className="font-['Zen_Antique'] text-2xl text-[#b1a2ca] [text-shadow:0px_0px_20px_rgba(255,255,255,0.5),0px_4px_40px_rgba(255,255,255,0.5),0px_4px_50px_rgba(255,255,255,0.5)] md:text-[35px] md:leading-[44px]">
           協辦單位
@@ -136,7 +136,7 @@ export default function StaffAndThanks() {
         className="staff-desktop flex w-full flex-col items-center gap-8 md:gap-[50px]"
       >
         <SectionTitle>工作人員名單</SectionTitle>
-        <div className="relative aspect-[1121/407] w-full">
+        <div className="relative min-h-[407px] w-full">
           <img
             src={staffShape}
             alt=""
@@ -157,7 +157,7 @@ export default function StaffAndThanks() {
           ))}
 
           <div
-            className="absolute top-0 left-0 z-30 grid h-[15.48%] w-[87.51%] grid-cols-7"
+            className="absolute top-0 left-0 z-30 grid h-[63px] w-[87.51%] grid-cols-7"
             role="tablist"
             aria-label="工作人員部門"
           >
@@ -168,7 +168,7 @@ export default function StaffAndThanks() {
                 role="tab"
                 aria-selected={dept === d}
                 onClick={() => setDept(d)}
-                className={`flex min-w-0 cursor-pointer items-center justify-center rounded-t-[30px] px-1 font-['Chiron_Hei_HK'] text-[clamp(13px,1.67vw,24px)] leading-none font-extrabold text-white [text-shadow:0_1px_4px_rgba(255,255,255,0.35)] focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-white/90 ${
+                className={`flex min-w-0 cursor-pointer items-center justify-center rounded-t-[30px] px-1 font-['Chiron_Hei_HK'] text-[24px] leading-none font-extrabold whitespace-nowrap text-white [text-shadow:0_1px_4px_rgba(255,255,255,0.35)] focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-white/90 ${
                   dept === d
                     ? 'bg-[linear-gradient(180deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0.07)_60%,rgba(255,255,255,0)_100%)] shadow-[inset_0_10px_20px_rgba(255,255,255,0.12)]'
                     : ''
@@ -179,15 +179,15 @@ export default function StaffAndThanks() {
             ))}
           </div>
 
-          <div className="absolute top-[15.48%] left-0 z-20 flex h-[82.56%] w-[99.29%] items-center gap-[5.84%]">
+          <div className="relative z-20 flex min-h-[407px] w-[99.29%] items-center gap-[clamp(24px,5.84%,65px)] pt-[63px] pr-[clamp(24px,4vw,48px)] pb-2">
             <img
               src={photo}
               alt={`${dept}合照`}
               loading="lazy"
               decoding="async"
-              className="ml-[5.84%] h-[74.7%] w-[36.48%] shrink-0 rounded-[clamp(16px,2.08vw,30px)] object-cover"
+              className="ml-[clamp(24px,5.84%,65px)] h-[251px] w-[clamp(230px,36.48%,406px)] shrink-0 rounded-[30px] object-cover"
             />
-            <div className="flex min-w-0 flex-1 flex-col text-[clamp(15px,1.74vw,25px)] leading-[1.6] font-semibold text-[#4664ac]">
+            <div className="flex min-w-0 flex-1 flex-col text-[25px] leading-[40px] font-semibold text-[#4664ac]">
               {members.map((line) => (
                 <p key={line}>{line}</p>
               ))}

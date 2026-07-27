@@ -3,6 +3,10 @@ import rulesHackerActive from '../../assets/home/rules-hacker-active.svg'
 import rulesHackerBase from '../../assets/home/rules-hacker-base.svg'
 import rulesMakerActive from '../../assets/home/rules-maker-active.svg'
 import rulesMakerBase from '../../assets/home/rules-maker-base.svg'
+import rulesMobileHackerBase from '../../assets/home/rules-mobile-hacker-base.svg'
+import rulesMobileHackerShell from '../../assets/home/rules-mobile-hacker-shell.svg'
+import rulesMobileMakerBase from '../../assets/home/rules-mobile-maker-base.svg'
+import rulesMobileMakerShell from '../../assets/home/rules-mobile-maker-shell.svg'
 
 type GroupKey = 'hacker' | 'maker'
 
@@ -80,6 +84,24 @@ export default function Rules() {
       <div className="rules-mobile">
         <p className="mobile-home-title">比賽規則</p>
         <div className={`rules-mobile-panel is-${tab}`}>
+          <div className="rules-mobile-art" aria-hidden="true">
+            <img
+              src={
+                tab === 'hacker' ? rulesMobileHackerBase : rulesMobileMakerBase
+              }
+              alt=""
+              className="rules-mobile-base"
+            />
+            <img
+              src={
+                tab === 'hacker'
+                  ? rulesMobileHackerShell
+                  : rulesMobileMakerShell
+              }
+              alt=""
+              className="rules-mobile-shell"
+            />
+          </div>
           <div className="rules-mobile-tabs">
             {TABS.map(({ key, label }) => (
               <button
@@ -98,14 +120,14 @@ export default function Rules() {
         </div>
       </div>
 
-      <div className="rules-desktop mx-auto w-full max-w-[1019px] flex-col items-center gap-12 px-6 py-16 md:gap-[90px] md:px-0 md:py-0">
+      <div className="rules-desktop mx-auto w-full max-w-[1083px] flex-col items-center gap-12 px-6 py-16 md:gap-[90px] md:px-[32px] md:py-0 xl:px-0">
         <p className="text-center font-['Zen_Antique'] text-2xl text-[#f6f6f6] [text-shadow:0px_0px_20px_rgba(255,255,255,0.35),0px_4px_40px_rgba(255,255,255,0.2)] md:text-[35px] md:leading-[44px]">
           比賽規則
         </p>
 
         <div
-          className={`relative w-full overflow-visible transition-[height] duration-300 ${
-            tab === 'hacker' ? 'h-[908px]' : 'h-[634px]'
+          className={`relative w-full overflow-visible transition-[min-height] duration-300 ${
+            tab === 'hacker' ? 'min-h-[908px]' : 'min-h-[634px]'
           }`}
         >
           {tab === 'hacker' ? (
@@ -117,15 +139,26 @@ export default function Rules() {
                 <img
                   src={rulesHackerBase}
                   alt=""
-                  className="absolute top-[86px] left-[19px] h-[798px] w-[970px] max-w-none"
+                  className="absolute top-[86px] left-[19px] h-[calc(100%-110px)] w-[calc(100%-49px)] max-w-none"
                 />
-                <div className="absolute top-[24px] left-[19px] h-[63px] w-[167px] rounded-t-[30px] bg-[#b1a2ca]" />
+                <div className="absolute top-[86px] left-[19px] h-[calc(100%-110px)] w-[calc(100%-49px)] rounded-tr-[40px] rounded-b-[40px] bg-[#d8d0e4] shadow-[0_0_24px_rgba(255,255,255,0.9),0_8px_0_rgba(177,162,202,0.65),0_14px_28px_rgba(0,0,0,0.28),inset_1px_0_rgba(255,255,255,0.72),inset_-1px_0_rgba(255,255,255,0.72),inset_0_-1px_rgba(255,255,255,0.72)]" />
+                <div className="absolute top-[24px] left-[19px] h-[63px] w-[167px] rounded-t-[30px] bg-[#d8d0e4]" />
                 <div className="absolute top-[24px] left-[184px] h-[63px] w-[233px] rounded-t-[30px] bg-[#b1a2ca]" />
-                <img
-                  src={rulesHackerActive}
-                  alt=""
-                  className="absolute top-[-22px] left-[-31px] h-[960px] w-[1070px] max-w-none"
-                />
+                <div
+                  className="absolute top-[-22px] left-[-31px] h-[120px] w-[330px] overflow-hidden"
+                  style={{
+                    maskImage:
+                      'linear-gradient(to bottom, black 0%, black 48%, rgba(0,0,0,0.65) 68%, transparent 92%, transparent 100%)',
+                    WebkitMaskImage:
+                      'linear-gradient(to bottom, black 0%, black 48%, rgba(0,0,0,0.65) 68%, transparent 92%, transparent 100%)',
+                  }}
+                >
+                  <img
+                    src={rulesHackerActive}
+                    alt=""
+                    className="absolute top-0 left-0 h-[960px] w-[1070px] max-w-none"
+                  />
+                </div>
               </div>
 
               <button
@@ -154,15 +187,26 @@ export default function Rules() {
                 <img
                   src={rulesMakerBase}
                   alt=""
-                  className="absolute top-[85px] left-[25px] h-[517px] w-[970px] max-w-none"
+                  className="absolute top-[85px] left-[25px] h-[calc(100%-117px)] w-[calc(100%-49px)] max-w-none"
                 />
+                <div className="absolute top-[85px] left-[25px] h-[calc(100%-117px)] w-[calc(100%-49px)] rounded-tr-[40px] rounded-b-[40px] bg-[#d8d0e4] shadow-[0_0_24px_rgba(255,255,255,0.9),0_8px_0_rgba(177,162,202,0.65),0_14px_28px_rgba(0,0,0,0.28),inset_1px_0_rgba(255,255,255,0.72),inset_-1px_0_rgba(255,255,255,0.72),inset_0_-1px_rgba(255,255,255,0.72)]" />
                 <div className="absolute top-[23px] left-[25px] h-[63px] w-[167px] rounded-t-[30px] bg-[#b1a2ca]" />
-                <div className="absolute top-[22px] left-[192px] h-[64px] w-[233px] rounded-t-[30px] bg-[#b1a2ca]" />
-                <img
-                  src={rulesMakerActive}
-                  alt=""
-                  className="absolute top-[-24px] left-[-25px] h-[680px] w-[1070px] max-w-none"
-                />
+                <div className="absolute top-[22px] left-[192px] h-[64px] w-[233px] rounded-t-[30px] bg-[#d8d0e4]" />
+                <div
+                  className="absolute top-[-24px] left-[130px] h-[120px] w-[390px] overflow-hidden"
+                  style={{
+                    maskImage:
+                      'linear-gradient(to bottom, black 0%, black 48%, rgba(0,0,0,0.65) 68%, transparent 92%, transparent 100%)',
+                    WebkitMaskImage:
+                      'linear-gradient(to bottom, black 0%, black 48%, rgba(0,0,0,0.65) 68%, transparent 92%, transparent 100%)',
+                  }}
+                >
+                  <img
+                    src={rulesMakerActive}
+                    alt=""
+                    className="absolute top-0 left-[-155px] h-[680px] w-[1070px] max-w-none"
+                  />
+                </div>
               </div>
 
               <button
@@ -184,7 +228,7 @@ export default function Rules() {
             </>
           )}
 
-          <div className="rules-desktop-copy absolute top-[148px] left-[69px] z-10 w-[860px] text-justify text-[#656565]">
+          <div className="rules-desktop-copy relative z-10 mx-[clamp(48px,6.77%,69px)] pt-[148px] pb-[74px] text-justify text-[#656565]">
             {tab === 'hacker' ? hackerRules : makerRules}
           </div>
         </div>
