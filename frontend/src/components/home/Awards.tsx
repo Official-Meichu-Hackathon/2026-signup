@@ -41,26 +41,26 @@ function AwardCard({
 }) {
   const titleClass = {
     hacker:
-      'md:absolute md:top-[51px] md:left-[63px] md:w-[131px] md:font-noto md:text-[30px] md:leading-[44px]',
+      'md:absolute md:top-[51px] md:left-[8.64%] md:w-[85.87%] md:font-noto md:text-[30px] md:leading-[44px]',
     maker:
-      'md:absolute md:top-[64px] md:left-[66.833px] md:w-[616.925px] md:font-noto md:text-[30px] md:leading-[44px]',
+      'md:absolute md:top-[64px] md:left-[9.17%] md:w-[84.63%] md:font-noto md:text-[30px] md:leading-[44px]',
     grand:
-      'md:absolute md:top-[33.5px] md:left-[52px] md:w-[336px] md:font-chiron md:text-[32px] md:leading-[40px] md:font-extrabold',
+      'md:absolute md:top-[33.5px] md:left-[7.13%] md:w-[85.74%] md:font-chiron md:text-[32px] md:leading-[40px] md:font-extrabold',
   }[variant]
 
   const noteClass = {
-    hacker: 'md:absolute md:top-[95px] md:left-[63px] md:w-[131px]',
+    hacker: 'md:absolute md:top-[95px] md:left-[8.64%] md:w-[85.87%]',
     maker: '',
-    grand: 'md:absolute md:top-[73.5px] md:left-[52px] md:w-[336px]',
+    grand: 'md:absolute md:top-[73.5px] md:left-[7.13%] md:w-[85.74%]',
   }[variant]
 
   const copyClass = {
     hacker:
-      'md:absolute md:top-[135px] md:left-[63px] md:mt-0 md:w-[626px] md:font-noto md:text-[20px] md:leading-[36px]',
+      'md:absolute md:top-[135px] md:left-[8.64%] md:mt-0 md:w-[85.87%] md:font-noto md:text-[20px] md:leading-[36px]',
     maker:
-      'md:absolute md:top-[130px] md:left-[66.833px] md:mt-0 md:w-[616.925px] md:font-noto md:text-[20px] md:leading-[36px]',
+      'md:absolute md:top-[130px] md:left-[9.17%] md:mt-0 md:w-[84.63%] md:font-noto md:text-[20px] md:leading-[36px]',
     grand:
-      'md:absolute md:top-[121.5px] md:left-[52px] md:mt-0 md:w-[416px] md:font-chiron md:text-[20px] md:leading-[40px] md:font-bold',
+      'md:absolute md:top-[121.5px] md:left-[7.13%] md:mt-0 md:w-[57.06%] md:font-chiron md:text-[20px] md:leading-[40px] md:font-bold',
   }[variant]
 
   return (
@@ -185,13 +185,13 @@ export default function Awards({
             cardRefs.current[1] = element
           }}
         >
-          <div className="grid grid-cols-1 gap-x-16 gap-y-1 sm:grid-cols-2 md:grid-cols-[250px_274px] md:gap-x-[76px]">
-            <div className="md:w-[250px] md:whitespace-nowrap">
+          <div className="grid grid-cols-1 gap-x-16 gap-y-1 sm:grid-cols-2 md:grid-cols-[minmax(0,250fr)_minmax(0,274fr)] md:gap-x-[12.32%]">
+            <div>
               <p>第一名：新台幣 50,000 元整</p>
               <p>第二名：新台幣 40,000 元整</p>
               <p>第三名：新台幣 30,000 元整</p>
             </div>
-            <div className="md:w-[274px] md:whitespace-nowrap">
+            <div>
               <p>創意獎一：新台幣 12,000 元整</p>
               <p>創意獎二：新台幣 10,000 元整</p>
               <p>創意獎三：新台幣 8,000 元整</p>

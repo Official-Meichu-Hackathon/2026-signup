@@ -1,4 +1,8 @@
 import { useState } from 'react'
+import rulesHackerActive from '../../assets/home/rules-hacker-active.svg'
+import rulesHackerBase from '../../assets/home/rules-hacker-base.svg'
+import rulesMakerActive from '../../assets/home/rules-maker-active.svg'
+import rulesMakerBase from '../../assets/home/rules-maker-base.svg'
 
 type GroupKey = 'hacker' | 'maker'
 
@@ -53,7 +57,8 @@ export default function Rules() {
     <ul>
       <li>
         創客組僅有一次 Demo，創客組接受多元形式的 Demo 與作品，唯需於比賽 Demo
-        時讓評審實際操作作品。（參考工具：figma、Miro、Webflow、Sketch）
+        時讓評審實際操作作品。
+        <p>（參考工具：figma、Miro、Webflow、Sketch）</p>
         <ul>
           <li>
             創客組 Demo
@@ -98,35 +103,89 @@ export default function Rules() {
           比賽規則
         </p>
 
-        <div className="relative w-full md:h-[908px] md:px-[25px] md:pt-[24px]">
-          <div className="relative z-20 flex items-end pl-[5px] md:pl-0">
-            {TABS.map(({ key, label }) => (
-              <button
-                key={key}
-                onClick={() => setTab(key)}
-                className={`relative flex h-[52px] cursor-pointer items-center justify-center rounded-t-[24px] px-5 text-base leading-none font-semibold transition-all duration-300 md:h-[64px] md:rounded-t-[30px] md:text-[25px] md:leading-[40px] ${
-                  key === 'hacker'
-                    ? 'w-[38%] md:w-[167px]'
-                    : 'w-[52%] md:w-[233px]'
-                } ${
-                  tab === key
-                    ? 'z-20 bg-[linear-gradient(to_bottom,#f1ebf7_0%,#e7dfef_52%,#d8d0e4_100%)] text-[#6c6c6c] shadow-[0_-9px_28px_rgba(255,255,255,1),-9px_0_24px_rgba(255,255,255,0.85),9px_0_24px_rgba(255,255,255,0.65),inset_0_3px_8px_rgba(255,255,255,0.95)]'
-                    : 'z-0 bg-[#b1a2ca] text-white shadow-[inset_0_1px_5px_rgba(255,255,255,0.22)] hover:brightness-105'
-                }`}
+        <div
+          className={`relative w-full overflow-visible transition-[height] duration-300 ${
+            tab === 'hacker' ? 'h-[908px]' : 'h-[634px]'
+          }`}
+        >
+          {tab === 'hacker' ? (
+            <>
+              <div
+                className="pointer-events-none absolute inset-0"
+                aria-hidden="true"
               >
-                {label}
-              </button>
-            ))}
-          </div>
+                <img
+                  src={rulesHackerBase}
+                  alt=""
+                  className="absolute top-[86px] left-[19px] h-[798px] w-[970px] max-w-none"
+                />
+                <div className="absolute top-[24px] left-[19px] h-[63px] w-[167px] rounded-t-[30px] bg-[#b1a2ca]" />
+                <div className="absolute top-[24px] left-[184px] h-[63px] w-[233px] rounded-t-[30px] bg-[#b1a2ca]" />
+                <img
+                  src={rulesHackerActive}
+                  alt=""
+                  className="absolute top-[-22px] left-[-31px] h-[960px] w-[1070px] max-w-none"
+                />
+              </div>
 
-          <div
-            className={`relative z-10 -mt-px w-full rounded-[30px] rounded-tl-none bg-[#d8d0e4] px-6 py-10 text-justify text-[#656565] shadow-[-10px_0_24px_rgba(255,255,255,0.75),10px_0_24px_rgba(255,255,255,0.75),0_12px_0_rgba(177,162,202,0.75),0_15px_24px_rgba(0,0,0,0.28),inset_1px_0_rgba(255,255,255,0.8),inset_-1px_0_rgba(255,255,255,0.8),inset_0_-1px_rgba(255,255,255,0.8)] md:px-[47px] md:pt-[60px] md:pb-[48px] ${
-              tab === 'hacker' ? 'md:min-h-[798px]' : 'md:min-h-[518px]'
-            }`}
-          >
-            <div className="rules-desktop-copy">
-              {tab === 'hacker' ? hackerRules : makerRules}
-            </div>
+              <button
+                type="button"
+                aria-pressed="true"
+                onClick={() => setTab('hacker')}
+                className="absolute top-[24px] left-[19px] z-20 flex h-[64px] w-[167px] cursor-pointer items-center justify-center rounded-t-[30px] text-[25px] leading-[40px] font-semibold text-[#6c6c6c] focus:outline-none focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white/80"
+              >
+                黑客組
+              </button>
+              <button
+                type="button"
+                aria-pressed="false"
+                onClick={() => setTab('maker')}
+                className="absolute top-[24px] left-[184px] z-20 flex h-[63px] w-[233px] cursor-pointer items-center justify-center rounded-t-[30px] text-[25px] leading-[40px] font-semibold text-white transition-[filter] hover:brightness-110 focus:outline-none focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white/80"
+              >
+                創客交流組
+              </button>
+            </>
+          ) : (
+            <>
+              <div
+                className="pointer-events-none absolute inset-0"
+                aria-hidden="true"
+              >
+                <img
+                  src={rulesMakerBase}
+                  alt=""
+                  className="absolute top-[85px] left-[25px] h-[517px] w-[970px] max-w-none"
+                />
+                <div className="absolute top-[23px] left-[25px] h-[63px] w-[167px] rounded-t-[30px] bg-[#b1a2ca]" />
+                <div className="absolute top-[22px] left-[192px] h-[64px] w-[233px] rounded-t-[30px] bg-[#b1a2ca]" />
+                <img
+                  src={rulesMakerActive}
+                  alt=""
+                  className="absolute top-[-24px] left-[-25px] h-[680px] w-[1070px] max-w-none"
+                />
+              </div>
+
+              <button
+                type="button"
+                aria-pressed="false"
+                onClick={() => setTab('hacker')}
+                className="absolute top-[23px] left-[25px] z-20 flex h-[63px] w-[167px] cursor-pointer items-center justify-center rounded-t-[30px] text-[25px] leading-[40px] font-semibold text-white transition-[filter] hover:brightness-110 focus:outline-none focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white/80"
+              >
+                黑客組
+              </button>
+              <button
+                type="button"
+                aria-pressed="true"
+                onClick={() => setTab('maker')}
+                className="absolute top-[22px] left-[192px] z-20 flex h-[64px] w-[233px] cursor-pointer items-center justify-center rounded-t-[30px] text-[25px] leading-[40px] font-semibold text-[#6c6c6c] focus:outline-none focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white/80"
+              >
+                創客交流組
+              </button>
+            </>
+          )}
+
+          <div className="rules-desktop-copy absolute top-[148px] left-[69px] z-10 w-[860px] text-justify text-[#656565]">
+            {tab === 'hacker' ? hackerRules : makerRules}
           </div>
         </div>
       </div>

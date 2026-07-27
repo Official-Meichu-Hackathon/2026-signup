@@ -240,6 +240,7 @@ body {
     border-radius: 15px 15px 0 0;
     background: rgba(177, 162, 202, 0.66);
     color: #fff;
+    font-family: 'Noto Sans', 'Noto Sans TC', sans-serif;
     font-size: 11px;
     font-weight: 500;
     line-height: 13px;
@@ -254,6 +255,14 @@ body {
     background: rgba(198, 184, 218, 0.95);
   }
 
+  .group-mobile-tabs button:focus-visible,
+  .rules-mobile-tabs button:focus-visible,
+  .staff-mobile-row > button:focus-visible,
+  .group-mobile-workshop:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.85);
+    outline-offset: -3px;
+  }
+
   .group-mobile-card {
     position: absolute;
     top: 29px;
@@ -263,7 +272,7 @@ body {
     min-height: 434px;
     flex-direction: column;
     align-items: center;
-    padding: 27px 30px 20px;
+    padding: 27px 29.5px 20px;
     overflow: hidden;
     border: 1px solid rgba(244, 245, 245, 0.75);
     border-radius: 0 18px 18px 18px;
@@ -290,6 +299,7 @@ body {
     gap: 15px;
     margin-top: 17px;
     color: #f6f6f6;
+    font-family: 'Noto Sans', 'Noto Sans TC', sans-serif;
     font-size: 11px;
     font-weight: 600;
     line-height: 15px;
@@ -303,6 +313,7 @@ body {
     border-radius: 40px;
     background: rgba(244, 218, 225, 0.3);
     color: rgba(219, 131, 150, 0.92);
+    font-family: 'Chiron Hei HK', sans-serif;
     font-size: 14px;
     font-weight: 800;
     box-shadow: 0 4px 5px rgba(210, 127, 144, 0.4);
@@ -349,6 +360,7 @@ body {
     border-radius: 14px 14px 0 0;
     background: rgba(177, 162, 202, 0.68);
     color: #fff;
+    font-family: 'Noto Sans', 'Noto Sans TC', sans-serif;
     font-size: 12px;
     font-weight: 600;
     line-height: 12px;
@@ -361,12 +373,14 @@ body {
   }
 
   .rules-mobile-copy {
+    width: calc(100% - 6px);
     min-height: 579px;
     padding: 22px 16px 18px 20px;
     border: 1px solid rgba(244, 245, 245, 0.78);
     border-radius: 0 16px 16px 16px;
     background: rgba(193, 178, 213, 0.95);
     color: #f6f6f6;
+    font-family: 'Noto Sans', 'Noto Sans TC', sans-serif;
     font-size: 10px;
     font-weight: 600;
     line-height: 15px;
@@ -414,6 +428,7 @@ body {
   }
 
   .award-card {
+    height: auto !important;
     min-height: 177px;
     padding: 32px 19px !important;
   }
@@ -424,6 +439,8 @@ body {
   }
 
   .award-card > p {
+    position: static !important;
+    width: auto !important;
     font-size: 14px !important;
     line-height: 15.6px;
   }
@@ -436,6 +453,8 @@ body {
   }
 
   .award-card > div:last-child {
+    position: static !important;
+    width: auto !important;
     margin-top: 14px;
     font-size: 12px !important;
     line-height: 16px !important;
@@ -447,7 +466,13 @@ body {
   }
 
   .award-card > div:last-child .grid {
+    grid-template-columns: minmax(0, 1fr) !important;
     gap: 0;
+  }
+
+  .award-card > div:last-child .grid > div {
+    width: auto !important;
+    white-space: normal !important;
   }
 
   .home-awards-signup {
@@ -548,12 +573,22 @@ body {
   }
 
   .staff-mobile-list {
+    position: relative;
     width: 100%;
+    height: 221px;
+    overflow: visible;
+  }
+
+  .staff-mobile-list.has-expanded {
+    height: 268px;
+    overflow: hidden;
   }
 
   .staff-mobile-row {
-    position: relative;
-    margin-top: -2px;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 45px;
     overflow: hidden;
     border: 1px solid #f4f5f5;
     border-radius: 15px 15px 0 0;
@@ -563,8 +598,10 @@ body {
       inset 0 1px 8px rgba(255, 255, 255, 0.5);
   }
 
-  .staff-mobile-row:first-child {
-    margin-top: 0;
+  .staff-mobile-list:not(.has-expanded) .staff-mobile-row:last-child {
+    height: 65px;
+    background: linear-gradient(180deg, #b1a2ca 39.158%, #fff 82.938%);
+    box-shadow: none;
   }
 
   .staff-mobile-row > button {
@@ -573,14 +610,26 @@ body {
     height: 33px;
     align-items: center;
     justify-content: space-between;
-    padding: 0 11px;
+    padding: 0 19px 0 11px;
     color: #fff;
+    font-family: 'Chiron Hei HK', sans-serif;
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 800;
+    line-height: normal;
+  }
+
+  .staff-mobile-row > button > span:last-child {
+    width: 10px;
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 400;
+    line-height: 10px;
+    text-align: center;
   }
 
   .staff-mobile-row.is-expanded {
+    height: 100px;
     background: #d8d8d8;
+    box-shadow: none;
   }
 
   .staff-mobile-row.is-expanded > button {
@@ -588,8 +637,9 @@ body {
   }
 
   .staff-mobile-members {
-    padding: 0 18px 14px;
+    padding: 0 18px;
     color: #2d3e63;
+    font-family: 'Noto Sans', 'Noto Sans TC', sans-serif;
     font-size: 10px;
     font-weight: 500;
     line-height: 14px;

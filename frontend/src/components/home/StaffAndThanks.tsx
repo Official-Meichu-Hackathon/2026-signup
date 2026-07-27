@@ -6,6 +6,14 @@ import staffEvents from '../../assets/home/staff-events.webp'
 import staffFinance from '../../assets/home/staff-finance.webp'
 import staffDesign from '../../assets/home/staff-design.webp'
 import staffDev from '../../assets/home/staff-dev.webp'
+import staffShape from '../../assets/home/staff-shape.svg'
+import staffGlowAdmin from '../../assets/home/staff-tabs-bg.svg'
+import staffGlowMarketing from '../../assets/home/staff-tabs-bg-marketing.svg'
+import staffGlowPr from '../../assets/home/staff-tabs-bg-pr.svg'
+import staffGlowEvents from '../../assets/home/staff-tabs-bg-events.svg'
+import staffGlowFinance from '../../assets/home/staff-tabs-bg-finance.svg'
+import staffGlowDesign from '../../assets/home/staff-tabs-bg-design.svg'
+import staffGlowDev from '../../assets/home/staff-tabs-bg-dev.svg'
 
 const DEPARTMENTS = [
   '行政部',
@@ -16,6 +24,18 @@ const DEPARTMENTS = [
   '設計部',
   '開發部',
 ] as const
+
+const STAFF_MOBILE_ROW_TOPS = [0, 33, 63, 94, 125, 156, 186] as const
+
+const STAFF_GLOWS: Record<(typeof DEPARTMENTS)[number], string> = {
+  行政部: staffGlowAdmin,
+  行銷部: staffGlowMarketing,
+  公關部: staffGlowPr,
+  活動部: staffGlowEvents,
+  財務部: staffGlowFinance,
+  設計部: staffGlowDesign,
+  開發部: staffGlowDev,
+}
 
 const STAFF: Record<
   (typeof DEPARTMENTS)[number],
@@ -116,16 +136,42 @@ export default function StaffAndThanks() {
         className="staff-desktop flex w-full flex-col items-center gap-8 md:gap-[50px]"
       >
         <SectionTitle>工作人員名單</SectionTitle>
-        <div className="relative w-full">
-          <div className="relative z-20 flex w-full items-end">
+        <div className="relative aspect-[1121/407] w-full">
+          <img
+            src={staffShape}
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 h-full w-full select-none"
+          />
+
+          {DEPARTMENTS.map((d) => (
+            <img
+              key={d}
+              src={STAFF_GLOWS[d]}
+              alt=""
+              aria-hidden="true"
+              className={`pointer-events-none absolute top-[-11.302%] left-[-4.46%] z-10 h-[122.604%] w-[108.207%] max-w-none transition-opacity duration-300 select-none ${
+                dept === d ? 'opacity-100' : 'opacity-0'
+              }`}
+            />
+          ))}
+
+          <div
+            className="absolute top-0 left-0 z-30 grid h-[15.48%] w-[87.51%] grid-cols-7"
+            role="tablist"
+            aria-label="工作人員部門"
+          >
             {DEPARTMENTS.map((d) => (
               <button
                 key={d}
+                type="button"
+                role="tab"
+                aria-selected={dept === d}
                 onClick={() => setDept(d)}
-                className={`relative flex h-[42px] min-w-0 flex-1 cursor-pointer items-center justify-center rounded-t-[18px] px-1 text-xs leading-none font-semibold text-white transition-all duration-300 sm:h-[48px] sm:rounded-t-[24px] sm:text-base md:h-[52px] md:rounded-t-[30px] md:text-[24px] md:leading-[40px] ${
+                className={`flex min-w-0 cursor-pointer items-center justify-center rounded-t-[30px] px-1 font-['Chiron_Hei_HK'] text-[clamp(13px,1.67vw,24px)] leading-none font-extrabold text-white [text-shadow:0_1px_4px_rgba(255,255,255,0.35)] focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-white/90 ${
                   dept === d
-                    ? 'z-20 bg-[linear-gradient(to_bottom,#d9cfea_0%,#b1a2ca_100%)] shadow-[0_-8px_24px_rgba(255,255,255,1),-7px_0_18px_rgba(255,255,255,0.7),7px_0_18px_rgba(255,255,255,0.55),inset_0_3px_8px_rgba(255,255,255,0.85)]'
-                    : 'z-0 bg-[#b1a2ca]/75 shadow-[inset_0_2px_5px_rgba(255,255,255,0.28)] hover:bg-[#b1a2ca]/90'
+                    ? 'bg-[linear-gradient(180deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0.07)_60%,rgba(255,255,255,0)_100%)] shadow-[inset_0_10px_20px_rgba(255,255,255,0.12)]'
+                    : ''
                 }`}
               >
                 {d}
@@ -133,15 +179,15 @@ export default function StaffAndThanks() {
             ))}
           </div>
 
-          <div className="relative z-10 -mt-px flex min-h-[300px] flex-col items-start gap-8 rounded-b-[30px] bg-[#b1a2ca] p-8 shadow-[0_0_24px_rgba(255,255,255,0.95),0_8px_0_rgba(151,135,180,0.72),0_14px_28px_rgba(0,0,0,0.3),inset_1px_0_rgba(255,255,255,0.75),inset_-1px_0_rgba(255,255,255,0.75),inset_0_-1px_rgba(255,255,255,0.75)] sm:flex-row sm:items-center md:min-h-[347px] md:gap-[65px] md:px-[65px] md:py-[48px]">
+          <div className="absolute top-[15.48%] left-0 z-20 flex h-[82.56%] w-[99.29%] items-center gap-[5.84%]">
             <img
               src={photo}
               alt={`${dept}合照`}
               loading="lazy"
               decoding="async"
-              className="h-[180px] w-full shrink-0 rounded-[30px] object-cover sm:w-[42%] md:h-[251px] md:w-[406px]"
+              className="ml-[5.84%] h-[74.7%] w-[36.48%] shrink-0 rounded-[clamp(16px,2.08vw,30px)] object-cover"
             />
-            <div className="flex min-w-0 flex-1 flex-col text-lg leading-[1.6] font-semibold text-[#4664ac] md:text-[25px] md:leading-[40px]">
+            <div className="flex min-w-0 flex-1 flex-col text-[clamp(15px,1.74vw,25px)] leading-[1.6] font-semibold text-[#4664ac]">
               {members.map((line) => (
                 <p key={line}>{line}</p>
               ))}
@@ -152,13 +198,24 @@ export default function StaffAndThanks() {
 
       <div className="staff-mobile">
         <SectionTitle>工作人員名單</SectionTitle>
-        <div className="staff-mobile-list">
-          {DEPARTMENTS.map((department) => {
+        <div
+          className={`staff-mobile-list ${
+            mobileDept === null ? '' : 'has-expanded'
+          }`}
+        >
+          {DEPARTMENTS.map((department, index) => {
             const expanded = mobileDept === department
+            const expandedIndex =
+              mobileDept === null ? -1 : DEPARTMENTS.indexOf(mobileDept)
+            const rowTop =
+              STAFF_MOBILE_ROW_TOPS[index] +
+              (expandedIndex >= 0 && index > expandedIndex ? 47 : 0)
+
             return (
               <div
                 key={department}
                 className={`staff-mobile-row ${expanded ? 'is-expanded' : ''}`}
+                style={{ top: rowTop }}
               >
                 <button
                   type="button"
