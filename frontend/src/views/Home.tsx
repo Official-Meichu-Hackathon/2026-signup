@@ -3,8 +3,7 @@ import { useMotionValueEvent, useScroll } from 'motion/react'
 import bg1 from '../assets/home/bg-01.webp'
 import bg2 from '../assets/home/bg-02.webp'
 import bg3 from '../assets/home/bg-03.webp'
-import bg4 from '../assets/home/bg-04.webp'
-import bg5 from '../assets/home/bg-05.webp'
+import bgTransition from '../assets/home/bg-transition-figma.png'
 import heroTitle from '../assets/home/hero-title-overlay.webp'
 import heroCta from '../assets/home/hero-cta-overlay.webp'
 import EventVision from '../components/home/EventVision'
@@ -15,7 +14,7 @@ import PartnerLogos from '../components/home/PartnerLogos'
 import StaffAndThanks from '../components/home/StaffAndThanks'
 import FloatingNav from '../components/home/FloatingNav'
 
-const BACKGROUND_SEQUENCE = [bg1, bg2, bg3, bg4]
+const BACKGROUND_SEQUENCE = [bg1, bg2, bg3]
 const RESIZE_SCROLL_SECTION = '[data-resize-scroll-section]'
 const RESIZE_GESTURE_IDLE_MS = 300
 
@@ -31,7 +30,10 @@ export default function Home() {
   const trackRef = useRef<HTMLDivElement>(null)
   const resizeScrollAnchorRef = useRef<ResizeScrollAnchor | null>(null)
   const [frozenRange, setFrozenRange] = useState({ start: 0, height: 0 })
-  const [bg5Start, setBg5Start] = useState<number | null>(null)
+  const [lightTransitionRange, setLightTransitionRange] = useState<{
+    start: number
+    end: number
+  } | null>(null)
   const { scrollY } = useScroll()
 
   useEffect(() => {
@@ -219,18 +221,32 @@ export default function Home() {
       }
 
       const rules = document.getElementById('rules')
-      if (rules) {
+      const lightSection = document.querySelector<HTMLElement>(
+        '.home-light-section',
+      )
+      if (rules && lightSection) {
         const rulesTop = rules.getBoundingClientRect().top + window.scrollY
-        setBg5Start(rulesTop + rules.offsetHeight * 0.7)
+        const lightSectionTop =
+          lightSection.getBoundingClientRect().top + window.scrollY
+        const start = rulesTop + rules.offsetHeight * 0.8
+
+        setLightTransitionRange({
+          start,
+          end: Math.max(start + 1, lightSectionTop),
+        })
       }
     }
 
     measure()
     window.addEventListener('resize', measure)
 
-    const rules = document.getElementById('rules')
+    const observedElements = [
+      document.getElementById('rules'),
+      document.getElementById('awards'),
+      document.querySelector<HTMLElement>('.home-light-section'),
+    ].filter((element): element is HTMLElement => element !== null)
     const resizeObserver = new ResizeObserver(measure)
-    if (rules) resizeObserver.observe(rules)
+    observedElements.forEach((element) => resizeObserver.observe(element))
 
     return () => {
       window.removeEventListener('resize', measure)
@@ -256,42 +272,54 @@ export default function Home() {
           ref={trackRef}
           className="home-background-track flex w-full flex-col"
         >
-          {BACKGROUND_SEQUENCE.map((bg, index) => (
-            <img
-              key={bg}
-              src={bg}
-              alt=""
-              loading={index === 0 ? 'eager' : 'lazy'}
-              decoding="async"
-              fetchPriority={index === 0 ? 'high' : 'low'}
-              className="min-h-0 w-full object-cover"
-            />
-          ))}
+          {BACKGROUND_SEQUENCE.map((bg, index) => {
+            const isLastBackground = index === BACKGROUND_SEQUENCE.length - 1
+
+            return (
+              <div key={bg} className="relative w-full shrink-0">
+                <img
+                  src={bg}
+                  alt=""
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  fetchPriority={index === 0 ? 'high' : 'low'}
+                  className="block h-auto w-full"
+                />
+                {isLastBackground && (
+                  <div className="absolute inset-x-0 bottom-0 h-[38%] bg-gradient-to-b from-transparent via-black/80 to-black" />
+                )}
+              </div>
+            )
+          })}
+          <div className="h-screen min-h-[720px] w-full shrink-0 bg-black" />
         </div>
       </div>
 
-      {bg5Start !== null && (
+      {lightTransitionRange !== null && (
         <div
-          className="home-light-background pointer-events-none absolute inset-x-0 bottom-0 z-0 overflow-hidden bg-white"
-          style={{ top: `${bg5Start}px` }}
+          className="home-light-background pointer-events-none absolute inset-x-0 z-0 overflow-hidden"
+          style={{
+            top: `${lightTransitionRange.start}px`,
+            height: `${lightTransitionRange.end - lightTransitionRange.start}px`,
+          }}
+          aria-hidden="true"
         >
+          <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(8,5,6,0.88)_18%,#17203a_46%,#5d7ec0_68%,#e9eef7_87%,#fdfdfd_100%)]" />
           <img
-            src={bg5}
+            src={bgTransition}
             alt=""
             loading="lazy"
             decoding="async"
             fetchPriority="low"
-            className="h-auto w-full"
-          />
-          <div
-            className="absolute inset-x-0 top-0 h-[min(28vw,400px)] bg-black"
+            className="absolute top-1/2 left-0 h-[86%] w-full -translate-y-1/2 object-fill opacity-90"
             style={{
               maskImage:
-                'linear-gradient(to bottom, black 0%, transparent 100%)',
+                'linear-gradient(to bottom, transparent 0%, black 16%, black 82%, transparent 100%)',
               WebkitMaskImage:
-                'linear-gradient(to bottom, black 0%, transparent 100%)',
+                'linear-gradient(to bottom, transparent 0%, black 16%, black 82%, transparent 100%)',
             }}
           />
+          <div className="absolute inset-x-0 bottom-0 h-[14%] bg-gradient-to-b from-transparent to-[#fdfdfd]" />
         </div>
       )}
 
@@ -333,14 +361,14 @@ export default function Home() {
 
       <section
         id="awards"
-        className="relative"
+        className="relative z-10"
         data-resize-scroll-section="awards"
       >
-        <Awards lightBackgroundStart={bg5Start} />
+        <Awards lightBackgroundStart={lightTransitionRange?.start ?? null} />
       </section>
 
       <section
-        className="home-light-section relative md:pb-[172px]"
+        className="home-light-section relative z-0 bg-[#fdfdfd] md:pb-[172px]"
         data-nav-theme="light"
         data-resize-scroll-section="partners-and-staff"
       >
