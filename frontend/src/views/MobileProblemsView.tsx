@@ -163,12 +163,12 @@ export default function MobileProblemsView({
           <img
             src={bgGradient}
             alt=""
-            className="pointer-events-none absolute top-0 left-0 h-[52%] w-full object-cover"
+            className="page-glow pointer-events-none absolute top-0 left-0 h-[52%] w-full object-cover"
           />
           <img
             src={bgGradient}
             alt=""
-            className="pointer-events-none absolute bottom-[3%] left-0 h-[34%] w-full rotate-180 object-cover"
+            className="page-glow pointer-events-none absolute bottom-[3%] left-0 h-[34%] w-full rotate-180 object-cover"
           />
           <MobileStars />
           <TitleStars />

@@ -4,12 +4,11 @@ import barQuotes from '../../assets/Stats/m-bar-quotes.svg'
 import cardLink from '../../assets/Stats/m-card-link.svg'
 import iconPlus from '../../assets/Stats/m-icon-plus.svg'
 import iconMinus from '../../assets/Stats/m-icon-minus.svg'
-import pieGrade from '../../assets/Stats/pie-grade.svg'
-import pieSchool from '../../assets/Stats/pie-school.svg'
-import pieDeptHacker from '../../assets/Stats/pie-dept-hacker.svg'
-import pieDeptMaker from '../../assets/Stats/pie-dept-maker.svg'
 import carouselArrow from '../../assets/Stats/carousel-arrow.svg'
 import { TESTIMONIALS } from './testimonials'
+import { RESULT_PLATFORM_URL } from './resultPlatform'
+import StatsPieChart from './StatsPieChart'
+import { STATS_CHARTS } from './statsData'
 
 // 參賽數據(手機) 165:1219。設計稿是一個 393 寬的元件，四個 variant 分別是
 // 兩條手風琴的開合組合（Frame 61 全收 / 62 開數據 / 63 開感言 / 60 全開）。
@@ -92,33 +91,33 @@ const PIE_LABEL_LEADING = 12
 
 const PIES = [
   {
-    src: pieGrade,
-    label: '參賽者年級比',
+    chart: STATS_CHARTS.grade,
+    label: '2025參賽者年級分布',
     tag: '',
     top: 60,
     labelCenter: 40,
     labelWidth: 81,
   },
   {
-    src: pieSchool,
-    label: '參賽者學校分佈',
+    chart: STATS_CHARTS.school,
+    label: '2025參賽者學校分布',
     tag: '',
     top: 202,
     labelCenter: 181,
     labelWidth: 90,
   },
   {
-    src: pieDeptHacker,
-    label: '參賽者科系分佈',
-    tag: '【黑客組】',
+    chart: STATS_CHARTS.hackerDepartment,
+    label: '2025黑客組院系分布',
+    tag: '',
     top: 361,
     labelCenter: 332.5,
     labelWidth: 90,
   },
   {
-    src: pieDeptMaker,
-    label: '參賽者科系分佈',
-    tag: '【創客交流組】',
+    chart: STATS_CHARTS.makerDepartment,
+    label: '2025創客組院系分布',
+    tag: '',
     top: 520,
     labelCenter: 484,
     labelWidth: 90,
@@ -245,9 +244,9 @@ function PiePanel() {
     >
       {PIES.map((pie) => (
         <div key={pie.label + pie.tag}>
-          <img
-            src={pie.src}
-            alt={pie.label + pie.tag}
+          <div
+            role="group"
+            aria-label={pie.chart.title}
             className="absolute max-w-none"
             style={{
               left: px(PIE_LEFT - PIE_PAD_X),
@@ -255,7 +254,9 @@ function PiePanel() {
               width: px(PIE_SVG),
               aspectRatio: '1 / 1',
             }}
-          />
+          >
+            <StatsPieChart chart={pie.chart} />
+          </div>
           <p
             className="font-noto text-ink absolute left-1/2 -translate-x-1/2 -translate-y-1/2 text-center font-medium"
             style={{
@@ -467,10 +468,10 @@ export default function MobileStatsAccordion() {
         >
           成果平台網址
         </span>
-        {/* TODO: 成果平台上線後補上正式網址 */}
         <a
-          href="#"
-          onClick={(event) => event.preventDefault()}
+          href={RESULT_PLATFORM_URL}
+          target="_blank"
+          rel="noopener noreferrer"
           className="font-noto text-periwinkle absolute left-1/2 w-full -translate-x-1/2 -translate-y-1/2 text-center font-medium underline-offset-4"
           style={{
             top: `${((LINK_SUB_CENTER / H_CARD_LINK) * 100).toFixed(4)}%`,

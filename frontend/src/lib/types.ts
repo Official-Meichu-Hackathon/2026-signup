@@ -45,8 +45,7 @@ export interface RegistrationData {
   isCrossDomain: string
   priorityOrder: string[]
   players: PlayerData[]
-  assentFirst: string
-  assentSecond: string
+  assent: string
   // 其他 step (per 2026 design): team-level upload + attendance questions
   lowIncomeProof: File | null
   workshopAttendance: string

@@ -139,7 +139,7 @@ export default function MobileProblemDeck() {
                 if (phase === 'revealed') setSelected(index)
               }}
               disabled={phase === 'revealing'}
-              className="@container absolute w-[14.42%] cursor-pointer rounded-[6px] shadow-[0_0_16px_rgba(255,255,255,0.6)] transition-transform duration-200 [perspective:700px] hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-default disabled:hover:translate-y-0"
+              className="@container absolute w-[14.42%] cursor-pointer rounded-[6px] shadow-[0_0_36px_8px_rgba(255,255,255,0.72)] transition-transform duration-200 [perspective:700px] hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-default disabled:hover:translate-y-0"
               style={{
                 left: position.left,
                 top: position.top,

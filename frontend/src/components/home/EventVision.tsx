@@ -1,26 +1,25 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, type MotionValue } from 'motion/react'
-import Sparkle from './Sparkle'
-import activityImage1 from '../../assets/home/activity/image-1.jpg'
-import activityImage2 from '../../assets/home/activity/image-2.jpg'
-import activityImage3 from '../../assets/home/activity/image-3.jpg'
-import activityImage4 from '../../assets/home/activity/image-4.jpg'
-import activityImage5 from '../../assets/home/activity/image-5.jpg'
-import activityImage6 from '../../assets/home/activity/image-6.jpg'
-import activityImage7 from '../../assets/home/activity/image-7.jpg'
-import activityImage8 from '../../assets/home/activity/image-8.jpg'
-import activityImage9 from '../../assets/home/activity/image-9.jpg'
-import activityImage10 from '../../assets/home/activity/image-10.jpg'
-import activityImage11 from '../../assets/home/activity/image-11.jpg'
-import activityImage12 from '../../assets/home/activity/image-12.jpg'
-import activityHero from '../../assets/home/activity/hero.jpg'
+import activityImage1 from '../../assets/home/activity/image-1.webp'
+import activityImage2 from '../../assets/home/activity/image-2.webp'
+import activityImage3 from '../../assets/home/activity/image-3.webp'
+import activityImage4 from '../../assets/home/activity/image-4.webp'
+import activityImage5 from '../../assets/home/activity/image-5.webp'
+import activityImage6 from '../../assets/home/activity/image-6.webp'
+import activityImage7 from '../../assets/home/activity/image-7.webp'
+import activityImage8 from '../../assets/home/activity/image-8.webp'
+import activityImage9 from '../../assets/home/activity/image-9.webp'
+import activityImage10 from '../../assets/home/activity/image-10.webp'
+import activityImage11 from '../../assets/home/activity/image-11.webp'
+import activityImage12 from '../../assets/home/activity/image-12.webp'
+import activityHero from '../../assets/home/activity/hero.webp'
 
 const clamp01 = (n: number) => Math.min(1, Math.max(0, n))
 
 type Corner = 'top-left' | 'bottom-left' | 'bottom-right' | 'top-right'
 
 type SequencePhoto = {
-  src?: string
+  src: string
   label: string
 }
 
@@ -55,7 +54,7 @@ const SEQUENCE_PHOTOS: SequencePhoto[] = [
   { label: '照片 12', src: activityImage12 },
 ]
 
-const HERO_PHOTO: SequencePhoto = { label: '主視覺照片', src: activityHero }
+const HERO_PHOTO = activityHero
 
 const VISION_PARAGRAPHS = [
   'Hack 為黑客精神，指的是對解決問題懷有強烈熱忱的人；而 Marathon 則是取其長期抗戰之意——「Hackathon」，不只是一場技術的競技，更是一場集結各領域思想家與實踐者，關於「解決問題」的馬拉松。',
@@ -152,18 +151,24 @@ function SequencePhotoItem({
   })
 
   return (
-    <motion.div
-      style={{ x, y, scale, opacity, zIndex }}
-      className="absolute top-1/2 left-1/2 -mt-[11vw] -ml-[13vw] aspect-[4/3] w-[26vw] max-w-[320px] overflow-hidden shadow-[0px_10px_30px_0px_rgba(0,0,0,0.35)]"
+    <div
+      className="pointer-events-none absolute inset-0 flex items-center justify-center"
+      style={{ zIndex }}
     >
-      {photo.src ? (
-        <img src={photo.src} alt="" className="h-full w-full object-cover" />
-      ) : (
-        <div className="flex h-full w-full items-center justify-center bg-white/10 text-sm text-white/50 backdrop-blur-sm">
-          {photo.label}
-        </div>
-      )}
-    </motion.div>
+      <motion.div
+        data-sequence-photo={photo.label}
+        style={{ x, y, scale, opacity }}
+        className="aspect-[4/3] w-[26vw] max-w-[320px] overflow-hidden shadow-[0px_10px_30px_0px_rgba(0,0,0,0.35)]"
+      >
+        <img
+          src={photo.src}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-cover"
+        />
+      </motion.div>
+    </div>
   )
 }
 
@@ -177,7 +182,7 @@ function HeroPhoto({ progress }: { progress: MotionValue<number> }) {
   const filter = useTransform(
     progress,
     [HERO_APPEAR_START, HERO_APPEAR_END],
-    ['blur(25px)', 'blur(0px)'],
+    ['blur(25px) brightness(0.7)', 'blur(0px) brightness(0.7)'],
   )
   // 在照片輪播結束前完全不出現，時間一到才瞬間切換顯示（不是漸層淡入）
   const opacity = useTransform(progress, (p) => (p < HERO_APPEAR_START ? 0 : 1))
@@ -187,17 +192,13 @@ function HeroPhoto({ progress }: { progress: MotionValue<number> }) {
       style={{ scale, filter, opacity }}
       className="absolute top-1/2 left-1/2 z-20 -mt-[44vh] -ml-[43.5vw] h-[88vh] w-[87vw] overflow-hidden shadow-[0px_20px_50px_0px_rgba(0,0,0,0.45)]"
     >
-      {HERO_PHOTO.src ? (
-        <img
-          src={HERO_PHOTO.src}
-          alt=""
-          className="h-full w-full object-cover"
-        />
-      ) : (
-        <div className="flex h-full w-full items-center justify-center bg-white/10 text-lg text-white/50 backdrop-blur-sm">
-          {HERO_PHOTO.label}
-        </div>
-      )}
+      <img
+        src={HERO_PHOTO}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        className="h-full w-full object-cover"
+      />
     </motion.div>
   )
 }
@@ -213,13 +214,16 @@ export default function EventVision() {
     <section
       id="vision"
       ref={sectionRef}
+      data-resize-scroll-section="vision"
       className="home-vision-section relative"
       style={{ height: `${SECTION_HEIGHT_VH}vh` }}
     >
       <div className="vision-mobile">
         <img
-          src={HERO_PHOTO.src}
+          src={HERO_PHOTO}
           alt="梅竹黑客松活動大合照"
+          loading="lazy"
+          decoding="async"
           className="vision-mobile-photo"
         />
         <div className="vision-mobile-copy">
@@ -230,21 +234,8 @@ export default function EventVision() {
       </div>
 
       <div className="vision-desktop sticky top-0 h-screen w-full overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 z-30 flex flex-col items-center justify-center gap-6 px-6 text-center">
-          <div className="relative">
-            <Sparkle
-              variant="bright"
-              className="-top-3 -left-8 h-8 w-8 md:-top-4 md:-left-10 md:h-12 md:w-12"
-            />
-            <Sparkle
-              variant="soft"
-              className="-top-2 -right-6 h-6 w-6 md:-top-3 md:-right-8 md:h-8 md:w-8"
-            />
-            <p className="font-['Zen_Antique'] text-2xl text-[#f6f6f6] [text-shadow:0px_0px_20px_rgba(255,255,255,0.35),0px_4px_40px_rgba(255,255,255,0.2)] md:text-[35px]">
-              活動願景
-            </p>
-          </div>
-          <div className="flex max-w-[1200px] flex-col gap-4 px-[60px] text-justify text-base leading-[1.9] text-white/90 md:text-[20px]">
+        <div className="pointer-events-none absolute inset-0 z-30 flex flex-col items-center justify-center gap-6 px-[clamp(60px,8vw,96px)] text-center">
+          <div className="md:font-noto flex w-full max-w-[957px] flex-col gap-4 text-justify text-base leading-[1.9] font-semibold text-white/90 md:gap-[26px] md:text-[22px] md:leading-[26px]">
             {VISION_PARAGRAPHS.map((paragraph) => (
               <p key={paragraph.slice(0, 8)}>{paragraph}</p>
             ))}

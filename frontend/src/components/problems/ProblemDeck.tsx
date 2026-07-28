@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { PROBLEMS, HASHTAG_NOTE, type Problem } from '../../data/problems'
 import cardBack from '../../assets/Problems/card-back.png'
 import cardDecor from '../../assets/Problems/card-decor.svg'
@@ -162,22 +162,33 @@ export function ZoomedFace({
 }) {
   const isLogitech = problem.sponsor === '羅技'
   const isAmd = problem.sponsor === 'AMD'
+  const isAdvantest = problem.sponsor === '愛德萬測試'
+  const isNxp = problem.sponsor === '恩智浦半導體'
+  const usesAmdLayout = isAmd || isAdvantest || isNxp
   const isGoogle = problem.sponsor === 'Google'
   const logitechNoteLines = [
     '請務必簽署附件之保密協定，',
     '並於回傳組別繳費證明的郵件的同時，',
     '一併繳交個人的保密協定同意書，方為報名成功。',
   ]
-  const logoBoxHeight = isLogitech ? 172 : isAmd ? 176 : isGoogle ? 85.263 : 120
+  const logoBoxHeight = isLogitech
+    ? 172
+    : usesAmdLayout
+      ? 176
+      : isGoogle
+        ? 85.263
+        : 120
   const logoImageWidth = isLogitech
     ? 344
-    : isAmd
+    : usesAmdLayout
       ? 404
       : isGoogle
         ? 261.458
         : undefined
+  const nxpLogoWidths = [256, 250]
+  const logoRowWidth = isNxp ? 514 : undefined
   const sponsorBoxStyle =
-    isAmd || isGoogle
+    usesAmdLayout || isGoogle
       ? {
           width: zoomCq(zpx(278)),
           height: zoomCq(zpx(96)),
@@ -186,8 +197,8 @@ export function ZoomedFace({
           justifyContent: 'center',
         }
       : undefined
-  const isLargeHashtagCard = isLogitech || isAmd || isGoogle
-  const hashtagBoxWidth = isAmd ? 572 : isGoogle ? 493 : undefined
+  const isLargeHashtagCard = isLogitech || usesAmdLayout || isGoogle
+  const hashtagBoxWidth = usesAmdLayout ? 572 : isGoogle ? 493 : undefined
   const contentTop = isGoogle ? '14%' : '9%'
   const contentGap = isLogitech || isGoogle ? 13 : 18
   const noticeBoxStyle = isGoogle
@@ -224,18 +235,35 @@ export function ZoomedFace({
             高 logo（聚陽、愛德萬）受高度上限，皆比先前放大許多 */}
           <div
             className="flex w-full items-center justify-center"
-            style={{ height: zoomCq(zpx(logoBoxHeight)), gap: zoomCq(zpx(20)) }}
+            style={{
+              width: logoRowWidth ? zoomCq(zpx(logoRowWidth)) : undefined,
+              height: zoomCq(zpx(logoBoxHeight)),
+              gap: zoomCq(zpx(isNxp ? 8 : 20)),
+            }}
           >
-            {problem.logos.map((logo) => (
+            {problem.logos.map((logo, index) => (
               <img
                 key={logo}
                 src={logo}
                 alt={problem.sponsor}
-                className="max-h-full max-w-[46%] object-contain"
+                className={`max-h-full object-contain ${
+                  isNxp ? 'max-w-none' : 'max-w-[46%]'
+                }`}
                 style={
-                  logoImageWidth
-                    ? { width: zoomCq(zpx(logoImageWidth)), maxWidth: '100%' }
-                    : undefined
+                  isNxp
+                    ? {
+                        width: zoomCq(zpx(nxpLogoWidths[index])),
+                        transform:
+                          index === 0
+                            ? `translateX(${zoomCq(zpx(32))}) scale(1.1)`
+                            : `translateX(-${zoomCq(zpx(40))}) scale(1.6)`,
+                      }
+                    : logoImageWidth
+                      ? {
+                          width: zoomCq(zpx(logoImageWidth)),
+                          maxWidth: '100%',
+                        }
+                      : undefined
                 }
               />
             ))}
@@ -371,8 +399,70 @@ export default function ProblemDeck() {
   const [viewportWidth, setViewportWidth] = useState(() => window.innerWidth)
   const [viewportHeight, setViewportHeight] = useState(() => window.innerHeight)
   const deckRef = useRef<HTMLDivElement>(null)
+  const cardRefs = useRef(new Map<string, HTMLDivElement>())
+  const cardRectsBeforeLayout = useRef(new Map<string, DOMRect>())
+  const cardAnimations = useRef<Animation[]>([])
   const [deckWidth, setDeckWidth] = useState(DECK_W)
   const prevZoomed = useRef<number | null>(null)
+
+  const captureCardRects = () => {
+    cardRectsBeforeLayout.current = new Map(
+      [...cardRefs.current].map(([sponsor, element]) => [
+        sponsor,
+        element.getBoundingClientRect(),
+      ]),
+    )
+  }
+
+  useLayoutEffect(() => {
+    if (cardRectsBeforeLayout.current.size === 0) return
+
+    cardAnimations.current.forEach((animation) => animation.cancel())
+    const before = cardRectsBeforeLayout.current
+    cardRectsBeforeLayout.current = new Map()
+
+    cardAnimations.current = [...cardRefs.current].flatMap(
+      ([sponsor, element]) => {
+        const first = before.get(sponsor)
+        const last = element.getBoundingClientRect()
+        if (!first || last.width === 0 || last.height === 0) return []
+
+        const deltaX = first.left - last.left
+        const deltaY = first.top - last.top
+        const scaleX = first.width / last.width
+        const scaleY = first.height / last.height
+        if (deltaX === 0 && deltaY === 0 && scaleX === 1 && scaleY === 1)
+          return []
+
+        return [
+          element.animate(
+            [
+              {
+                transformOrigin: 'top left',
+                transform: `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`,
+              },
+              {
+                transformOrigin: 'top left',
+                transform: 'translate(0, 0) scale(1, 1)',
+              },
+            ],
+            {
+              duration: 700,
+              easing: 'cubic-bezier(0.23, 1, 0.32, 1)',
+              fill: 'both',
+            },
+          ),
+        ]
+      },
+    )
+
+    const timer = window.setTimeout(() => {
+      cardAnimations.current.forEach((animation) => animation.cancel())
+      cardAnimations.current = []
+    }, 710)
+
+    return () => window.clearTimeout(timer)
+  }, [isOpen, zoomed])
 
   useEffect(() => {
     const handleResize = () => {
@@ -460,6 +550,7 @@ export default function ProblemDeck() {
   }
 
   const handleClick = (index: number) => {
+    captureCardRects()
     if (!isOpen) return setIsOpen(true)
     setZoomed(index)
   }
@@ -489,7 +580,11 @@ export default function ProblemDeck() {
             // 且外層一旦 disabled 會連子元素的點擊一起吃掉。
             <div
               key={problem.sponsor}
-              className={`ease-out-strong absolute max-w-[calc(100vw-3rem)] overflow-hidden transition-all duration-700 ${
+              ref={(element) => {
+                if (element) cardRefs.current.set(problem.sponsor, element)
+                else cardRefs.current.delete(problem.sponsor)
+              }}
+              className={`absolute max-w-[calc(100vw-3rem)] overflow-hidden transition-transform duration-200 ${
                 isZoomed ? '@container' : 'hover:-translate-y-2'
               }`}
               style={{
@@ -499,7 +594,10 @@ export default function ProblemDeck() {
                 height: spot.height,
                 borderRadius: spot.radius,
                 zIndex: spot.zIndex,
-                transitionDelay: zoomed === null ? `${index * 50}ms` : '0ms',
+                boxShadow: isZoomed
+                  ? undefined
+                  : `0 0 ${cq(px(44))} ${cq(px(12))} rgba(255,255,255,0.72)`,
+                willChange: 'transform',
               }}
             >
               <img
@@ -510,7 +608,10 @@ export default function ProblemDeck() {
               {isZoomed ? (
                 <ZoomedFace
                   problem={problem}
-                  onClose={() => setZoomed(null)}
+                  onClose={() => {
+                    captureCardRects()
+                    setZoomed(null)
+                  }}
                   contentScale={contentScale}
                 />
               ) : (

@@ -126,7 +126,7 @@ export default function HeroDecorations({
           src="/deco/star-03.svg"
           alt=""
           draggable={false}
-          className="twinkle absolute top-1/2 left-[7%] w-[72.849px] -translate-y-[17.5rem] rotate-[-10deg] drop-shadow-[0_10px_4px_rgba(0,0,0,0.25)]"
+          className="twinkle absolute top-1/2 left-[7%] w-[4.5531rem] -translate-y-[17.5rem] rotate-[-10deg] drop-shadow-[0_10px_4px_rgba(0,0,0,0.25)]"
           style={{ animation: 'twinkle 3s ease-in-out infinite' }}
         />
         {/* small lower-left star (Figma 1757:87510) */}

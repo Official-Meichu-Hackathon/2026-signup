@@ -288,7 +288,7 @@ const METEOR_LINES: MeteorLineDef[] = [
     endSrc: figmaStar6,
     gap: 0.0575,
     horizontalOffset: 0,
-    verticalOffset: -0.01,
+    verticalOffset: 0.015,
   },
   {
     // 1577:63527，題目説明標題下方，figmaStar3 → figmaStar4
@@ -404,7 +404,7 @@ export default function ProblemStars() {
     <div
       ref={containerRef}
       aria-hidden
-      className="pointer-events-none absolute top-[4.08%] left-[2.22%] h-[79.24%] w-[95.58%]"
+      className="pointer-events-none absolute top-[7.222vw] left-[2.22%] aspect-[1376.367/2020.722] w-[95.58%]"
     >
       {METEOR_LINES.map((line, index) => (
         <div
@@ -460,7 +460,11 @@ export default function ProblemStars() {
           ref={(el) => {
             if (el) starRefs.current.set(star.src, el)
           }}
-          className="absolute"
+          className={`absolute ${
+            star.src === figmaStar6 || star.src === figmaStar7
+              ? 'problem-meteor-endpoint'
+              : ''
+          }`}
           style={{
             left: `${star.left}%`,
             top: `${star.top}%`,
