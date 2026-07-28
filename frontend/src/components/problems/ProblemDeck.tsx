@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { PROBLEMS, HASHTAG_NOTE, type Problem } from '../../data/problems'
 import cardBack from '../../assets/Problems/card-back.png'
 import cardDecor from '../../assets/Problems/card-decor.svg'
@@ -399,8 +399,73 @@ export default function ProblemDeck() {
   const [viewportWidth, setViewportWidth] = useState(() => window.innerWidth)
   const [viewportHeight, setViewportHeight] = useState(() => window.innerHeight)
   const deckRef = useRef<HTMLDivElement>(null)
+  const cardRefs = useRef(new Map<string, HTMLDivElement>())
+  const cardRectsBeforeLayout = useRef(new Map<string, DOMRect>())
+  const cardAnimations = useRef<Animation[]>([])
   const [deckWidth, setDeckWidth] = useState(DECK_W)
+  const [isDeckAnimating, setIsDeckAnimating] = useState(false)
   const prevZoomed = useRef<number | null>(null)
+
+  const captureCardRects = () => {
+    cardRectsBeforeLayout.current = new Map(
+      [...cardRefs.current].map(([sponsor, element]) => [
+        sponsor,
+        element.getBoundingClientRect(),
+      ]),
+    )
+    setIsDeckAnimating(true)
+  }
+
+  useLayoutEffect(() => {
+    if (cardRectsBeforeLayout.current.size === 0) return
+
+    cardAnimations.current.forEach((animation) => animation.cancel())
+    const before = cardRectsBeforeLayout.current
+    cardRectsBeforeLayout.current = new Map()
+
+    cardAnimations.current = [...cardRefs.current].flatMap(
+      ([sponsor, element]) => {
+        const first = before.get(sponsor)
+        const last = element.getBoundingClientRect()
+        if (!first || last.width === 0 || last.height === 0) return []
+
+        const deltaX = first.left - last.left
+        const deltaY = first.top - last.top
+        const scaleX = first.width / last.width
+        const scaleY = first.height / last.height
+        if (deltaX === 0 && deltaY === 0 && scaleX === 1 && scaleY === 1)
+          return []
+
+        return [
+          element.animate(
+            [
+              {
+                transformOrigin: 'top left',
+                transform: `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`,
+              },
+              {
+                transformOrigin: 'top left',
+                transform: 'translate(0, 0) scale(1, 1)',
+              },
+            ],
+            {
+              duration: 700,
+              easing: 'cubic-bezier(0.23, 1, 0.32, 1)',
+              fill: 'both',
+            },
+          ),
+        ]
+      },
+    )
+
+    const timer = window.setTimeout(() => {
+      cardAnimations.current.forEach((animation) => animation.cancel())
+      cardAnimations.current = []
+      setIsDeckAnimating(false)
+    }, 710)
+
+    return () => window.clearTimeout(timer)
+  }, [isOpen, zoomed])
 
   useEffect(() => {
     const handleResize = () => {
@@ -488,6 +553,7 @@ export default function ProblemDeck() {
   }
 
   const handleClick = (index: number) => {
+    captureCardRects()
     if (!isOpen) return setIsOpen(true)
     setZoomed(index)
   }
@@ -517,7 +583,11 @@ export default function ProblemDeck() {
             // 且外層一旦 disabled 會連子元素的點擊一起吃掉。
             <div
               key={problem.sponsor}
-              className={`ease-out-strong absolute max-w-[calc(100vw-3rem)] overflow-hidden transition-all duration-700 ${
+              ref={(element) => {
+                if (element) cardRefs.current.set(problem.sponsor, element)
+                else cardRefs.current.delete(problem.sponsor)
+              }}
+              className={`absolute max-w-[calc(100vw-3rem)] overflow-hidden transition-transform duration-200 ${
                 isZoomed ? '@container' : 'hover:-translate-y-2'
               }`}
               style={{
@@ -530,7 +600,7 @@ export default function ProblemDeck() {
                 boxShadow: isZoomed
                   ? undefined
                   : `0 0 ${cq(px(44))} ${cq(px(12))} rgba(255,255,255,0.72)`,
-                transitionDelay: zoomed === null ? `${index * 50}ms` : '0ms',
+                willChange: isDeckAnimating ? 'transform, opacity' : undefined,
               }}
             >
               <img
@@ -541,7 +611,10 @@ export default function ProblemDeck() {
               {isZoomed ? (
                 <ZoomedFace
                   problem={problem}
-                  onClose={() => setZoomed(null)}
+                  onClose={() => {
+                    captureCardRects()
+                    setZoomed(null)
+                  }}
                   contentScale={contentScale}
                 />
               ) : (
