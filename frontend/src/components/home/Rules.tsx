@@ -80,7 +80,10 @@ export default function Rules() {
   )
 
   return (
-    <div id="rules" className="rules-section md:mt-[108px]">
+    <div
+      id="rules"
+      className="rules-section md:mt-[108px] md:px-[clamp(48px,8vw,96px)]"
+    >
       <div className="rules-mobile">
         <p className="mobile-home-title">比賽規則</p>
         <div className={`rules-mobile-panel is-${tab}`}>
@@ -120,7 +123,7 @@ export default function Rules() {
         </div>
       </div>
 
-      <div className="rules-desktop mx-auto w-full max-w-[1083px] flex-col items-center gap-12 px-6 py-16 md:gap-[90px] md:px-[32px] md:py-0 xl:px-0">
+      <div className="rules-desktop mx-auto w-full max-w-[1083px] flex-col items-center gap-12 py-16 md:gap-[90px] md:py-0">
         <p className="text-center font-['Zen_Antique'] text-2xl text-[#f6f6f6] [text-shadow:0px_0px_20px_rgba(255,255,255,0.35),0px_4px_40px_rgba(255,255,255,0.2)] md:text-[35px] md:leading-[44px]">
           比賽規則
         </p>
