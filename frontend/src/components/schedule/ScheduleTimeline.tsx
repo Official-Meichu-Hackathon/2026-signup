@@ -1,4 +1,11 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import {
+  motion,
+  useMotionValue,
+  useMotionValueEvent,
+  useScroll,
+  useTransform,
+} from 'motion/react'
 import timelineLine19 from '../../assets/Schedule/timeline-line.svg'
 import timelineLine20 from '../../assets/Schedule/timeline-line-0920.svg'
 import mobileTimelineLine19 from '../../assets/Schedule/mobile-timeline-line.svg'
@@ -304,8 +311,47 @@ export default function ScheduleTimeline({
   const tabs = TABS[device][selectedDay]
   const line = LINE[device][selectedDay]
 
+  const containerRef = useRef<HTMLDivElement>(null)
+  // 0 as the timeline starts entering the viewport from the bottom, 1 once
+  // its bottom edge reaches the viewport's bottom (fully scrolled into
+  // view) — stars connect in step with this as the user scrolls down, not
+  // on a fixed timer. Deliberately 'end end', not 'end start': the latter
+  // needs the container to scroll completely past the top of the viewport,
+  // which requires more scroll distance than the page actually has left
+  // after the container (just the Footer band), so the line never finished
+  // connecting even at the bottom of the page. 'end end' always finishes at
+  // or before the true page bottom, since the container can't extend past
+  // its own page.
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start end', 'end end'],
+  })
+  // Ratchets up with scrollYProgress but never back down, so scrolling back
+  // up doesn't retract the line once it's been drawn — once connected, a
+  // segment stays connected. Tracked per day (not one shared value) so
+  // switching tabs doesn't carry 09/19's progress over onto 09/20, or vice
+  // versa — each day remembers only how far its own line has been scrolled
+  // through.
+  const maxProgress19 = useMotionValue(0)
+  const maxProgress20 = useMotionValue(0)
+  useMotionValueEvent(scrollYProgress, 'change', (v) => {
+    const target = selectedDay === '19' ? maxProgress19 : maxProgress20
+    if (v > target.get()) target.set(v)
+  })
+  const maskFor = (p: number) => {
+    const pct = p * 100
+    return `linear-gradient(to bottom, black ${Math.max(0, pct - 6)}%, transparent ${pct}%)`
+  }
+  // Soft-edged reveal (not a hard cut): fully visible above the furthest
+  // scroll position reached, fading out over the last 6% before it — reads
+  // as a comet trail drawing the constellation rather than a wipe.
+  const lineMask19 = useTransform(maxProgress19, maskFor)
+  const lineMask20 = useTransform(maxProgress20, maskFor)
+  const lineMask = selectedDay === '19' ? lineMask19 : lineMask20
+
   return (
     <div
+      ref={containerRef}
       className={`relative w-full transition-[aspect-ratio] duration-300 ease-out ${className}`}
       style={{ aspectRatio: line.aspect }}
     >
@@ -340,13 +386,21 @@ export default function ScheduleTimeline({
         key={selectedDay}
         className="animate-fade-in pointer-events-none absolute inset-0"
       >
-        {/* The line art's drop-shadow bleeds past its own bounds, so it needs
-            the same clean-box + bleed-inset nesting as the header constellations. */}
-        <div className="absolute" style={{ inset: line.box }}>
-          <div className="absolute" style={{ inset: line.bleed }}>
-            <img src={line.src} alt="" className="h-full w-full" />
+        {/* Masked at the full-container scale (same 0~100% space as each
+            dot's `top`), wrapping the box+bleed-inset nesting the line art
+            itself needs for its drop-shadow bleed — keeps the mask's percent
+            values directly comparable to dot.top instead of needing a
+            conversion between the two coordinate spaces. */}
+        <motion.div
+          className="absolute inset-0"
+          style={{ WebkitMaskImage: lineMask, maskImage: lineMask }}
+        >
+          <div className="absolute" style={{ inset: line.box }}>
+            <div className="absolute" style={{ inset: line.bleed }}>
+              <img src={line.src} alt="" className="h-full w-full" />
+            </div>
           </div>
-        </div>
+        </motion.div>
 
         {EVENTS[device][selectedDay].map(({ time, label, dot, text }) => (
           <div key={time}>
@@ -354,8 +408,16 @@ export default function ScheduleTimeline({
               className="absolute size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[0_0_10px_3px_rgba(255,255,255,0.65)]"
               style={{ top: `${dot.top}%`, left: `${dot.left}%` }}
             />
+            {/* Desktop: no wrap — there's always enough room past the
+                text's start position for even the longest label. Mobile
+                keeps the max-w-[40%] cap (and wraps): the two longest
+                labels genuinely need more width than mobile has left of
+                their start position, and the font is already at this
+                clamp's floor, so nowrap would just overflow invisibly
+                past the canvas's own overflow-hidden edge instead of
+                wrapping — worse than the wrap it's replacing. */}
             <p
-              className="font-noto absolute w-max max-w-[40%] text-[clamp(0.6875rem,1.74vw,1.5625rem)] leading-[1.6] font-semibold text-white"
+              className={`font-noto absolute w-max text-[clamp(0.6875rem,1.74vw,1.5625rem)] leading-[1.6] font-semibold text-white ${device === 'desktop' ? 'whitespace-nowrap' : 'max-w-[40%]'}`}
               style={{ top: `${text.top}%`, left: `${text.left}%` }}
             >
               {time}&nbsp;&nbsp;{label}
