@@ -3,10 +3,6 @@ import rulesHackerActive from '../../assets/home/rules-hacker-active.svg'
 import rulesHackerBase from '../../assets/home/rules-hacker-base.svg'
 import rulesMakerActive from '../../assets/home/rules-maker-active.svg'
 import rulesMakerBase from '../../assets/home/rules-maker-base.svg'
-import rulesMobileHackerBase from '../../assets/home/rules-mobile-hacker-base.svg'
-import rulesMobileHackerShell from '../../assets/home/rules-mobile-hacker-shell.svg'
-import rulesMobileMakerBase from '../../assets/home/rules-mobile-maker-base.svg'
-import rulesMobileMakerShell from '../../assets/home/rules-mobile-maker-shell.svg'
 
 type GroupKey = 'hacker' | 'maker'
 
@@ -87,24 +83,6 @@ export default function Rules() {
       <div className="rules-mobile">
         <p className="mobile-home-title">比賽規則</p>
         <div className={`rules-mobile-panel is-${tab}`}>
-          <div className="rules-mobile-art" aria-hidden="true">
-            <img
-              src={
-                tab === 'hacker' ? rulesMobileHackerBase : rulesMobileMakerBase
-              }
-              alt=""
-              className="rules-mobile-base"
-            />
-            <img
-              src={
-                tab === 'hacker'
-                  ? rulesMobileHackerShell
-                  : rulesMobileMakerShell
-              }
-              alt=""
-              className="rules-mobile-shell"
-            />
-          </div>
           <div className="rules-mobile-tabs">
             {TABS.map(({ key, label }) => (
               <button

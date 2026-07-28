@@ -8,10 +8,20 @@ import logoEclat from '../../assets/home/logo-eclat.webp'
 import logoWtmicro from '../../assets/home/logo-wtmicro.webp'
 import logoTsmc from '../../assets/home/logo-tsmc.webp'
 import logoPhison from '../../assets/home/logo-phison.webp'
+import logoMaicoin from '../../assets/home/logo-maicoin.webp'
+import logoPixart from '../../assets/home/logo-pixart.webp'
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
     <p className="partner-section-title font-zen w-full text-center text-2xl leading-[44px] font-normal text-[#b1a2ca] not-italic md:text-[35px]">
+      {children}
+    </p>
+  )
+}
+
+function SponsorTierLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="sponsor-tier-label font-zen w-full text-[32px] leading-[44px] font-normal text-[#6e8eda] [text-shadow:0px_0px_20px_rgba(255,255,255,0.5),0px_4px_40px_rgba(255,255,255,0.5),0px_4px_50px_rgba(255,255,255,0.5)]">
       {children}
     </p>
   )
@@ -104,27 +114,62 @@ export default function PartnerLogos() {
 
       <div
         id="sponsors"
-        className="partner-block partner-sponsors mt-16 flex w-full flex-col items-center gap-6 md:mt-[187px] md:gap-[60px]"
+        className="partner-block partner-sponsors mt-16 flex w-full flex-col items-center gap-6 md:mt-[187px] md:max-w-[617px] md:gap-[60px]"
       >
         <SectionTitle>贊助企業</SectionTitle>
-        <div className="flex w-full flex-col items-center gap-8 md:gap-[93px]">
-          <div className="relative aspect-[345/228] w-full max-w-[120px] md:max-w-[345px]">
-            <img
-              src={logoTsmc}
-              alt="TSMC 台積電"
-              loading="lazy"
-              decoding="async"
-              className="absolute top-[8.772%] left-[5.797%] h-[84.149%] w-[88.406%] object-cover"
-            />
+        <div className="sponsor-tier-list flex w-full flex-col items-center gap-[87px]">
+          <div className="sponsor-tier sponsor-tier-tsmc flex w-[305px] flex-col items-start">
+            <SponsorTierLabel>Gold</SponsorTierLabel>
+            <div className="relative aspect-[2100/1321] w-full">
+              <img
+                src={logoTsmc}
+                alt="TSMC 台積電"
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 h-full w-full max-w-none object-cover"
+              />
+            </div>
           </div>
-          <div className="relative aspect-[315/99] w-full max-w-[120px] overflow-hidden md:max-w-[315px]">
-            <img
-              src={logoPhison}
-              alt="Phison 群聯電子"
-              loading="lazy"
-              decoding="async"
-              className="absolute top-[-71.78%] left-[-18.03%] h-[243.45%] w-[136.03%] max-w-none"
-            />
+
+          <div className="sponsor-tier sponsor-tier-maicoin flex w-[347px] flex-col items-start">
+            <SponsorTierLabel>Silver</SponsorTierLabel>
+            <div className="relative aspect-[1734/375] w-full">
+              <img
+                src={logoMaicoin}
+                alt="MaiCoin"
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 h-full w-full max-w-none object-cover"
+              />
+            </div>
+          </div>
+
+          <div className="sponsor-tier sponsor-tier-pixart flex w-full flex-col items-start gap-[3px]">
+            <SponsorTierLabel>Silver</SponsorTierLabel>
+            <div className="relative aspect-[2472/308] w-full">
+              <img
+                src={logoPixart}
+                alt="PixArt 原相科技"
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 h-full w-full max-w-none object-cover"
+              />
+            </div>
+          </div>
+
+          <div className="sponsor-tier sponsor-tier-phison flex w-[315px] flex-col items-start">
+            <SponsorTierLabel>Bronze</SponsorTierLabel>
+            <div className="relative aspect-[3010/946] w-full">
+              <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                <img
+                  src={logoPhison}
+                  alt="Phison 群聯電子"
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute top-[-71.78%] left-[-18.03%] h-[243.45%] w-[136.03%] max-w-none"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
