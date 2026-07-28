@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import {
+  animate,
   motion,
   useMotionValue,
   useMotionValueEvent,
@@ -338,9 +339,17 @@ export default function ScheduleTimeline({
 
   useEffect(() => {
     const target = selectedDay === '19' ? maxProgress19 : maxProgress20
-    const v = scrollYProgress.get()
-    if (v > target.get()) target.set(v)
-  }, [selectedDay, scrollYProgress, maxProgress19, maxProgress20])
+    if (device === 'mobile') {
+      const controls = animate(target, 1, {
+        duration: 1.2,
+        ease: [0.25, 0.1, 0.25, 1],
+      })
+      return () => controls.stop()
+    } else {
+      const v = scrollYProgress.get()
+      if (v > target.get()) target.set(v)
+    }
+  }, [device, selectedDay, scrollYProgress, maxProgress19, maxProgress20])
 
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
     const target = selectedDay === '19' ? maxProgress19 : maxProgress20
