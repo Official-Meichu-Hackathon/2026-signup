@@ -49,8 +49,10 @@ export function buildRows(data: RegistrationData): SheetCell[][] {
     data.isCrossDomain,
     ...priority,
     ...playerCells(players[0]),
-    data.assentFirst,
-    data.assentSecond,
+    // The two consents merged into one question, but the sheet still has two
+    // columns, so the single answer fills both.
+    data.assent,
+    data.assent,
     data.lowIncomeProof ? data.lowIncomeProof.name : '',
     data.workshopAttendance,
     data.ceremonyAttendance,
