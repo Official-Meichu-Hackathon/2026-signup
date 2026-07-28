@@ -1,6 +1,15 @@
 // Decorative meteor streaks + 4-point stars around the 報名黑客松 hero title.
 // Purely decorative (aria-hidden). Two variants: mobile and desktop.
 // variant="success" shifts the mobile sparkles: 流星1 up, the rest down.
+
+// Figma's drop-shadow, moved out of the meteor SVGs: an in-file <filter>
+// rasterises at the SVG's user-space size and upscales into a blur on high-DPR
+// phones. Blur is in user units, so each call site scales it by its own
+// rendered width / viewBox width.
+const glow = (blur: number, dy: number) =>
+  `drop-shadow(0 0 ${blur}px rgba(255,255,255,0.35))` +
+  ` drop-shadow(0 ${dy}px ${blur}px rgba(255,255,255,0.2))`
+
 export default function HeroDecorations({
   variant = 'form',
 }: {
@@ -23,6 +32,7 @@ export default function HeroDecorations({
           alt=""
           draggable={false}
           className={`absolute top-1/2 left-1/2 ${success ? 'mt-[3.6rem] w-[11.5rem] rotate-[5deg]' : 'mt-[2.8rem] w-[11rem]'} -ml-[4.7rem] -translate-x-1/2 -translate-y-1/2`}
+          style={{ filter: success ? glow(7.3, 1.5) : glow(7, 1.4) }}
         />
         {/* 流星1 — large, top-right */}
         <img
@@ -30,7 +40,10 @@ export default function HeroDecorations({
           alt=""
           draggable={false}
           className={`twinkle absolute top-1/2 left-1/2 ${success ? '-mt-[3.0rem] ml-[8.8rem] w-[3.6rem]' : '-mt-[1.5rem] ml-[8.3rem] w-[3.08rem]'} -translate-x-1/2 -translate-y-1/2`}
-          style={{ animation: 'twinkle 3.6s ease-in-out infinite 0.2s' }}
+          style={{
+            animation: 'twinkle 3.6s ease-in-out infinite 0.2s',
+            filter: success ? glow(17.1, 3.4) : glow(14.6, 2.9),
+          }}
         />
         {/* 流星5 — right edge, below 流星1 (success only, Figma 1757:87652) */}
         {success && (
@@ -39,7 +52,10 @@ export default function HeroDecorations({
             alt=""
             draggable={false}
             className="twinkle absolute top-1/2 left-1/2 -mt-[0.4rem] ml-[10rem] w-[1.7rem] -translate-x-1/2 -translate-y-1/2"
-            style={{ animation: 'twinkle 4.6s ease-in-out infinite 0.9s' }}
+            style={{
+              animation: 'twinkle 4.6s ease-in-out infinite 0.9s',
+              filter: glow(8, 1.6),
+            }}
           />
         )}
         {/* 流星3 — mid, far left */}
@@ -48,7 +64,10 @@ export default function HeroDecorations({
           alt=""
           draggable={false}
           className={`twinkle absolute top-1/2 left-1/2 ${success ? 'mt-[1rem] -ml-[10.8rem] w-[2.7rem]' : 'mt-[1.3rem] -ml-[10.4rem] w-[2.28rem]'} -translate-x-1/2 -translate-y-1/2`}
-          style={{ animation: 'twinkle 4.1s ease-in-out infinite 1.1s' }}
+          style={{
+            animation: 'twinkle 4.1s ease-in-out infinite 1.1s',
+            filter: success ? glow(12.8, 2.6) : glow(10.8, 2.2),
+          }}
         />
         {/* 流星2 — small, upper-left */}
         <img
@@ -56,7 +75,10 @@ export default function HeroDecorations({
           alt=""
           draggable={false}
           className={`twinkle absolute top-1/2 left-1/2 ${success ? '-mt-[0.3rem] -ml-[9.6rem] w-[1.8rem]' : 'mt-[0.72rem] -ml-[9.7rem] w-[1.39rem]'} -translate-x-1/2 -translate-y-1/2`}
-          style={{ animation: 'twinkle 5s ease-in-out infinite 0.6s' }}
+          style={{
+            animation: 'twinkle 5s ease-in-out infinite 0.6s',
+            filter: success ? glow(8.5, 1.7) : glow(6.6, 1.3),
+          }}
         />
         {/* 流星4 — small, bottom-centre on streak */}
         <img
@@ -64,7 +86,10 @@ export default function HeroDecorations({
           alt=""
           draggable={false}
           className={`twinkle absolute top-1/2 left-1/2 ${success ? 'mt-[4.1rem] ml-[1.8rem] w-[1.8rem]' : 'mt-[2.85rem] ml-[1.2rem] w-[1.39rem]'} -translate-x-1/2 -translate-y-1/2`}
-          style={{ animation: 'twinkle 3.2s ease-in-out infinite 1.6s' }}
+          style={{
+            animation: 'twinkle 3.2s ease-in-out infinite 1.6s',
+            filter: success ? glow(8.5, 1.7) : glow(6.6, 1.3),
+          }}
         />
       </div>
 
@@ -99,6 +124,7 @@ export default function HeroDecorations({
           alt=""
           draggable={false}
           className="absolute top-1/2 left-1/2 mt-[6.875rem] -ml-[10.75rem] w-[23.125rem] -translate-x-1/2 -translate-y-1/2 rotate-[5deg]"
+          style={{ filter: glow(14.7, 2.9) }}
         />
         {/* small meteor just right of centre */}
         <img
@@ -106,12 +132,15 @@ export default function HeroDecorations({
           alt=""
           draggable={false}
           className="twinkle absolute top-1/2 left-1/2 mt-[7.8125rem] ml-[1.25rem] w-[3.75rem] -translate-x-1/2 -translate-y-1/2"
-          style={{ animation: 'twinkle 5.5s ease-in-out infinite 0.3s' }}
+          style={{
+            animation: 'twinkle 5.5s ease-in-out infinite 0.3s',
+            filter: glow(17.8, 3.6),
+          }}
         />
         {/* bright 4-point star on the right — shadow lives on the un-rotated
           wrapper so it drops straight down; the img alone carries the rotation */}
         <div
-          className={`absolute top-1/2 right-[6%] ${success ? 'translate-y-[1rem]' : 'translate-y-[8rem]'} drop-shadow-[0_10px_4px_rgba(0,0,0,0.25)]`}
+          className={`absolute top-1/2 right-[12%] ${success ? 'translate-y-[1rem]' : 'translate-y-[8.75rem]'} drop-shadow-[0_10px_4px_rgba(0,0,0,0.25)]`}
         >
           <img
             src="/deco/star-02.svg"
