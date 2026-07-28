@@ -414,6 +414,12 @@ export default function StatsAccordion() {
 
   // 收合時面板要互相重疊（見 STACK_STEP）；展開時讓出完整高度，內容才不會
   // 被下一塊面板蓋住。
+  //
+  // 這個負 margin 必須跟 Collapsible 的高度動畫「同時、同曲線」漸變。先前它是
+  // 瞬間切換的：一按收合，marginBottom 立刻從 0 跳到負值，下面的內容瞬移上去
+  // 一百多 px，接著高度才慢慢收 —— 那一下就是使用者看到的抖動。故下面兩塊
+  // 都加上 transition-[margin-bottom] duration-500，與 Collapsible 的
+  // duration-500 用同一組 Tailwind 預設緩動，兩段位移才會疊成一次平滑的收合。
   const overlap = (height: number, isOpen: boolean) =>
     isOpen ? '0px' : cq(STACK_STEP - height)
 
@@ -421,7 +427,7 @@ export default function StatsAccordion() {
     <div className="@container w-full max-w-[1394px]">
       {/* 後面的面板要疊在前一塊之上，故 z-index 遞增 */}
       <div
-        className="stats-layer relative z-[1]"
+        className="stats-layer relative z-[1] transition-[margin-bottom] duration-500"
         style={{ marginBottom: overlap(H_BAR_STATS, openStats) }}
       >
         <AccordionBar
@@ -445,7 +451,7 @@ export default function StatsAccordion() {
       </Collapsible>
 
       <div
-        className="stats-layer relative z-[2]"
+        className="stats-layer relative z-[2] transition-[margin-bottom] duration-500"
         style={{ marginBottom: overlap(H_BAR_QUOTES, openQuotes) }}
       >
         <AccordionBar
