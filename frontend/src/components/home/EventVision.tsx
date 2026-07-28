@@ -1,19 +1,18 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, type MotionValue } from 'motion/react'
-import Sparkle from './Sparkle'
-import activityImage1 from '../../assets/home/activity/image-1.jpg'
-import activityImage2 from '../../assets/home/activity/image-2.jpg'
-import activityImage3 from '../../assets/home/activity/image-3.jpg'
-import activityImage4 from '../../assets/home/activity/image-4.jpg'
-import activityImage5 from '../../assets/home/activity/image-5.jpg'
-import activityImage6 from '../../assets/home/activity/image-6.jpg'
-import activityImage7 from '../../assets/home/activity/image-7.jpg'
-import activityImage8 from '../../assets/home/activity/image-8.jpg'
-import activityImage9 from '../../assets/home/activity/image-9.jpg'
-import activityImage10 from '../../assets/home/activity/image-10.jpg'
-import activityImage11 from '../../assets/home/activity/image-11.jpg'
-import activityImage12 from '../../assets/home/activity/image-12.jpg'
-import activityHero from '../../assets/home/activity/hero.jpg'
+import activityImage1 from '../../assets/home/activity/image-1.webp'
+import activityImage2 from '../../assets/home/activity/image-2.webp'
+import activityImage3 from '../../assets/home/activity/image-3.webp'
+import activityImage4 from '../../assets/home/activity/image-4.webp'
+import activityImage5 from '../../assets/home/activity/image-5.webp'
+import activityImage6 from '../../assets/home/activity/image-6.webp'
+import activityImage7 from '../../assets/home/activity/image-7.webp'
+import activityImage8 from '../../assets/home/activity/image-8.webp'
+import activityImage9 from '../../assets/home/activity/image-9.webp'
+import activityImage10 from '../../assets/home/activity/image-10.webp'
+import activityImage11 from '../../assets/home/activity/image-11.webp'
+import activityImage12 from '../../assets/home/activity/image-12.webp'
+import activityHero from '../../assets/home/activity/hero.webp'
 
 const clamp01 = (n: number) => Math.min(1, Math.max(0, n))
 
@@ -152,18 +151,30 @@ function SequencePhotoItem({
   })
 
   return (
-    <motion.div
-      style={{ x, y, scale, opacity, zIndex }}
-      className="absolute top-1/2 left-1/2 -mt-[11vw] -ml-[13vw] aspect-[4/3] w-[26vw] max-w-[320px] overflow-hidden shadow-[0px_10px_30px_0px_rgba(0,0,0,0.35)]"
+    <div
+      className="pointer-events-none absolute inset-0 flex items-center justify-center"
+      style={{ zIndex }}
     >
-      {photo.src ? (
-        <img src={photo.src} alt="" className="h-full w-full object-cover" />
-      ) : (
-        <div className="flex h-full w-full items-center justify-center bg-white/10 text-sm text-white/50 backdrop-blur-sm">
-          {photo.label}
-        </div>
-      )}
-    </motion.div>
+      <motion.div
+        data-sequence-photo={photo.label}
+        style={{ x, y, scale, opacity }}
+        className="aspect-[4/3] w-[26vw] max-w-[320px] overflow-hidden shadow-[0px_10px_30px_0px_rgba(0,0,0,0.35)]"
+      >
+        {photo.src ? (
+          <img
+            src={photo.src}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-white/10 text-sm text-white/50 backdrop-blur-sm">
+            {photo.label}
+          </div>
+        )}
+      </motion.div>
+    </div>
   )
 }
 
@@ -191,6 +202,8 @@ function HeroPhoto({ progress }: { progress: MotionValue<number> }) {
         <img
           src={HERO_PHOTO.src}
           alt=""
+          loading="lazy"
+          decoding="async"
           className="h-full w-full object-cover"
         />
       ) : (
@@ -213,6 +226,7 @@ export default function EventVision() {
     <section
       id="vision"
       ref={sectionRef}
+      data-resize-scroll-section="vision"
       className="home-vision-section relative"
       style={{ height: `${SECTION_HEIGHT_VH}vh` }}
     >
@@ -220,6 +234,8 @@ export default function EventVision() {
         <img
           src={HERO_PHOTO.src}
           alt="梅竹黑客松活動大合照"
+          loading="lazy"
+          decoding="async"
           className="vision-mobile-photo"
         />
         <div className="vision-mobile-copy">
@@ -230,21 +246,13 @@ export default function EventVision() {
       </div>
 
       <div className="vision-desktop sticky top-0 h-screen w-full overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 z-30 flex flex-col items-center justify-center gap-6 px-6 text-center">
-          <div className="relative">
-            <Sparkle
-              variant="bright"
-              className="-top-3 -left-8 h-8 w-8 md:-top-4 md:-left-10 md:h-12 md:w-12"
-            />
-            <Sparkle
-              variant="soft"
-              className="-top-2 -right-6 h-6 w-6 md:-top-3 md:-right-8 md:h-8 md:w-8"
-            />
-            <p className="font-['Zen_Antique'] text-2xl text-[#f6f6f6] [text-shadow:0px_0px_20px_rgba(255,255,255,0.35),0px_4px_40px_rgba(255,255,255,0.2)] md:text-[35px]">
+        <div className="pointer-events-none absolute inset-0 z-30 flex flex-col items-center justify-center gap-6 px-[clamp(60px,8vw,96px)] text-center">
+          {/* <div>
+            <p className="font-['Zen_Antique'] text-2xl text-[#f6f6f6] [text-shadow:0px_0px_20px_rgba(255,255,255,0.35),0px_4px_40px_rgba(255,255,255,0.2)] md:text-[35px] md:leading-[44px]">
               活動願景
             </p>
-          </div>
-          <div className="flex max-w-[1200px] flex-col gap-4 px-[60px] text-justify text-base leading-[1.9] text-white/90 md:text-[20px]">
+          </div> */}
+          <div className="md:font-noto flex w-full max-w-[957px] flex-col gap-4 text-justify text-base leading-[1.9] font-semibold text-white/90 md:gap-[26px] md:text-[22px] md:leading-[26px]">
             {VISION_PARAGRAPHS.map((paragraph) => (
               <p key={paragraph.slice(0, 8)}>{paragraph}</p>
             ))}

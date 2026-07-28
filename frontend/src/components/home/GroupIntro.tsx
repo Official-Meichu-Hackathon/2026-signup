@@ -1,7 +1,10 @@
 import { useState } from 'react'
-import groupHacker from '../../assets/home/group-hacker.jpg'
-import groupMaker from '../../assets/home/group-maker.jpg'
-import Sparkle from './Sparkle'
+import groupHacker from '../../assets/home/group-hacker.webp'
+import groupMaker from '../../assets/home/group-maker.webp'
+import groupMobileBase from '../../assets/home/group-mobile-base.svg'
+import groupMobileHackerShell from '../../assets/home/group-mobile-hacker-shell.svg'
+import groupMobileMakerShell from '../../assets/home/group-mobile-maker-shell.svg'
+import { GroupTitleSparkles } from './HomeSparkles'
 
 type GroupKey = 'hacker' | 'maker'
 
@@ -55,7 +58,19 @@ export default function GroupIntro() {
     <div id="group-intro">
       <div className="group-intro-mobile">
         <p className="mobile-home-title">組別介紹</p>
-        <div className="group-mobile-panel">
+        <div className={`group-mobile-panel is-${tab}`}>
+          <div className="group-mobile-art" aria-hidden="true">
+            <img src={groupMobileBase} alt="" className="group-mobile-base" />
+            <img
+              src={
+                tab === 'hacker'
+                  ? groupMobileHackerShell
+                  : groupMobileMakerShell
+              }
+              alt=""
+              className="group-mobile-shell"
+            />
+          </div>
           <div className="group-mobile-tabs">
             {TABS.map(({ key, label }) => (
               <button
@@ -69,7 +84,7 @@ export default function GroupIntro() {
             ))}
           </div>
           <div className="group-mobile-card">
-            <img src={image} alt="" />
+            <img src={image} alt="" loading="lazy" decoding="async" />
             <div className="group-mobile-copy">
               <p>{intro}</p>
               <p>{workshop}</p>
@@ -81,68 +96,70 @@ export default function GroupIntro() {
         </div>
       </div>
 
-      <div className="group-intro-desktop mx-auto w-full max-w-[1440px] flex-col gap-8 py-16 sm:flex-row sm:gap-10 lg:gap-16 xl:gap-[151px]">
-        <div
-          className="flex shrink-0 flex-row items-end px-6 sm:relative sm:left-[calc(50%-50vw)] sm:flex-col sm:items-start sm:px-0"
-          data-node-id="617:1329"
-        >
-          {TABS.map(({ key, label }) => (
-            <button
-              key={key}
-              onClick={() => setTab(key)}
-              className={`relative flex cursor-pointer items-center justify-center rounded-t-[30px] border bg-gradient-to-br px-6 py-4 text-center font-semibold text-white backdrop-blur-[35px] transition-all duration-300 ease-out sm:h-[140px] sm:w-[80px] sm:rounded-t-none sm:rounded-r-[50px] sm:border-l-0 sm:px-0 sm:py-6 sm:text-xl sm:leading-none sm:tracking-[0.45em] sm:[writing-mode:vertical-rl] ${
-                tab === key
-                  ? 'z-10 border-white/45 from-white/[0.27] to-white/[0.08] opacity-100 shadow-[8px_12px_32px_rgba(0,0,0,0.38),inset_-2px_2px_10px_rgba(255,255,255,0.42),0_0_22px_rgba(176,200,255,0.2)] sm:w-[100px]'
-                  : 'z-0 border-white/20 from-white/[0.11] to-white/[0.02] opacity-55 shadow-[6px_8px_20px_rgba(0,0,0,0.24),inset_-1px_1px_6px_rgba(255,255,255,0.14)] hover:opacity-75'
-              }`}
-            >
-              {label}
-            </button>
-          ))}
+      <div className="group-intro-desktop relative mx-auto min-h-[1024px] w-full max-w-[1440px] flex-col">
+        <GroupTitleSparkles />
+        <div className="absolute top-[155px] left-1/2 -translate-x-1/2">
+          <p className="text-center font-['Zen_Antique'] text-[35px] leading-[44px] text-[#f6f6f6] [text-shadow:0px_0px_20px_rgba(255,255,255,0.35),0px_4px_40px_rgba(255,255,255,0.2)]">
+            組別介紹
+          </p>
         </div>
 
-        <div className="flex min-w-0 flex-1 flex-col gap-8 px-6 lg:gap-[45px] xl:pr-[116px]">
-          <div className="relative">
-            <Sparkle
-              variant="bright"
-              className="-top-3 left-[30%] h-8 w-8 md:-top-4 md:h-12 md:w-12"
-            />
-            <Sparkle
-              variant="soft"
-              className="top-4 left-[64%] h-6 w-6 md:top-6 md:h-8 md:w-8"
-            />
-            <p className="text-center font-['Zen_Antique'] text-2xl text-[#f6f6f6] [text-shadow:0px_0px_20px_rgba(255,255,255,0.35),0px_4px_40px_rgba(255,255,255,0.2)] md:text-[35px]">
-              組別介紹
-            </p>
+        <div className="flex w-full items-start gap-[clamp(48px,10.49vw,151px)] pt-[244px] pr-[clamp(24px,5vw,72px)]">
+          <div
+            className="group-edge-tabs flex w-[112px] shrink-0 flex-col items-start"
+            data-node-id="617:1329"
+          >
+            {TABS.map(({ key, label }) => (
+              <button
+                key={key}
+                onClick={() => setTab(key)}
+                className={`font-noto relative flex cursor-pointer items-center justify-center rounded-r-[65px] border border-white/20 bg-gradient-to-br px-[43px] py-[29px] text-center text-[25px] leading-[40px] font-semibold text-white shadow-[0px_10px_30px_0px_rgba(0,0,0,0.25)] backdrop-blur-[35px] transition-all duration-300 ease-out ${
+                  tab === key
+                    ? 'z-10 w-[150px] from-white/[0.14] to-white/[0.028] opacity-100'
+                    : 'z-0 w-[112px] from-white/[0.14] to-white/[0.028] opacity-60 hover:opacity-75'
+                }`}
+              >
+                <span className="w-[40px]">{label}</span>
+                <span className="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0px_1px_8px_0px_rgba(255,255,255,0.5)]" />
+              </button>
+            ))}
           </div>
 
-          <div className="flex flex-col gap-4 lg:flex-row lg:gap-[15px]">
-            <p className="shrink-0 font-semibold text-white">組別介紹</p>
-            <GlassCard className="flex min-w-0 flex-1 flex-col items-center gap-6 p-8 lg:h-[334px] lg:flex-row lg:justify-center lg:gap-[54px] lg:py-[72px] lg:pr-[62px] lg:pl-[57px]">
-              <img
-                src={image}
-                alt=""
-                className="h-[180px] w-full max-w-[280px] shrink-0 rounded-[41px] object-cover lg:h-[208px] xl:max-w-[340px]"
-              />
-              <p className="min-w-0 flex-1 leading-[32px] font-semibold text-white">
-                {intro}
+          <div className="flex max-w-[1008px] min-w-0 flex-1 flex-col gap-[45px] pt-[45px] pb-[84px]">
+            <div className="flex w-full items-start gap-[15px]">
+              <p className="font-noto w-[26px] shrink-0 text-center text-[25px] leading-[40px] font-semibold text-white">
+                組別介紹
               </p>
-            </GlassCard>
-          </div>
+              <GlassCard className="flex min-h-[334px] min-w-0 flex-1 items-center gap-[clamp(16px,3.75vw,54px)] px-[clamp(20px,4vw,57px)] py-[clamp(32px,5vw,72px)]">
+                <img
+                  src={image}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  className="h-[clamp(160px,14.44vw,208px)] w-[clamp(160px,29.5%,340px)] shrink-0 rounded-[clamp(28px,2.85vw,41px)] object-cover"
+                />
+                <p className="font-noto min-w-0 flex-1 text-[clamp(14px,1.389vw,20px)] leading-[clamp(22px,2.222vw,32px)] font-semibold text-white">
+                  {intro}
+                </p>
+              </GlassCard>
+            </div>
 
-          <div className="flex flex-col gap-4 lg:flex-row lg:gap-[15px]">
-            <p className="shrink-0 font-semibold text-white">工作坊</p>
-            <GlassCard className="flex min-w-0 flex-1 flex-col items-center gap-6 p-8 lg:h-[334px] lg:flex-row lg:justify-center lg:gap-[54px] lg:px-[57px] lg:py-[63px]">
-              <div className="flex min-w-0 flex-1 flex-col gap-2">
-                <p className="leading-[32px] font-semibold text-white">
-                  {workshop}
-                </p>
-                <p className="text-right font-light text-[#9fc2ff]">
-                  點擊查詢詳細內容
-                </p>
-              </div>
-              <div className="h-[180px] w-full max-w-[280px] shrink-0 rounded-[41px] bg-white lg:h-[208px] xl:max-w-[340px]" />
-            </GlassCard>
+            <div className="flex w-full items-start gap-[15px]">
+              <p className="font-noto w-[26px] shrink-0 text-center text-[25px] leading-[40px] font-semibold text-white">
+                工作坊
+              </p>
+              <GlassCard className="flex min-h-[334px] min-w-0 flex-1 items-center gap-[clamp(16px,3.75vw,54px)] px-[clamp(20px,4vw,57px)] py-[clamp(32px,4.375vw,63px)]">
+                <div className="flex min-w-0 flex-1 flex-col gap-px">
+                  <p className="font-noto text-[clamp(14px,1.389vw,20px)] leading-[clamp(22px,2.222vw,32px)] font-semibold text-white">
+                    {workshop}
+                  </p>
+                  <p className="font-noto w-full text-right text-[clamp(14px,1.389vw,20px)] leading-[clamp(20px,1.806vw,26px)] font-light text-[#9fc2ff]">
+                    點擊查詢詳細內容
+                  </p>
+                </div>
+                <div className="h-[clamp(160px,14.44vw,208px)] w-[clamp(160px,29.5%,340px)] shrink-0 rounded-[clamp(28px,2.85vw,41px)] bg-white" />
+              </GlassCard>
+            </div>
           </div>
         </div>
       </div>

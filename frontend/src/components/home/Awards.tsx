@@ -1,9 +1,14 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
-import Sparkle from './Sparkle'
 
-const BG_ASPECT_RATIO = 2254 / 1431
+type LightTransitionRange = {
+  start: number
+  end: number
+} | null
 
 type Rgba = [number, number, number, number]
+
+const CARD_FADE_START = 0.58
+const CARD_FADE_END = 0.82
 
 function mixRgba(from: Rgba, to: Rgba, progress: number) {
   const mixed = from.map(
@@ -14,43 +19,75 @@ function mixRgba(from: Rgba, to: Rgba, progress: number) {
 }
 
 function cardStyle(progress: number): CSSProperties {
-  const top = mixRgba([211, 228, 252, 0.5], [70, 100, 172, 0.72], progress)
-  const bottom = mixRgba([211, 228, 252, 0.1], [45, 62, 99, 0.58], progress)
-  const border = mixRgba([211, 228, 252, 1], [118, 147, 210, 0.85], progress)
+  const eased = progress * progress * (3 - 2 * progress)
+  const top = mixRgba([211, 228, 252, 0.5], [163, 177, 200, 1], eased)
+  const bottom = mixRgba([211, 228, 252, 0.1], [224, 229, 237, 1], eased)
 
   return {
-    backgroundImage: `linear-gradient(135deg, ${top}, ${bottom})`,
-    borderColor: border,
+    backgroundImage: `linear-gradient(106.086deg, ${top} 12.571%, ${bottom} 101.37%)`,
   }
 }
 
 function AwardCard({
+  variant,
   title,
   note,
   children,
   cardRef,
   lightProgress,
 }: {
+  variant: 'hacker' | 'maker' | 'grand'
   title: string
   note?: string
   children: React.ReactNode
   cardRef: (element: HTMLDivElement | null) => void
   lightProgress: number
 }) {
+  const titleClass = {
+    hacker:
+      'md:absolute md:top-[51px] md:left-[8.64%] md:w-[85.87%] md:font-noto md:text-[30px] md:leading-[44px]',
+    maker:
+      'md:absolute md:top-[64px] md:left-[9.17%] md:w-[84.63%] md:font-noto md:text-[30px] md:leading-[44px]',
+    grand:
+      'md:absolute md:top-[33.5px] md:left-[7.13%] md:w-[85.74%] md:font-chiron md:text-[32px] md:leading-[40px] md:font-extrabold',
+  }[variant]
+
+  const noteClass = {
+    hacker: 'md:absolute md:top-[95px] md:left-[8.64%] md:w-[85.87%]',
+    maker: '',
+    grand: 'md:absolute md:top-[73.5px] md:left-[7.13%] md:w-[85.74%]',
+  }[variant]
+
+  const copyClass = {
+    hacker:
+      'md:absolute md:top-[135px] md:left-[8.64%] md:mt-0 md:w-[85.87%] md:font-noto md:text-[20px] md:leading-[36px]',
+    maker:
+      'md:absolute md:top-[130px] md:left-[9.17%] md:mt-0 md:w-[84.63%] md:font-noto md:text-[20px] md:leading-[36px]',
+    grand:
+      'md:absolute md:top-[121.5px] md:left-[7.13%] md:mt-0 md:w-[57.06%] md:font-chiron md:text-[20px] md:leading-[40px] md:font-bold',
+  }[variant]
+
   return (
     <div
       ref={cardRef}
-      className="award-card relative w-full rounded-[30px] border border-[#d3e4fc] p-8 shadow-[0px_4px_25px_-5px_#1c1b1f] transition-[background-color,border-color] duration-500 md:p-12"
+      className="award-card relative w-full rounded-[30px] border border-[#d3e4fc] p-8 shadow-[0px_4px_25px_-5px_#1c1b1f] md:h-[315px] md:p-0"
       style={cardStyle(lightProgress)}
     >
-      <div className="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0px_1px_8px_0px_rgba(255,255,255,0.5)]" />
-      <p className="text-2xl font-semibold text-white md:text-[30px]">
+      <p className={`text-2xl font-semibold text-white ${titleClass}`}>
         {title}
       </p>
       {note && (
-        <p className="mb-2 text-sm font-medium text-[#f6ff7b]">{note}</p>
+        <p
+          className={`award-card-note md:font-noto-tc mb-2 text-sm font-medium whitespace-nowrap text-[#f6ff7b] md:mb-0 md:text-[14px] md:leading-[40px] ${
+            variant === 'grand' ? 'award-card-note-grand' : ''
+          } ${noteClass}`}
+        >
+          {note}
+        </p>
       )}
-      <div className="mt-3 text-base leading-[1.8] font-semibold text-white md:text-[20px]">
+      <div
+        className={`mt-3 text-base leading-[1.8] font-semibold text-white ${copyClass}`}
+      >
         {children}
       </div>
     </div>
@@ -58,11 +95,10 @@ function AwardCard({
 }
 
 export default function Awards({
-  lightBackgroundStart,
+  lightTransitionRange,
 }: {
-  lightBackgroundStart: number | null
+  lightTransitionRange: LightTransitionRange
 }) {
-  const rootRef = useRef<HTMLDivElement>(null)
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
   const [lightProgress, setLightProgress] = useState([0, 0, 0])
 
@@ -72,22 +108,30 @@ export default function Awards({
     function measure() {
       cancelAnimationFrame(frame)
       frame = requestAnimationFrame(() => {
-        if (lightBackgroundStart === null) {
+        if (!lightTransitionRange) {
           setLightProgress([0, 0, 0])
           return
         }
 
         const transitionHeight = Math.max(
-          window.innerWidth * BG_ASPECT_RATIO,
-          window.innerHeight * 1.1,
+          1,
+          lightTransitionRange.end - lightTransitionRange.start,
         )
         const next = cardRefs.current.map((card) => {
           if (!card) return 0
+
           const rect = card.getBoundingClientRect()
           const cardCenter = rect.top + window.scrollY + rect.height / 2
+          const layerProgress =
+            (cardCenter - lightTransitionRange.start) / transitionHeight
+
           return Math.min(
             1,
-            Math.max(0, (cardCenter - lightBackgroundStart) / transitionHeight),
+            Math.max(
+              0,
+              (layerProgress - CARD_FADE_START) /
+                (CARD_FADE_END - CARD_FADE_START),
+            ),
           )
         })
 
@@ -99,36 +143,28 @@ export default function Awards({
     window.addEventListener('resize', measure)
 
     const observer = new ResizeObserver(measure)
-    if (rootRef.current) observer.observe(rootRef.current)
+    cardRefs.current.forEach((card) => {
+      if (card) observer.observe(card)
+    })
 
     return () => {
       cancelAnimationFrame(frame)
       window.removeEventListener('resize', measure)
       observer.disconnect()
     }
-  }, [lightBackgroundStart])
+  }, [lightTransitionRange])
 
   return (
-    <div
-      ref={rootRef}
-      className="home-awards mx-auto flex w-full max-w-[730px] flex-col items-center gap-16 px-6 py-16 md:gap-[90px]"
-    >
-      <div className="relative">
-        <Sparkle
-          variant="bright"
-          className="-top-6 -left-10 h-10 w-10 md:-top-8 md:-left-14 md:h-14 md:w-14"
-        />
-        <Sparkle
-          variant="soft"
-          className="-top-1 -right-8 h-6 w-6 md:-right-10 md:h-8 md:w-8"
-        />
-        <p className="home-awards-title text-center font-['Zen_Antique'] text-2xl text-[#f6f6f6] [text-shadow:0px_0px_20px_rgba(255,255,255,0.35),0px_4px_40px_rgba(255,255,255,0.2)] md:text-[35px]">
+    <div className="home-awards mx-auto flex w-full max-w-[730px] flex-col items-center gap-16 px-6 py-16 md:mt-[130px] md:max-w-[733.5px] md:gap-[90px] md:px-[2.25px] md:py-0">
+      <div>
+        <p className="home-awards-title text-center font-['Zen_Antique'] text-2xl text-[#f6f6f6] [text-shadow:0px_0px_20px_rgba(255,255,255,0.35),0px_4px_40px_rgba(255,255,255,0.2)] md:text-[35px] md:leading-[44px]">
           獎項資訊
         </p>
       </div>
 
       <div className="home-award-list flex w-full flex-col gap-10 md:gap-[70px]">
         <AwardCard
+          variant="hacker"
           title="黑客組"
           note="每間企業獨立評選"
           lightProgress={lightProgress[0]}
@@ -139,19 +175,20 @@ export default function Awards({
           <p>第一名：新台幣 25,000 元整、企業實體獎品、實習或實習面試機會</p>
           <p>第二名：新台幣 20,000 元整、企業實體獎品</p>
           <p>第三名：新台幣 15,000 元整、企業實體獎品</p>
-          <p className="mt-2 text-sm font-medium text-[#f6ff7b]">
+          <p className="md:font-noto-tc mt-2 text-sm font-medium text-[#f6ff7b] md:mt-[5px] md:text-[14px] md:leading-[40px]">
             *實習機會主要依據企業本身而定
           </p>
         </AwardCard>
 
         <AwardCard
+          variant="maker"
           title="創客交流組"
           lightProgress={lightProgress[1]}
           cardRef={(element) => {
             cardRefs.current[1] = element
           }}
         >
-          <div className="grid grid-cols-1 gap-x-16 gap-y-1 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-x-16 gap-y-1 sm:grid-cols-2 md:grid-cols-[minmax(0,250fr)_minmax(0,274fr)] md:gap-x-[12.32%]">
             <div>
               <p>第一名：新台幣 50,000 元整</p>
               <p>第二名：新台幣 40,000 元整</p>
@@ -166,6 +203,7 @@ export default function Awards({
         </AwardCard>
 
         <AwardCard
+          variant="grand"
           title="梅竹大獎"
           note="為黑客組複賽，由各間企業之第一名獲獎組別共同角逐"
           lightProgress={lightProgress[2]}
@@ -182,7 +220,7 @@ export default function Awards({
 
       <a
         href="/signup"
-        className="home-awards-signup flex h-[70px] w-full max-w-[358px] items-center justify-center rounded-[30px] border border-[rgba(211,228,252,0.8)] bg-[rgba(138,153,174,0.15)] text-2xl font-black text-[#b1a2ca] shadow-[0px_4px_20px_-1px_rgba(28,27,31,0.6)] transition-colors hover:bg-[rgba(138,153,174,0.3)] md:text-[32px]"
+        className="home-awards-signup md:font-chiron flex h-[70px] w-full max-w-[358px] items-center justify-center rounded-[30px] border border-[rgba(211,228,252,0.8)] bg-[rgba(138,153,174,0.15)] text-2xl font-black text-[#b1a2ca] shadow-[0px_4px_20px_-1px_rgba(28,27,31,0.6)] transition-colors hover:bg-[rgba(138,153,174,0.3)] md:mt-[10px] md:h-[93px] md:text-[32px] md:leading-[40px] md:font-extrabold"
       >
         點我報名
       </a>
