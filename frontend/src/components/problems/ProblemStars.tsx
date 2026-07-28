@@ -407,12 +407,10 @@ export default function ProblemStars() {
       className="pointer-events-none absolute top-[7.222vw] left-[2.22%] aspect-[1376.367/2020.722] w-[95.58%]"
     >
       {METEOR_LINES.map((line, index) => (
-        <div
-          key={line.src}
-          className="absolute"
-          style={lineStyles[index] ?? { opacity: 0 }}
-        >
-          <img src={line.src} alt="" className="block size-full max-w-none" />
+        <div key={line.src} className="absolute inset-0">
+          <div className="absolute" style={lineStyles[index] ?? { opacity: 0 }}>
+            <img src={line.src} alt="" className="block size-full max-w-none" />
+          </div>
         </div>
       ))}
       {LEGACY_STARS.map((star) => (

@@ -1139,10 +1139,11 @@ body {
   }
 }
 
-/* Keep the long meteor constellation below the desktop card deck. */
+/* Keep the long meteor constellation clear of both the card deck and footer. */
 @media (min-width: 768px) {
+  .problem-meteor-line,
   .problem-meteor-endpoint {
-    transform: translateY(clamp(40px, 3.5vw, 64px));
+    transform: translateY(clamp(-340px, -20vw, -296px));
   }
 }
 
