@@ -38,6 +38,12 @@ const cardGapY = fluid(8, 24) // gap between date rows
 // one badge whose column is heightened by the "20:00 前" note.
 const endCircleOffset = fluid(9.25, 13)
 
+// Toggle icon's own box — mobile stays close to its original small size,
+// desktop scales up to match the Figma reference more closely. 17.5/20 and
+// 24.5/28 both preserve the icon's native 31.5:36 aspect ratio.
+const toggleIconHeight = fluid(20, 28)
+const toggleIconWidth = fluid(17.5, 24.5)
+
 // Same +/− glyph as MobileNavMenu's ToggleIcon, duplicated locally rather
 // than exported/shared — this page's accordion opens by index instead of by
 // group label, so the two components don't otherwise share state shape.
@@ -45,18 +51,18 @@ const endCircleOffset = fluid(9.25, 13)
 // instead of unmounting, so + smoothly turns into − rather than popping.
 function ToggleIcon({ expanded }: { expanded: boolean }) {
   return (
-    <svg viewBox="0 0 12 12" className="size-3 shrink-0 text-white">
-      <path
-        d="M1 6h10"
+    <svg
+      viewBox="0 0 31.5 36"
+      className="shrink-0 text-white"
+      style={{ height: toggleIconHeight, width: toggleIconWidth }}
+    >
+      <line x1="0" y1="17.5" x2="31.5" y2="17.5" stroke="currentColor" />
+      <line
+        x1="16.25"
+        y1="0"
+        x2="16.25"
+        y2="36"
         stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      <path
-        d="M6 1v10"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
         className={`origin-center transition-transform duration-300 ease-out ${expanded ? 'scale-y-0' : 'scale-y-100'}`}
       />
     </svg>
@@ -206,7 +212,7 @@ function FaqAccordion() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
-    <div className="animate-fade-in divide-y divide-white/20 border-y border-white/20">
+    <div className="animate-fade-in divide-y divide-white/20 border-b border-white/20">
       {FAQ_SECTIONS.map((section, i) => {
         const expanded = openIndex === i
         return (

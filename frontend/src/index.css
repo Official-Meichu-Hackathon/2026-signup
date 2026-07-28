@@ -34,7 +34,7 @@ html {
     0%,
     100% {
       opacity: 0.1;
-      transform: scale(0.7);
+      transform: scale(0.94);
     }
     50% {
       opacity: 1;
@@ -264,8 +264,19 @@ body {
     transform: translateX(-40%);
   }
 
-  html,
-  body {
+  /* On `body` (not `html`), this triggers the CSS overflow-propagation
+     rule: `body`'s overflow becomes the viewport's own scroll box instead
+     of `html`'s. Since `body` has no explicit height and always grows to
+     exactly fit its content, it has nothing to scroll within itself
+     (scrollHeight === clientHeight), so the "viewport" the browser derives
+     from it has nothing to scroll either — even though `html` genuinely
+     has more content than the visible viewport height. Net effect: the
+     whole page stops scrolling vertically on mobile widths, which breaks
+     anything driven by window scroll position (e.g. ScheduleTimeline's
+     scroll-linked line-connect animation, which never advances). Setting
+     it on `html` instead clips the same horizontal overflow without that
+     propagation quirk, since `html` is already the real scroll root. */
+  html {
     overflow-x: hidden;
   }
 
