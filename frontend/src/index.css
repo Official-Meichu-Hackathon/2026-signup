@@ -1072,23 +1072,7 @@ body {
 
 /* Safari repeatedly repaints a backdrop-filter while a parent is animating.
    The panel fades/scales with a lightweight fill, then restores the glass. */
-@keyframes stats-panel-enter {
-  from {
-    opacity: 0;
-    transform: scaleY(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: scaleY(1);
-  }
-}
-
-.stats-panel-enter {
-  animation: stats-panel-enter 400ms var(--ease-out-strong) both;
-  will-change: transform, opacity;
-}
-
-.stats-panel-enter .glass-dark {
+.stats-panel-glass-transition .glass-dark {
   animation: stats-panel-glass 400ms step-end both;
 }
 
@@ -1159,9 +1143,6 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .stats-panel-enter {
-    animation: none;
-  }
   .twinkle,
   .twinkle-soft {
     animation: none !important;

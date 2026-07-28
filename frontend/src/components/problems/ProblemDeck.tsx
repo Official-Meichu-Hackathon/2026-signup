@@ -571,7 +571,7 @@ export default function ProblemDeck() {
           style={{
             width: cq(CARD_W + STACK_OFFSET * (PROBLEMS.length - 1)),
             height: cq(CARD_H),
-            opacity: isOpen ? 0 : 1,
+            opacity: isOpen || isDeckAnimating ? 0 : 1,
           }}
         />
         {PROBLEMS.map((problem, index) => {
@@ -587,7 +587,7 @@ export default function ProblemDeck() {
                 if (element) cardRefs.current.set(problem.sponsor, element)
                 else cardRefs.current.delete(problem.sponsor)
               }}
-              className={`absolute max-w-[calc(100vw-3rem)] overflow-hidden transition-transform duration-200 ${
+              className={`absolute max-w-[calc(100vw-3rem)] overflow-hidden transition-[transform,box-shadow] duration-200 ${
                 isZoomed ? '@container' : 'hover:-translate-y-2'
               }`}
               style={{
@@ -597,9 +597,10 @@ export default function ProblemDeck() {
                 height: spot.height,
                 borderRadius: spot.radius,
                 zIndex: spot.zIndex,
-                boxShadow: isZoomed
-                  ? undefined
-                  : `0 0 ${cq(px(44))} ${cq(px(12))} rgba(255,255,255,0.72)`,
+                boxShadow:
+                  isDeckAnimating || isZoomed
+                    ? '0 0 0 0 rgba(255,255,255,0)'
+                    : `0 0 ${cq(px(44))} ${cq(px(12))} rgba(255,255,255,0.72)`,
                 willChange: isDeckAnimating ? 'transform, opacity' : undefined,
               }}
             >
