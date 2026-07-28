@@ -1,5 +1,6 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
+  animate,
   motion,
   useMotionValue,
   useMotionValueEvent,
@@ -324,7 +325,8 @@ export default function ScheduleTimeline({
   // its own page.
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ['start end', 'end end'],
+    offset:
+      device === 'mobile' ? ['start 35%', 'end 45%'] : ['start end', 'end end'],
   })
   // Ratchets up with scrollYProgress but never back down, so scrolling back
   // up doesn't retract the line once it's been drawn — once connected, a
@@ -334,6 +336,21 @@ export default function ScheduleTimeline({
   // through.
   const maxProgress19 = useMotionValue(0)
   const maxProgress20 = useMotionValue(0)
+
+  useEffect(() => {
+    const target = selectedDay === '19' ? maxProgress19 : maxProgress20
+    if (device === 'mobile') {
+      const controls = animate(target, 1, {
+        duration: 1.2,
+        ease: [0.25, 0.1, 0.25, 1],
+      })
+      return () => controls.stop()
+    } else {
+      const v = scrollYProgress.get()
+      if (v > target.get()) target.set(v)
+    }
+  }, [device, selectedDay, scrollYProgress, maxProgress19, maxProgress20])
+
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
     const target = selectedDay === '19' ? maxProgress19 : maxProgress20
     if (v > target.get()) target.set(v)
