@@ -10,6 +10,7 @@ import pieDeptHacker from '../../assets/Stats/pie-dept-hacker.svg'
 import pieDeptMaker from '../../assets/Stats/pie-dept-maker.svg'
 import carouselArrow from '../../assets/Stats/carousel-arrow.svg'
 import { TESTIMONIALS } from './testimonials'
+import { RESULT_PLATFORM_URL } from './resultPlatform'
 
 // 參賽數據(手機) 165:1219。設計稿是一個 393 寬的元件，四個 variant 分別是
 // 兩條手風琴的開合組合（Frame 61 全收 / 62 開數據 / 63 開感言 / 60 全開）。
@@ -467,10 +468,10 @@ export default function MobileStatsAccordion() {
         >
           成果平台網址
         </span>
-        {/* TODO: 成果平台上線後補上正式網址 */}
         <a
-          href="#"
-          onClick={(event) => event.preventDefault()}
+          href={RESULT_PLATFORM_URL}
+          target="_blank"
+          rel="noopener noreferrer"
           className="font-noto text-periwinkle absolute left-1/2 w-full -translate-x-1/2 -translate-y-1/2 text-center font-medium underline-offset-4"
           style={{
             top: `${((LINK_SUB_CENTER / H_CARD_LINK) * 100).toFixed(4)}%`,

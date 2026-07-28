@@ -10,6 +10,7 @@ import pieDeptHacker from '../../assets/Stats/pie-dept-hacker.svg'
 import pieDeptMaker from '../../assets/Stats/pie-dept-maker.svg'
 import carouselArrow from '../../assets/Stats/carousel-arrow.svg'
 import { TESTIMONIALS } from './testimonials'
+import { RESULT_PLATFORM_URL } from './resultPlatform'
 
 // 參賽數據(電腦) 378:362。設計稿元件寬 1222.14，頁面上的 instance（378:632）
 // 放大到 1394（1440 版面左右各留 23）。故一律以元件座標系為基準，用 cq()
@@ -458,10 +459,10 @@ export default function StatsAccordion() {
         >
           成果平台網址
         </span>
-        {/* TODO: 成果平台上線後補上正式網址 */}
         <a
-          href="#"
-          onClick={(event) => event.preventDefault()}
+          href={RESULT_PLATFORM_URL}
+          target="_blank"
+          rel="noopener noreferrer"
           className="font-zen text-periwinkle absolute left-1/2 w-full -translate-x-1/2 -translate-y-1/2 text-center underline-offset-4 transition hover:underline"
           style={{
             top: `${((CARD_LINK_CENTER / H_CARD) * 100).toFixed(4)}%`,
