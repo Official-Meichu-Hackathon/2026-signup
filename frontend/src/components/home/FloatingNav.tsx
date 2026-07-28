@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react'
 import navLogo from '../../assets/home/float-nav.png'
 
+// href targets must match a real section id (see Home.tsx and its child
+// components). '#intro' used to point at the hero banner instead of the
+// actual 簡介 copy in EventVision (id="vision"), and '#stats' never had a
+// matching section at all — both silently failed to scroll anywhere.
 const LINKS = [
-  { label: '活動簡介', href: '#intro' },
+  { label: '活動簡介', href: '#vision' },
   { label: '組別介紹', href: '#group-intro' },
   { label: '比賽規則', href: '#rules' },
   { label: '獎項資訊', href: '#awards' },
-  { label: '參賽數據', href: '#stats' },
   { label: '合作企業', href: '#partners' },
   { label: '贊助單位', href: '#sponsors' },
   { label: '工作人員', href: '#staff' },
