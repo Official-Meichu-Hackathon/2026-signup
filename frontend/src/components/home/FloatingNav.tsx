@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react'
 import navLogo from '../../assets/home/float-nav.webp'
 
+// href targets must match a real section id (see Home.tsx and its child
+// components). '#intro' used to point at the hero banner instead of the
+// actual 簡介 copy in EventVision (id="vision"), and '#stats' never had a
+// matching section at all — both silently failed to scroll anywhere.
 const LINKS = [
-  { label: '活動簡介', href: '#intro', weight: 'normal' },
+  { label: '活動簡介', href: '#vision', weight: 'normal' },
   { label: '組別介紹', href: '#group-intro', weight: 'normal' },
   { label: '比賽規則', href: '#rules', weight: 'normal' },
   { label: '獎項資訊', href: '#awards', weight: 'medium' },
@@ -31,7 +35,7 @@ const NAV_HEIGHT = HEIGHT
 export default function FloatingNav() {
   const [onLightBg, setOnLightBg] = useState(false)
   const [activeHref, setActiveHref] =
-    useState<(typeof LINKS)[number]['href']>('#intro')
+    useState<(typeof LINKS)[number]['href']>('#vision')
 
   useEffect(() => {
     function updateNavState() {
@@ -48,7 +52,7 @@ export default function FloatingNav() {
       setOnLightBg(over)
 
       const marker = window.scrollY + window.innerHeight * 0.45
-      let nextActive: (typeof LINKS)[number]['href'] = '#intro'
+      let nextActive: (typeof LINKS)[number]['href'] = '#vision'
 
       LINKS.forEach(({ href }) => {
         const section = document.querySelector<HTMLElement>(href)

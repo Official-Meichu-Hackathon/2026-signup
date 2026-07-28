@@ -114,7 +114,7 @@ export default function HeroDecorations({
           className={`absolute top-1/2 right-[6%] ${success ? 'translate-y-[1rem]' : 'translate-y-[8rem]'} drop-shadow-[0_10px_4px_rgba(0,0,0,0.25)]`}
         >
           <img
-            src="/deco/star-02.png"
+            src="/deco/star-02.svg"
             alt=""
             draggable={false}
             className="twinkle w-[6.25rem] -rotate-[120deg]"
@@ -123,7 +123,7 @@ export default function HeroDecorations({
         </div>
         {/* upper-left star hugging the title (Figma 894:10448) */}
         <img
-          src="/deco/star-03.png"
+          src="/deco/star-03.svg"
           alt=""
           draggable={false}
           className="twinkle absolute top-1/2 left-[7%] w-[72.849px] -translate-y-[17.5rem] rotate-[-10deg] drop-shadow-[0_10px_4px_rgba(0,0,0,0.25)]"
@@ -132,7 +132,7 @@ export default function HeroDecorations({
         {/* small lower-left star (Figma 1757:87510) */}
         <div className="absolute top-1/2 left-[7%] translate-y-[19rem] drop-shadow-[0_10px_4px_rgba(0,0,0,0.25)]">
           <img
-            src="/deco/star-02.png"
+            src="/deco/star-02.svg"
             alt=""
             draggable={false}
             className="twinkle w-[2.42rem] -rotate-[15deg]"

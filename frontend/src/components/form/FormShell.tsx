@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import Navbar from '../layout/Navbar'
 import Footer from '../layout/Footer'
+import CursorTrail from '../layout/CursorTrail'
 import HeroDecorations from '../layout/HeroDecorations'
 import StepRail from './StepRail'
 import { type Section } from './railSections'
@@ -35,6 +36,7 @@ export default function FormShell({
       <div className="pointer-events-none relative -z-10 col-start-1 row-start-1 overflow-hidden bg-black">
         {/* bg-1 — top glow */}
         <img
+          data-trail-bg
           src="/bg-1.png"
           alt=""
           draggable={false}
@@ -46,6 +48,7 @@ export default function FormShell({
         />
         {/* bg-2 — lower blob */}
         <img
+          data-trail-bg
           src="/bg-2.png"
           alt=""
           draggable={false}
@@ -55,6 +58,9 @@ export default function FormShell({
             WebkitMaskImage: BG2_MASK,
           }}
         />
+        {/* Last child of the -z-10 background cell: above both bg images,
+            below every piece of content in the cell below. */}
+        <CursorTrail />
       </div>
 
       <Navbar />
@@ -64,7 +70,7 @@ export default function FormShell({
       <div className="relative col-start-1 row-start-1 pt-28 md:pt-56">
         {/* lower-left star, far down below the hero star (Figma 894:10450) */}
         <img
-          src="/deco/star-03.png"
+          src="/deco/star-03.svg"
           alt=""
           draggable={false}
           aria-hidden
@@ -105,7 +111,7 @@ export default function FormShell({
             in. Hosts star-04, just below the card (Figma 894:10451). */}
         <div className="relative h-[22rem]">
           <img
-            src="/deco/star-04.png"
+            src="/deco/star-04.svg"
             alt=""
             draggable={false}
             aria-hidden

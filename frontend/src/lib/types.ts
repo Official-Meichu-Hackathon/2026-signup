@@ -12,6 +12,11 @@ export interface PlayerData {
   phone: string
   dietaryRestrictions: string
   shirtSize: string
+  // 參賽者經歷 (each ≤100 chars)
+  selfIntro: string
+  motivation: string
+  project: string
+  competitionExp: string
 }
 
 export const createPlayerData = (): PlayerData => ({
@@ -28,6 +33,10 @@ export const createPlayerData = (): PlayerData => ({
   phone: '',
   dietaryRestrictions: '',
   shirtSize: '',
+  selfIntro: '',
+  motivation: '',
+  project: '',
+  competitionExp: '',
 })
 
 export interface RegistrationData {
@@ -45,6 +54,9 @@ export interface RegistrationData {
 }
 
 export const MAX_PLAYERS = 5
+
+// 參賽者經歷 char cap
+export const EXPERIENCE_MAX = 100
 
 export const PLAYER_COUNT_OPTIONS = ['3人', '4人', '5人']
 
