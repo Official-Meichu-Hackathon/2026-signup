@@ -28,12 +28,12 @@ export default function StatsView() {
       <img
         src={bgGradient}
         alt=""
-        className="pointer-events-none absolute top-0 left-[-9.44%] h-[1064px] w-[109.44%] max-w-none select-none"
+        className="page-glow pointer-events-none absolute top-0 left-[-9.44%] h-[1064px] w-[109.44%] max-w-none select-none"
       />
       <img
         src={bgGradient}
         alt=""
-        className="pointer-events-none absolute bottom-0 left-[-9.44%] h-[1064px] w-[109.44%] max-w-none rotate-180 select-none"
+        className="page-glow pointer-events-none absolute bottom-0 left-[-9.44%] h-[1064px] w-[109.44%] max-w-none rotate-180 select-none"
       />
       {/* 參賽數據電腦_星星閃爍（570:1341）：7 顆帶光暈的星，各自不同的閃爍
           相位差。鋪在背景漸層之上、內容之下。 */}

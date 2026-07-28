@@ -29,12 +29,12 @@ export default function ProblemsView() {
       <img
         src={bgGradient}
         alt=""
-        className="pointer-events-none absolute top-0 left-[-9.44%] h-[1064px] w-[109.44%] max-w-none select-none"
+        className="page-glow pointer-events-none absolute top-0 left-[-9.44%] h-[1064px] w-[109.44%] max-w-none select-none"
       />
       <img
         src={bgGradient}
         alt=""
-        className="pointer-events-none absolute bottom-0 left-[-9.44%] h-[1064px] w-[109.44%] max-w-none rotate-180 select-none"
+        className="page-glow pointer-events-none absolute bottom-0 left-[-9.44%] h-[1064px] w-[109.44%] max-w-none rotate-180 select-none"
       />
       {/* 小星點（共用元件）鋪底，設計稿的 5 顆大星疊在其上 */}
       <ProblemStars />
