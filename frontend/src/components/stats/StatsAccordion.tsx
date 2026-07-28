@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import barStats from '../../assets/Stats/bar-collapsed-1.svg'
 import barQuotes from '../../assets/Stats/bar-collapsed-2.svg'
 import cardLink from '../../assets/Stats/card-link.svg'
@@ -212,6 +212,37 @@ function AccordionBar({
   )
 }
 
+// While the row height animates, every glass surface on the page either
+// resizes (the panel being revealed) or moves (the bars and footer sliding
+// down), so its backdrop-filter blur would be recomputed on every frame —
+// that, not the height animation itself, is what makes the toggle stutter.
+// Same Safari/Chrome behaviour Charlie worked around in stats-panel-glass;
+// here the blur is suspended for the transition and restored at rest.
+const GLASS_SUSPEND_CLASS = 'glass-suspend'
+const COLLAPSE_MS = 500
+let glassSuspendCount = 0
+
+function useGlassSuspend(isOpen: boolean) {
+  const mounted = useRef(false)
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true
+      return
+    }
+    const root = document.documentElement
+    glassSuspendCount++
+    root.classList.add(GLASS_SUSPEND_CLASS)
+    const release = () => {
+      if (--glassSuspendCount === 0) root.classList.remove(GLASS_SUSPEND_CLASS)
+    }
+    const timer = window.setTimeout(release, COLLAPSE_MS + 50)
+    return () => {
+      window.clearTimeout(timer)
+      release()
+    }
+  }, [isOpen])
+}
+
 function Collapsible({
   isOpen,
   children,
@@ -219,14 +250,15 @@ function Collapsible({
   isOpen: boolean
   children: React.ReactNode
 }) {
+  useGlassSuspend(isOpen)
   return (
     <div
-      className={`grid transition-[grid-template-rows] duration-500 ${
-        isOpen ? 'stats-panel-glass-transition' : ''
-      }`}
+      className="grid transition-[grid-template-rows] duration-500"
       style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}
     >
-      <div className="overflow-hidden">{children}</div>
+      <div className="overflow-hidden">
+        <div className="stats-layer">{children}</div>
+      </div>
     </div>
   )
 }
@@ -389,7 +421,7 @@ export default function StatsAccordion() {
     <div className="@container w-full max-w-[1394px]">
       {/* 後面的面板要疊在前一塊之上，故 z-index 遞增 */}
       <div
-        className="relative z-[1]"
+        className="stats-layer relative z-[1]"
         style={{ marginBottom: overlap(H_BAR_STATS, openStats) }}
       >
         <AccordionBar
@@ -413,7 +445,7 @@ export default function StatsAccordion() {
       </Collapsible>
 
       <div
-        className="relative z-[2]"
+        className="stats-layer relative z-[2]"
         style={{ marginBottom: overlap(H_BAR_QUOTES, openQuotes) }}
       >
         <AccordionBar
@@ -443,7 +475,7 @@ export default function StatsAccordion() {
 
       {/* 成果平台網址（Frame 54）：常駐展開的高面板，用的是 card-link 素材，
           不是上面兩條矮橫幅 */}
-      <div className="relative z-[3]">
+      <div className="stats-layer relative z-[3]">
         <img
           src={cardLink}
           alt=""

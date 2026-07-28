@@ -8,6 +8,7 @@ interface NavLink {
 
 interface NavGroup {
   label: string
+  href: string
   children: NavLink[]
 }
 
@@ -21,6 +22,7 @@ interface NavGroup {
 const GROUPS: NavGroup[] = [
   {
     label: '首頁',
+    href: '/',
     children: [
       { label: '活動簡介', href: '/#vision' },
       { label: '比賽組別、工作坊', href: '/#group-intro' },
@@ -32,6 +34,7 @@ const GROUPS: NavGroup[] = [
   },
   {
     label: '報名方式',
+    href: '/registration',
     children: [{ label: '報名資訊', href: '/registration' }],
   },
 ]
@@ -46,6 +49,7 @@ const LEAF_LINKS: NavLink[] = [
 // 390px viewport → node 346:1263; desktop: 1440px viewport → node 190:120),
 // linearly interpolated between them instead of snapping at a `md:` breakpoint
 // — 注意事項.txt: "width height 盡量用 vw vh 來寫，不要寫死 (RWD 會出事)".
+// Capped at the desktop frame for the same reason as Footer (see index.css).
 const fluid = (minPx: number, maxPx: number) => {
   const minVw = 390
   const maxVw = 1440
@@ -147,14 +151,24 @@ export default function MobileNavMenu({
           const expanded = openGroup === group.label
           return (
             <div key={group.label}>
-              <Row onClick={() => setOpenGroup(expanded ? null : group.label)}>
-                <span
+              <Row>
+                <Link
+                  to={group.href}
+                  onClick={onClose}
                   style={{ fontSize: labelSize }}
-                  className="font-noto-tc md:font-chiron font-bold text-white md:font-[800]"
+                  className="font-noto-tc md:font-chiron flex flex-1 items-center self-stretch font-bold text-white md:font-[800]"
                 >
                   {group.label}
-                </span>
-                <ToggleIcon expanded={expanded} />
+                </Link>
+                <button
+                  type="button"
+                  aria-expanded={expanded}
+                  aria-label={`${expanded ? '收合' : '展開'}${group.label}選單`}
+                  onClick={() => setOpenGroup(expanded ? null : group.label)}
+                  className="-mx-3 flex shrink-0 items-center self-stretch px-3"
+                >
+                  <ToggleIcon expanded={expanded} />
+                </button>
               </Row>
               {expanded &&
                 group.children.map((child, i) => (

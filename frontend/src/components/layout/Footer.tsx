@@ -6,6 +6,8 @@ import mailIcon from '../../assets/mail-icon.png'
 // 390px viewport → node 786:4617; desktop: 1460px viewport → node 688:3871),
 // linearly interpolated between them instead of snapping at a `md:`
 // breakpoint — 注意事項.txt: "width height 盡量用 vw vh 來寫，不要寫死 (RWD 會出事)".
+// Capped at the desktop frame so these are constants past it — a live vw term
+// there would cancel out browser zoom (see index.css).
 const fluid = (minPx: number, maxPx: number) => {
   const minVw = 390
   const maxVw = 1460

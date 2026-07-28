@@ -77,23 +77,18 @@ html {
   animation: pop-in-right 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* Fluid scaling engine — the whole page is sized in rem, so scaling the root
-   font-size makes every rem-based measure (title, nav, rail, card, fields,
-   footer, spacing) shrink/grow together with the viewport, matching the two
-   Figma frames as reference widths and interpolating smoothly between them.
-   Mobile frame = 390px, desktop frame = 1440px, both authored at a 16px base.
-   Container max-widths stay in px (upper bounds only) so they don't
-   double-shrink. Breakpoint layout switch stays at Tailwind's md (768px). */
+/* The page is sized in rem off the 16px Figma base (mobile frame 390px,
+   desktop 1440px). Desktop keeps a constant root: a vw-derived font-size
+   cancels out browser zoom (Cmd +/- scales 100vw in CSS px by the same
+   factor), so rem elements would freeze while px ones zoomed. Widths flex on
+   their own, so nothing needs vw to fit. Layout switch stays at md (768px). */
 :root {
   /* 390px mobile frame at a 16px base → 1rem = 100vw/24.375 (390 ÷ 16). */
   font-size: clamp(13px, calc(100vw / 24.375), 16px);
 }
 @media (min-width: 768px) {
   :root {
-    /* Continuous across the whole desktop range (≈768–1800px) so every
-       rem-based element — including the rem-width side rail — scales with the
-       window instead of freezing. 1440px frame at 16px base → 100vw/90. */
-    font-size: clamp(8.5px, calc(100vw / 90), 20px);
+    font-size: 16px;
   }
 }
 
@@ -1059,6 +1054,15 @@ body {
 .page-glow {
   -webkit-mask-image: linear-gradient(to bottom, #000 42%, transparent 72%);
   mask-image: linear-gradient(to bottom, #000 42%, transparent 72%);
+}
+
+.stats-layer {
+  will-change: transform;
+}
+
+.glass-suspend .glass-dark {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .glass-dark {

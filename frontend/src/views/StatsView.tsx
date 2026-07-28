@@ -73,7 +73,7 @@ export default function StatsView() {
       </main>
 
       {/* footer 灰底（1366:61578）：同題目說明頁，以外層包裹加上玻璃材質。 */}
-      <div className="glass-dark absolute inset-x-0 bottom-0 z-10">
+      <div className="glass-dark stats-layer absolute inset-x-0 bottom-0 z-10">
         <Footer />
       </div>
     </div>

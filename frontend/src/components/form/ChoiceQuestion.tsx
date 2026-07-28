@@ -4,6 +4,7 @@ import QuestionHeader from './QuestionHeader'
 interface ChoiceQuestionProps {
   title: string
   description?: string
+  pdf?: string
   options: string[]
   value: string
   onChange: (value: string) => void
@@ -12,6 +13,7 @@ interface ChoiceQuestionProps {
 export default function ChoiceQuestion({
   title,
   description,
+  pdf,
   options,
   value,
   onChange,
@@ -20,11 +22,25 @@ export default function ChoiceQuestion({
 
   return (
     <div className="py-4 whitespace-pre-line md:py-8">
-      <QuestionHeader
-        title={title}
-        description={description}
-        descriptionClassName="mx-4 mt-2 text-xs leading-snug whitespace-pre-line text-white/80 md:mt-3 md:text-xl md:leading-relaxed"
-      />
+      <QuestionHeader title={title} />
+      {pdf && (
+        <p className="mx-4 mt-2 text-xs leading-snug text-white/80 md:mt-3 md:text-xl md:leading-relaxed">
+          <a
+            href={pdf}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-bold text-[#B1A2CA] underline"
+          >
+            點我閱讀同意書
+          </a>
+          （在新分頁中開啟）
+        </p>
+      )}
+      {description && (
+        <p className="mx-4 mt-2 text-xs leading-snug whitespace-pre-line text-white/80 md:mt-3 md:text-xl md:leading-relaxed">
+          {description}
+        </p>
+      )}
       <div className="mx-4 mt-3 flex flex-wrap gap-x-8 gap-y-3 md:mt-5 md:gap-x-20 md:gap-y-6">
         {options.map((option) => (
           <label
