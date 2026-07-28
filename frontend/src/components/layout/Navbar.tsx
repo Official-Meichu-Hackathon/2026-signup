@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import logo from '../../assets/meichuhackathon.png'
+import logo from '../../assets/meichuhackathon.svg'
 import MobileNavMenu from './MobileNavMenu'
 
 // Header height it's checking against (py-4 + h-12 logo) — keep in sync with
