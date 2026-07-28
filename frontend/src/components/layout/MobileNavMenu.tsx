@@ -46,6 +46,7 @@ const LEAF_LINKS: NavLink[] = [
 // 390px viewport → node 346:1263; desktop: 1440px viewport → node 190:120),
 // linearly interpolated between them instead of snapping at a `md:` breakpoint
 // — 注意事項.txt: "width height 盡量用 vw vh 來寫，不要寫死 (RWD 會出事)".
+// Capped at the desktop frame for the same reason as Footer (see index.css).
 const fluid = (minPx: number, maxPx: number) => {
   const minVw = 390
   const maxVw = 1440

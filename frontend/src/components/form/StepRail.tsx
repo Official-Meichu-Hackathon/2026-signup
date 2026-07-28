@@ -63,12 +63,12 @@ export default function StepRail({
             disabled={!isReached}
             onClick={() => isReached && onNavigate(section)}
             // Glass spec; flush stacking (-mt-px overlaps borders into one line).
-            className={`relative flex min-h-[4.5rem] transform-gpu items-center justify-center overflow-hidden rounded-r-[1.75rem] border-[0.272px] border-[rgba(255,255,255,0.2)] bg-[linear-gradient(161deg,rgba(255,255,255,0.14)_0%,rgba(255,255,255,0.03)_90.55%)] py-5 shadow-[0_2.722px_8.166px_0_rgba(0,0,0,0.25),inset_0_0.272px_2.178px_0_rgba(255,255,255,0.5)] backdrop-blur-[9.527px] transition-all duration-200 [will-change:transform] [backface-visibility:hidden] md:min-h-40 md:rounded-r-[4.0625rem] md:border md:py-12 md:shadow-[0_10px_30px_0_rgba(0,0,0,0.25),inset_0_1px_8px_0_rgba(255,255,255,0.5)] md:backdrop-blur-[35px] ${
+            className={`relative flex min-h-[4.5rem] transform-gpu items-center justify-center overflow-hidden rounded-r-[1.75rem] border-[0.272px] border-[rgba(255,255,255,0.2)] bg-[linear-gradient(161deg,rgba(255,255,255,0.14)_0%,rgba(255,255,255,0.03)_90.55%)] py-5 shadow-[0_0.1701rem_0.5104rem_0_rgba(0,0,0,0.25),inset_0_0.017rem_0.1361rem_0_rgba(255,255,255,0.5)] backdrop-blur-[0.5954rem] transition-all duration-200 [will-change:transform] [backface-visibility:hidden] md:min-h-40 md:rounded-r-[4.0625rem] md:border md:py-12 md:shadow-[0_0.625rem_1.875rem_0_rgba(0,0,0,0.25),inset_0_0.0625rem_0.5rem_0_rgba(255,255,255,0.5)] md:backdrop-blur-[2.1875rem] ${
               index > 0 ? '-mt-px' : ''
             } ${
               isActive
-                ? 'z-20 w-20 pr-2 pl-4 md:w-52 md:pr-3 md:pl-9 2xl:w-56'
-                : `z-10 w-16 md:w-40 2xl:w-44 ${
+                ? 'z-20 w-20 pr-2 pl-4 md:w-52 md:pr-3 md:pl-9'
+                : `z-10 w-16 md:w-40 ${
                     isReached ? 'cursor-pointer' : 'cursor-default'
                   }`
             }`}
