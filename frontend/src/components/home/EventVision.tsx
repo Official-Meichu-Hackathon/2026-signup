@@ -1,6 +1,5 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, type MotionValue } from 'motion/react'
-import Sparkle from './Sparkle'
 import activityImage1 from '../../assets/home/activity/image-1.webp'
 import activityImage2 from '../../assets/home/activity/image-2.webp'
 import activityImage3 from '../../assets/home/activity/image-3.webp'
@@ -248,19 +247,11 @@ export default function EventVision() {
 
       <div className="vision-desktop sticky top-0 h-screen w-full overflow-hidden">
         <div className="pointer-events-none absolute inset-0 z-30 flex flex-col items-center justify-center gap-6 px-6 text-center">
-          <div className="relative">
-            <Sparkle
-              variant="bright"
-              className="-top-3 -left-8 h-8 w-8 md:-top-4 md:-left-10 md:h-12 md:w-12"
-            />
-            <Sparkle
-              variant="soft"
-              className="-top-2 -right-6 h-6 w-6 md:-top-3 md:-right-8 md:h-8 md:w-8"
-            />
+          {/* <div>
             <p className="font-['Zen_Antique'] text-2xl text-[#f6f6f6] [text-shadow:0px_0px_20px_rgba(255,255,255,0.35),0px_4px_40px_rgba(255,255,255,0.2)] md:text-[35px] md:leading-[44px]">
               活動願景
             </p>
-          </div>
+          </div> */}
           <div className="md:font-noto flex w-full max-w-[957px] flex-col gap-4 text-justify text-base leading-[1.9] font-semibold text-white/90 md:gap-[26px] md:text-[22px] md:leading-[26px]">
             {VISION_PARAGRAPHS.map((paragraph) => (
               <p key={paragraph.slice(0, 8)}>{paragraph}</p>

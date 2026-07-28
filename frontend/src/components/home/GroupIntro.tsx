@@ -4,7 +4,7 @@ import groupMaker from '../../assets/home/group-maker.webp'
 import groupMobileBase from '../../assets/home/group-mobile-base.svg'
 import groupMobileHackerShell from '../../assets/home/group-mobile-hacker-shell.svg'
 import groupMobileMakerShell from '../../assets/home/group-mobile-maker-shell.svg'
-import Sparkle from './Sparkle'
+import { GroupTitleSparkles } from './HomeSparkles'
 
 type GroupKey = 'hacker' | 'maker'
 
@@ -97,15 +97,8 @@ export default function GroupIntro() {
       </div>
 
       <div className="group-intro-desktop relative mx-auto min-h-[1024px] w-full max-w-[1440px] flex-col">
+        <GroupTitleSparkles />
         <div className="absolute top-[155px] left-1/2 -translate-x-1/2">
-          <Sparkle
-            variant="bright"
-            className="-top-[95px] -left-[178px] h-[126px] w-[135px]"
-          />
-          <Sparkle
-            variant="soft"
-            className="top-[22px] left-[219px] h-[71px] w-[74px]"
-          />
           <p className="text-center font-['Zen_Antique'] text-[35px] leading-[44px] text-[#f6f6f6] [text-shadow:0px_0px_20px_rgba(255,255,255,0.35),0px_4px_40px_rgba(255,255,255,0.2)]">
             組別介紹
           </p>
@@ -160,7 +153,7 @@ export default function GroupIntro() {
                   <p className="font-noto text-[20px] leading-[32px] font-semibold text-white">
                     {workshop}
                   </p>
-                  <p className="font-noto text-[20px] leading-[26px] font-light text-[#9fc2ff]">
+                  <p className="font-noto w-full text-right text-[20px] leading-[26px] font-light text-[#9fc2ff]">
                     點擊查詢詳細內容
                   </p>
                 </div>

@@ -12,11 +12,14 @@ import Rules from '../components/home/Rules'
 import Awards from '../components/home/Awards'
 import PartnerLogos from '../components/home/PartnerLogos'
 import StaffAndThanks from '../components/home/StaffAndThanks'
+import { AwardsSparkleField } from '../components/home/HomeSparkles'
 import FloatingNav from '../components/home/FloatingNav'
 
 const BACKGROUND_SEQUENCE = [bg1, bg2, bg3]
 const RESIZE_SCROLL_SECTION = '[data-resize-scroll-section]'
 const RESIZE_GESTURE_IDLE_MS = 300
+const LIGHT_TRANSITION_START_RATIO = 1
+const LIGHT_TRANSITION_START_OFFSET = 300
 
 type ResizeScrollAnchor = {
   section: string
@@ -131,9 +134,17 @@ export default function Home() {
 
     function handleWheel(event: WheelEvent) {
       // Ctrl/⌘ + wheel is browser zoom, not page navigation.
-      if (!event.ctrlKey && !event.metaKey) {
-        lastDirectScrollInput = performance.now()
+      if (event.ctrlKey || event.metaKey) {
+        // Capture before the browser changes the viewport. Waiting for resize
+        // would preserve a stale section from the previous scroll position.
+        if (!activeResizeAnchor) {
+          captureScrollAnchor(true)
+          activeResizeAnchor = resizeScrollAnchorRef.current
+        }
+        return
       }
+
+      lastDirectScrollInput = performance.now()
     }
 
     function handleTouchMove() {
@@ -228,7 +239,10 @@ export default function Home() {
         const rulesTop = rules.getBoundingClientRect().top + window.scrollY
         const lightSectionTop =
           lightSection.getBoundingClientRect().top + window.scrollY
-        const start = rulesTop + rules.offsetHeight * 0.8
+        const start =
+          rulesTop +
+          rules.offsetHeight * LIGHT_TRANSITION_START_RATIO +
+          LIGHT_TRANSITION_START_OFFSET
 
         setLightTransitionRange({
           start,
@@ -361,10 +375,11 @@ export default function Home() {
 
       <section
         id="awards"
-        className="relative z-10"
+        className="relative z-10 flow-root"
         data-resize-scroll-section="awards"
       >
-        <Awards lightBackgroundStart={lightTransitionRange?.start ?? null} />
+        <AwardsSparkleField />
+        <Awards lightTransitionRange={lightTransitionRange} />
       </section>
 
       <section

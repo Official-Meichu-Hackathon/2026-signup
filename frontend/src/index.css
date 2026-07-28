@@ -109,6 +109,112 @@ body {
   }
 }
 
+/*
+ * Home-page sparkles from the Figma instances in node 40:343.
+ * Each field owns the same coordinate system as its section, so resizing
+ * scales positions and glow extents together instead of moving the stars
+ * relative to a title's text box.
+ */
+.home-figma-sparkle {
+  position: absolute;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+  transform-origin: center;
+}
+
+.group-title-sparkles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 1440 / 1024;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.group-title-sparkle-large {
+  top: 1.3672%;
+  left: 27.3611%;
+  width: 16.3194%;
+  height: 22.0703%;
+}
+
+.group-title-sparkle-small {
+  top: 13.084%;
+  left: 57.5156%;
+  width: 11.2114%;
+  height: 15.366%;
+  transform: rotate(15deg);
+}
+
+.group-title-sparkle-edge {
+  top: 93.8926%;
+  left: 94.7174%;
+  width: 13.0556%;
+  height: 16.6016%;
+  transform: rotate(-11.44deg);
+}
+
+.awards-sparkle-canvas {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  display: block;
+  width: min(100%, 1440px);
+  transform: translateX(-50%);
+  container-type: inline-size;
+  pointer-events: none;
+}
+
+.awards-sparkle-field {
+  position: absolute;
+  top: calc(130px - 12.9861cqw);
+  left: 2.6275%;
+  width: 98.329%;
+  aspect-ratio: 1415.936 / 2047.462;
+  pointer-events: none;
+}
+
+.awards-sparkle-1 {
+  top: -2.474%;
+  left: -3.633%;
+  width: 21.433%;
+  height: 13.955%;
+}
+
+.awards-sparkle-2 {
+  top: 6.586%;
+  left: 12.06%;
+  width: 13.66%;
+  height: 8.413%;
+  transform: rotate(-11.44deg);
+}
+
+.awards-sparkle-3 {
+  top: 82.77%;
+  left: 76.84%;
+  width: 19.967%;
+  height: 17.143%;
+  transform: rotate(140.87deg) skewX(27.55deg) scale(0.72);
+}
+
+.awards-sparkle-4 {
+  top: 89.88%;
+  left: 73.38%;
+  width: 17.359%;
+  height: 9.93%;
+  transform: rotate(40.77deg) skewX(-35.07deg) scale(0.68);
+}
+
+.awards-sparkle-5 {
+  top: 91.55%;
+  left: 89.78%;
+  width: 14.308%;
+  height: 9.302%;
+  transform: rotate(-78.77deg) skewX(-30.65deg) scale(0.72);
+}
+
 .rules-desktop-copy > ul {
   list-style: disc;
   padding-left: 30px;
@@ -130,6 +236,10 @@ body {
 }
 
 @media (max-width: 767px) {
+  .awards-sparkle-canvas {
+    display: none;
+  }
+
   html,
   body {
     overflow-x: hidden;
@@ -488,14 +598,14 @@ body {
   }
 
   .home-award-list {
-    width: min(calc(100vw - 40px), 272px) !important;
+    width: min(calc(100vw - 32px), 280px) !important;
     gap: 38px !important;
   }
 
   .award-card {
     height: auto !important;
     min-height: 177px;
-    padding: 32px 19px !important;
+    padding: 32px 5px 32px 19px !important;
   }
 
   .award-card:first-child,
@@ -532,12 +642,12 @@ body {
 
   .award-card > div:last-child .grid {
     grid-template-columns: minmax(0, 1fr) !important;
-    gap: 0;
+    gap: 16px 0;
   }
 
   .award-card > div:last-child .grid > div {
     width: auto !important;
-    white-space: normal !important;
+    white-space: nowrap !important;
   }
 
   .home-awards-signup {

@@ -9,21 +9,9 @@ import logoWtmicro from '../../assets/home/logo-wtmicro.webp'
 import logoTsmc from '../../assets/home/logo-tsmc.webp'
 import logoPhison from '../../assets/home/logo-phison.webp'
 
-function SectionTitle({
-  children,
-  strongGlow = false,
-}: {
-  children: React.ReactNode
-  strongGlow?: boolean
-}) {
+function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <p
-      className={`partner-section-title w-full text-center font-['Zen_Antique'] text-2xl leading-[44px] text-[#b1a2ca] md:text-[35px] ${
-        strongGlow
-          ? '[text-shadow:0px_0px_20px_rgba(255,255,255,0.5),0px_4px_40px_rgba(255,255,255,0.5),0px_4px_50px_rgba(255,255,255,0.5)]'
-          : '[text-shadow:0px_0px_20px_rgba(255,255,255,0.35),0px_4px_40px_rgba(255,255,255,0.2)]'
-      }`}
-    >
+    <p className="partner-section-title font-zen w-full text-center text-2xl leading-[44px] font-normal text-[#b1a2ca] not-italic md:text-[35px]">
       {children}
     </p>
   )
@@ -102,7 +90,7 @@ export default function PartnerLogos() {
       </div>
 
       <div className="partner-block partner-special mt-12 flex w-full flex-col items-center gap-6 md:mt-[149px] md:gap-[60px]">
-        <SectionTitle strongGlow>特別合作企業</SectionTitle>
+        <SectionTitle>特別合作企業</SectionTitle>
         <div className="partner-special-logo relative h-[123px] w-[100px] overflow-hidden md:h-[250px] md:w-[203px]">
           <img
             src={logoWtmicro}
@@ -118,7 +106,7 @@ export default function PartnerLogos() {
         id="sponsors"
         className="partner-block partner-sponsors mt-16 flex w-full flex-col items-center gap-6 md:mt-[187px] md:gap-[60px]"
       >
-        <SectionTitle strongGlow>贊助企業</SectionTitle>
+        <SectionTitle>贊助企業</SectionTitle>
         <div className="flex w-full flex-col items-center gap-8 md:gap-[93px]">
           <div className="relative aspect-[345/228] w-full max-w-[120px] md:max-w-[345px]">
             <img
@@ -142,11 +130,11 @@ export default function PartnerLogos() {
       </div>
 
       <div className="partner-block partner-placeholder mt-24 flex w-full flex-col items-center md:mt-[331px]">
-        <SectionTitle strongGlow>特殊贊助</SectionTitle>
+        <SectionTitle>特殊贊助</SectionTitle>
       </div>
 
       <div className="partner-block partner-placeholder mt-20 flex w-full flex-col items-center md:mt-[113px]">
-        <SectionTitle strongGlow>媒體合作</SectionTitle>
+        <SectionTitle>媒體合作</SectionTitle>
       </div>
     </div>
   )

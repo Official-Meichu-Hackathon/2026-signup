@@ -1,9 +1,14 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
-import Sparkle from './Sparkle'
 
-const BG_ASPECT_RATIO = 2254 / 1431
+type LightTransitionRange = {
+  start: number
+  end: number
+} | null
 
 type Rgba = [number, number, number, number]
+
+const CARD_FADE_START = 0.58
+const CARD_FADE_END = 0.82
 
 function mixRgba(from: Rgba, to: Rgba, progress: number) {
   const mixed = from.map(
@@ -14,13 +19,12 @@ function mixRgba(from: Rgba, to: Rgba, progress: number) {
 }
 
 function cardStyle(progress: number): CSSProperties {
-  const top = mixRgba([211, 228, 252, 0.5], [70, 100, 172, 0.72], progress)
-  const bottom = mixRgba([211, 228, 252, 0.1], [45, 62, 99, 0.58], progress)
-  const border = mixRgba([211, 228, 252, 1], [118, 147, 210, 0.85], progress)
+  const eased = progress * progress * (3 - 2 * progress)
+  const top = mixRgba([211, 228, 252, 0.5], [163, 177, 200, 1], eased)
+  const bottom = mixRgba([211, 228, 252, 0.1], [224, 229, 237, 1], eased)
 
   return {
-    backgroundImage: `linear-gradient(135deg, ${top}, ${bottom})`,
-    borderColor: border,
+    backgroundImage: `linear-gradient(106.086deg, ${top} 12.571%, ${bottom} 101.37%)`,
   }
 }
 
@@ -66,16 +70,17 @@ function AwardCard({
   return (
     <div
       ref={cardRef}
-      className="award-card relative w-full rounded-[30px] border border-[#d3e4fc] p-8 shadow-[0px_4px_25px_-5px_#1c1b1f] transition-[background-color,border-color] duration-500 md:h-[315px] md:p-0"
+      className="award-card relative w-full rounded-[30px] border border-[#d3e4fc] p-8 shadow-[0px_4px_25px_-5px_#1c1b1f] md:h-[315px] md:p-0"
       style={cardStyle(lightProgress)}
     >
-      <div className="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0px_1px_8px_0px_rgba(255,255,255,0.5)]" />
       <p className={`text-2xl font-semibold text-white ${titleClass}`}>
         {title}
       </p>
       {note && (
         <p
-          className={`md:font-noto-tc mb-2 text-sm font-medium text-[#f6ff7b] md:mb-0 md:text-[14px] md:leading-[40px] ${noteClass}`}
+          className={`award-card-note md:font-noto-tc mb-2 text-sm font-medium whitespace-nowrap text-[#f6ff7b] md:mb-0 md:text-[14px] md:leading-[40px] ${
+            variant === 'grand' ? 'award-card-note-grand' : ''
+          } ${noteClass}`}
         >
           {note}
         </p>
@@ -90,11 +95,10 @@ function AwardCard({
 }
 
 export default function Awards({
-  lightBackgroundStart,
+  lightTransitionRange,
 }: {
-  lightBackgroundStart: number | null
+  lightTransitionRange: LightTransitionRange
 }) {
-  const rootRef = useRef<HTMLDivElement>(null)
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
   const [lightProgress, setLightProgress] = useState([0, 0, 0])
 
@@ -104,22 +108,30 @@ export default function Awards({
     function measure() {
       cancelAnimationFrame(frame)
       frame = requestAnimationFrame(() => {
-        if (lightBackgroundStart === null) {
+        if (!lightTransitionRange) {
           setLightProgress([0, 0, 0])
           return
         }
 
         const transitionHeight = Math.max(
-          window.innerWidth * BG_ASPECT_RATIO,
-          window.innerHeight * 1.1,
+          1,
+          lightTransitionRange.end - lightTransitionRange.start,
         )
         const next = cardRefs.current.map((card) => {
           if (!card) return 0
+
           const rect = card.getBoundingClientRect()
           const cardCenter = rect.top + window.scrollY + rect.height / 2
+          const layerProgress =
+            (cardCenter - lightTransitionRange.start) / transitionHeight
+
           return Math.min(
             1,
-            Math.max(0, (cardCenter - lightBackgroundStart) / transitionHeight),
+            Math.max(
+              0,
+              (layerProgress - CARD_FADE_START) /
+                (CARD_FADE_END - CARD_FADE_START),
+            ),
           )
         })
 
@@ -131,29 +143,20 @@ export default function Awards({
     window.addEventListener('resize', measure)
 
     const observer = new ResizeObserver(measure)
-    if (rootRef.current) observer.observe(rootRef.current)
+    cardRefs.current.forEach((card) => {
+      if (card) observer.observe(card)
+    })
 
     return () => {
       cancelAnimationFrame(frame)
       window.removeEventListener('resize', measure)
       observer.disconnect()
     }
-  }, [lightBackgroundStart])
+  }, [lightTransitionRange])
 
   return (
-    <div
-      ref={rootRef}
-      className="home-awards mx-auto flex w-full max-w-[730px] flex-col items-center gap-16 px-6 py-16 md:mt-[130px] md:max-w-[733.5px] md:gap-[90px] md:px-[2.25px] md:py-0"
-    >
-      <div className="relative">
-        <Sparkle
-          variant="bright"
-          className="-top-6 -left-10 h-10 w-10 md:-top-8 md:-left-14 md:h-14 md:w-14"
-        />
-        <Sparkle
-          variant="soft"
-          className="-top-1 -right-8 h-6 w-6 md:-right-10 md:h-8 md:w-8"
-        />
+    <div className="home-awards mx-auto flex w-full max-w-[730px] flex-col items-center gap-16 px-6 py-16 md:mt-[130px] md:max-w-[733.5px] md:gap-[90px] md:px-[2.25px] md:py-0">
+      <div>
         <p className="home-awards-title text-center font-['Zen_Antique'] text-2xl text-[#f6f6f6] [text-shadow:0px_0px_20px_rgba(255,255,255,0.35),0px_4px_40px_rgba(255,255,255,0.2)] md:text-[35px] md:leading-[44px]">
           獎項資訊
         </p>

@@ -17,7 +17,6 @@ const cssVars = {
   '--nav-logo-h': '48px',
   '--nav-logo-w': 'clamp(80px, 10.25vw, 123px)',
   '--nav-collapsed-w': '182px',
-  '--nav-expanded-w': 'min(1162px, calc(100vw - 48px))',
   '--nav-gap': 'clamp(20px, calc(9.95vw - 56.4px), 63px)',
   '--nav-links-gap': 'clamp(16px, calc(9.26vw - 55.1px), 56px)',
   '--nav-px': 'clamp(12px, 1.417vw, 17px)',
@@ -78,7 +77,7 @@ export default function FloatingNav() {
       style={cssVars}
     >
       <div
-        className={`flex h-[var(--nav-h)] w-[var(--nav-expanded-w)] max-w-[var(--nav-collapsed-w)] items-center gap-[var(--nav-gap)] overflow-hidden rounded-full border border-white/10 px-[var(--nav-px)] shadow-[0px_4px_12px_0px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-[max-width,background-color] duration-500 ease-out group-focus-within:max-w-[var(--nav-expanded-w)] group-hover:max-w-[var(--nav-expanded-w)] ${
+        className={`flex h-[var(--nav-h)] w-max max-w-[var(--nav-collapsed-w)] items-center gap-[var(--nav-gap)] overflow-hidden rounded-full border border-white/10 px-[var(--nav-px)] shadow-[0px_4px_12px_0px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-[max-width,background-color] duration-500 ease-out group-focus-within:max-w-[calc(100vw-48px)] group-hover:max-w-[calc(100vw-48px)] ${
           onLightBg
             ? 'bg-[rgba(70,100,172,0.4)]'
             : 'bg-[rgba(173,171,171,0.36)]'
