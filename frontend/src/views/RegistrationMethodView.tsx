@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react'
 import Navbar from '../components/layout/Navbar'
 import Footer from '../components/layout/Footer'
 import StarField from '../components/layout/StarField'
+import CursorTrail from '../components/layout/CursorTrail'
 import bgHero from '../assets/RegistrationMethod/bg-hero.jpg'
 import bgContent from '../assets/RegistrationMethod/bg-content.jpg'
 
@@ -456,6 +457,7 @@ export default function RegistrationMethodView() {
           Mask fades reproduce that cross-fade instead of a hard seam. */}
       <div className="relative isolate overflow-hidden">
         <img
+          data-trail-bg="registration"
           src={bgHero}
           alt=""
           className="absolute inset-x-0 top-0 -z-10 h-[100vh] w-full object-cover"
@@ -486,7 +488,16 @@ export default function RegistrationMethodView() {
               'linear-gradient(to bottom, transparent 0%, black 20%)',
           }}
         >
-          <img src={bgContent} alt="" className="h-full w-full object-cover" />
+          <img
+            data-trail-bg="registration"
+            src={bgContent}
+            alt=""
+            className="h-full w-full object-cover"
+          />
+        </div>
+
+        <div className="relative -z-10">
+          <CursorTrail bgSelector="[data-trail-bg='registration']" />
         </div>
 
         <section

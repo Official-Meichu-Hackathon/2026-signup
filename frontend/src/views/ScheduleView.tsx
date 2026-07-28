@@ -1,5 +1,6 @@
 import Navbar from '../components/layout/Navbar'
 import Footer from '../components/layout/Footer'
+import CursorTrail from '../components/layout/CursorTrail'
 import ScheduleTimeline from '../components/schedule/ScheduleTimeline'
 import bgTop from '../assets/Schedule/bg-top.png'
 import bgBottom from '../assets/Schedule/bg-bottom.png'
@@ -100,6 +101,7 @@ function DesktopSchedule() {
     <div className="overflow-x-auto">
       <div className="relative aspect-[1440/3155] w-full min-w-[768px] overflow-hidden">
         <img
+          data-trail-bg="schedule"
           src={bgTop}
           alt=""
           className="absolute top-0 left-0 h-[32.46%] w-full object-cover"
@@ -111,6 +113,7 @@ function DesktopSchedule() {
           }}
         />
         <img
+          data-trail-bg="schedule"
           src={bgBottom}
           alt=""
           className="absolute top-[49.98%] left-0 h-[74.36%] w-full object-cover"
@@ -204,6 +207,7 @@ function MobileSchedule() {
   return (
     <div className="relative aspect-[390/938] w-full min-w-[320px] overflow-hidden">
       <img
+        data-trail-bg="schedule"
         src={bgTop}
         alt=""
         className="absolute top-0 left-0 h-[29.53%] w-full object-cover"
@@ -214,6 +218,7 @@ function MobileSchedule() {
         }}
       />
       <img
+        data-trail-bg="schedule"
         src={bgBottom}
         alt=""
         className="absolute top-[50%] left-0 h-[66.84%] w-full object-cover"
@@ -291,6 +296,9 @@ function MobileSchedule() {
 export default function ScheduleView() {
   return (
     <div className="relative bg-black text-white">
+      <div className="relative -z-10">
+        <CursorTrail bgSelector="[data-trail-bg='schedule']" />
+      </div>
       <Navbar />
 
       {/* This frame ships two hand-matched layouts rather than one fluidly

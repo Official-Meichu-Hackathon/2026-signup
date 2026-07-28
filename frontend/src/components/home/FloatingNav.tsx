@@ -1,31 +1,33 @@
 import { useEffect, useState } from 'react'
-import navLogo from '../../assets/home/float-nav.png'
+import navLogo from '../../assets/home/float-nav.webp'
 
+// href targets must match a real section id (see Home.tsx and its child
+// components). '#intro' used to point at the hero banner instead of the
+// actual 簡介 copy in EventVision (id="vision"), and '#stats' never had a
+// matching section at all — both silently failed to scroll anywhere.
 const LINKS = [
-  { label: '活動簡介', href: '#intro' },
-  { label: '組別介紹', href: '#group-intro' },
-  { label: '比賽規則', href: '#rules' },
-  { label: '獎項資訊', href: '#awards' },
-  { label: '參賽數據', href: '#stats' },
-  { label: '合作企業', href: '#partners' },
-  { label: '贊助單位', href: '#sponsors' },
-  { label: '工作人員', href: '#staff' },
-]
+  { label: '活動簡介', href: '#vision', weight: 'normal' },
+  { label: '組別介紹', href: '#group-intro', weight: 'normal' },
+  { label: '比賽規則', href: '#rules', weight: 'normal' },
+  { label: '獎項資訊', href: '#awards', weight: 'medium' },
+  { label: '合作企業', href: '#partners', weight: 'medium' },
+  { label: '贊助單位', href: '#sponsors', weight: 'medium' },
+  { label: '工作人員', href: '#staff', weight: 'medium' },
+] as const
 
-// Overall floating-nav size — turn this one knob to scale the whole pill
-// (height, logo, padding, gaps) up or down. 1 = original design size.
-const SIZE = 0.7
-
-const HEIGHT = 76 * SIZE
+const HEIGHT = 76
 const cssVars = {
   '--nav-h': `${HEIGHT}px`,
-  '--nav-logo-h': `${64 * SIZE}px`,
-  '--nav-collapsed-w': `${180 * SIZE}px`,
-  '--nav-expanded-w': `${1200 * SIZE}px`,
-  '--nav-gap': `${40 * SIZE}px`,
-  '--nav-links-gap': `${32 * SIZE}px`,
-  '--nav-px': `${17 * SIZE}px`,
-  '--nav-font': `${18 * SIZE}px`,
+  '--nav-logo-h': '48px',
+  '--nav-logo-w': 'clamp(80px, 10.25vw, 123px)',
+  '--nav-collapsed-w': '182px',
+  '--nav-gap': 'clamp(20px, calc(9.95vw - 56.4px), 63px)',
+  '--nav-links-gap': 'clamp(16px, calc(9.26vw - 55.1px), 56px)',
+  '--nav-px': 'clamp(12px, 1.417vw, 17px)',
+  '--nav-tail-space': 'clamp(24px, 3.5vw, 42px)',
+  '--nav-font': 'clamp(14px, 1.667vw, 20px)',
+  '--nav-logo-offset':
+    'max(0px, calc((var(--nav-collapsed-w) - 2 * var(--nav-px) - var(--nav-logo-w)) / 2))',
 } as React.CSSProperties
 
 const NAV_BOTTOM_OFFSET = 24
@@ -33,9 +35,11 @@ const NAV_HEIGHT = HEIGHT
 
 export default function FloatingNav() {
   const [onLightBg, setOnLightBg] = useState(false)
+  const [activeHref, setActiveHref] =
+    useState<(typeof LINKS)[number]['href']>('#vision')
 
   useEffect(() => {
-    function checkBackground() {
+    function updateNavState() {
       const navBottom = window.innerHeight - NAV_BOTTOM_OFFSET
       const navTop = navBottom - NAV_HEIGHT
       const lightSections = document.querySelectorAll(
@@ -47,24 +51,38 @@ export default function FloatingNav() {
         if (rect.top < navBottom && rect.bottom > navTop) over = true
       })
       setOnLightBg(over)
+
+      const marker = window.scrollY + window.innerHeight * 0.45
+      let nextActive: (typeof LINKS)[number]['href'] = '#vision'
+
+      LINKS.forEach(({ href }) => {
+        const section = document.querySelector<HTMLElement>(href)
+        if (!section) return
+
+        const sectionTop = section.getBoundingClientRect().top + window.scrollY
+        if (sectionTop <= marker) nextActive = href
+      })
+
+      setActiveHref(nextActive)
     }
 
-    checkBackground()
-    window.addEventListener('scroll', checkBackground, { passive: true })
-    window.addEventListener('resize', checkBackground)
+    updateNavState()
+    window.addEventListener('scroll', updateNavState, { passive: true })
+    window.addEventListener('resize', updateNavState)
     return () => {
-      window.removeEventListener('scroll', checkBackground)
-      window.removeEventListener('resize', checkBackground)
+      window.removeEventListener('scroll', updateNavState)
+      window.removeEventListener('resize', updateNavState)
     }
   }, [])
 
   return (
     <nav
-      className="floating-nav group fixed bottom-10 left-6 z-50"
+      tabIndex={0}
+      className="floating-nav group fixed bottom-15 left-6 z-50 outline-none"
       style={cssVars}
     >
       <div
-        className={`flex h-[var(--nav-h)] max-w-[var(--nav-collapsed-w)] items-center gap-[var(--nav-gap)] overflow-hidden rounded-full border border-white/10 px-[var(--nav-px)] shadow-[0px_4px_12px_0px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-[max-width,background-color] duration-500 ease-out group-hover:max-w-[var(--nav-expanded-w)] ${
+        className={`flex h-[var(--nav-h)] w-max max-w-[var(--nav-collapsed-w)] items-center gap-[var(--nav-gap)] overflow-hidden rounded-full border border-white/10 pr-[var(--nav-tail-space)] pl-[var(--nav-px)] shadow-[0px_4px_12px_0px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-[max-width,background-color] duration-500 ease-out group-focus-within:max-w-[calc(100vw-48px)] group-hover:max-w-[calc(100vw-48px)] ${
           onLightBg
             ? 'bg-[rgba(70,100,172,0.4)]'
             : 'bg-[rgba(173,171,171,0.36)]'
@@ -73,14 +91,23 @@ export default function FloatingNav() {
         <img
           src={navLogo}
           alt="梅竹黑客松"
-          className="h-[var(--nav-logo-h)] w-auto shrink-0 object-contain object-left"
+          decoding="async"
+          className="ml-[var(--nav-logo-offset)] h-[var(--nav-logo-h)] w-[var(--nav-logo-w)] shrink-0 object-contain object-center transition-[margin-left] duration-500 ease-out group-focus-within:ml-0 group-hover:ml-0"
         />
-        <ul className="flex shrink-0 items-center gap-[var(--nav-links-gap)] whitespace-nowrap opacity-0 transition-opacity delay-150 duration-300 group-hover:opacity-100">
-          {LINKS.map(({ label, href }) => (
+        <ul className="flex shrink-0 items-center gap-[var(--nav-links-gap)] whitespace-nowrap opacity-0 transition-opacity delay-150 duration-300 group-focus-within:opacity-100 group-hover:opacity-100">
+          {LINKS.map(({ label, href, weight }) => (
             <li key={href}>
               <a
                 href={href}
-                className="text-[length:var(--nav-font)] text-white transition-colors hover:text-white/70"
+                className={`font-noto-tc block w-[4em] text-center text-[length:var(--nav-font)] transition-colors ${
+                  weight === 'medium' ? 'font-medium' : 'font-normal'
+                } ${
+                  activeHref === href
+                    ? onLightBg
+                      ? 'text-[#4664ac]'
+                      : 'text-[#989898]'
+                    : 'text-white hover:text-white/70'
+                }`}
               >
                 {label}
               </a>

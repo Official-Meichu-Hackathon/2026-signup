@@ -39,14 +39,15 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="site-header fixed top-0 left-0 z-50 flex w-full items-center justify-between bg-black/5 px-6 py-4 backdrop-blur-[2px]">
+      <header className="site-header fixed top-0 left-0 z-50 flex h-[80px] w-full items-start justify-between bg-black/5 pt-[13px] pr-[50px] pl-[47px] backdrop-blur-[2px]">
         {/* Faded/blurred (not literally layered under the drawer — `fixed`
             elements always open their own stacking context, so nesting these
             under a lower z-index header would trap them there too) to look
             covered by the glass panel while it's open, per the reference
-            screenshot. The hamburger itself fades along with the rest of the
-            header when open — closing then goes through the drawer's
-            click-outside backdrop instead, so it doesn't need to stay live. */}
+            screenshot. The hamburger button stays clickable (no
+            pointer-events-none) so it can toggle the drawer closed again —
+            it previously lost pointer events along with the rest of the
+            header, which made it impossible to close via the hamburger. */}
         <Link
           to="/"
           className={`transition duration-300 ${menuOpen ? 'pointer-events-none opacity-30 blur-[2px]' : ''}`}
@@ -54,13 +55,13 @@ export default function Navbar() {
           <img
             src={logo}
             alt="梅竹黑客松"
-            className={`site-logo h-12 w-auto transition duration-300 ${onLightBg ? 'invert' : ''}`}
+            className={`site-logo h-[67px] w-[148px] object-contain object-bottom transition duration-300 ${onLightBg ? 'invert' : ''}`}
           />
         </Link>
-        <div className="site-header-actions flex items-center gap-4">
+        <div className="site-header-actions mt-[10.5px] flex items-center gap-[37px]">
           <Link
             to="/signup"
-            className={`site-signup rounded-full border px-5 py-1.5 text-sm backdrop-blur transition duration-300 ${
+            className={`site-signup font-chiron flex h-[46px] w-[140px] items-center justify-center rounded-[30px] border text-[20px] leading-[40px] font-bold backdrop-blur transition duration-300 ${
               onLightBg
                 ? 'border-black/20 bg-black/5 text-neutral-900 hover:bg-black/10'
                 : 'border-white/20 bg-white/10 text-white hover:bg-white/20'
@@ -73,14 +74,14 @@ export default function Navbar() {
             aria-label={menuOpen ? '關閉選單' : '選單'}
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((open) => !open)}
-            className={`site-menu-button transition duration-300 hover:opacity-70 ${onLightBg ? 'text-neutral-900' : 'text-white'} ${menuOpen ? 'pointer-events-none opacity-30 blur-[2px]' : ''}`}
+            className={`site-menu-button transition duration-300 hover:opacity-70 ${onLightBg ? 'text-neutral-900' : 'text-white'} ${menuOpen ? 'opacity-30 blur-[2px]' : ''}`}
           >
             <svg
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
-              className="site-menu-icon h-6 w-6"
+              className="site-menu-icon h-[30px] w-[30px]"
             >
               <path strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />
             </svg>
