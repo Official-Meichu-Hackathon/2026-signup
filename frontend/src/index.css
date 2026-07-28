@@ -1049,6 +1049,18 @@ body {
     0 0 30px rgba(160, 180, 255, 0.22);
 }
 
+/* 頁面背景光暈（bg-gradient.png）專用。
+   素材 707×1000，發光只在上緣約 45%，從一半以下整片都是不透明的
+   rgb(10,4,4)。頁面通常鋪兩張：一張貼齊 top-0、一張 bottom-0 + rotate-180，
+   後者畫在前者之上。旋轉後那片「不透明近黑」會變成它的『上緣』，於是在
+   y = 頁面高度 − 1064 的位置，把下面那張的藍色一刀切掉，形成一條橫貫整頁
+   的硬邊；頁面一長高（縮放、開合手風琴）邊就跟著移動。
+   這裡把沒有資訊量的暗尾淡出，讓兩張只靠發光的部分疊合，接縫就消失了。 */
+.page-glow {
+  -webkit-mask-image: linear-gradient(to bottom, #000 42%, transparent 72%);
+  mask-image: linear-gradient(to bottom, #000 42%, transparent 72%);
+}
+
 .glass-dark {
   background: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(70px);
@@ -1103,6 +1115,14 @@ body {
     opacity: 0.05;
   }
 }
+
+/* Keep the long meteor constellation below the desktop card deck. */
+@media (min-width: 768px) {
+  .problem-meteor-endpoint {
+    transform: translateY(clamp(40px, 3.5vw, 64px));
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .twinkle,
   .twinkle-soft {

@@ -4,12 +4,11 @@ import barQuotes from '../../assets/Stats/bar-collapsed-2.svg'
 import cardLink from '../../assets/Stats/card-link.svg'
 import iconPlus from '../../assets/Stats/icon-plus.svg'
 import iconMinus from '../../assets/Stats/icon-minus.svg'
-import pieGrade from '../../assets/Stats/pie-grade.svg'
-import pieSchool from '../../assets/Stats/pie-school.svg'
-import pieDeptHacker from '../../assets/Stats/pie-dept-hacker.svg'
-import pieDeptMaker from '../../assets/Stats/pie-dept-maker.svg'
 import carouselArrow from '../../assets/Stats/carousel-arrow.svg'
 import { TESTIMONIALS } from './testimonials'
+import { RESULT_PLATFORM_URL } from './resultPlatform'
+import StatsPieChart from './StatsPieChart'
+import { STATS_CHARTS } from './statsData'
 
 // 參賽數據(電腦) 378:362。設計稿元件寬 1222.14，頁面上的 instance（378:632）
 // 放大到 1394（1440 版面左右各留 23）。故一律以元件座標系為基準，用 cq()
@@ -83,8 +82,8 @@ const PIE_PAD_X = 239.467 - PIE_BOX / 2
 const PIE_PAD_Y = 229.889 - PIE_BOX / 2
 const PIES = [
   {
-    src: pieGrade,
-    label: '參賽者年級比',
+    chart: STATS_CHARTS.grade,
+    label: '2025參賽者年級分布',
     tag: '',
     left: 250.265,
     top: 92.406,
@@ -94,9 +93,9 @@ const PIES = [
     labelWidth: 193.969,
   },
   {
-    src: pieDeptHacker,
-    label: '參賽者科系分佈',
-    tag: '【黑客組】',
+    chart: STATS_CHARTS.hackerDepartment,
+    label: '2025黑客組院系分布',
+    tag: '',
     left: 604.487,
     top: 97.796,
     labelLeft: 542.883,
@@ -104,8 +103,8 @@ const PIES = [
     labelWidth: 160.94,
   },
   {
-    src: pieSchool,
-    label: '參賽者學校分佈',
+    chart: STATS_CHARTS.school,
+    label: '2025參賽者學校分布',
     tag: '',
     left: 87.015,
     top: 352.682,
@@ -114,9 +113,9 @@ const PIES = [
     labelWidth: 215.521,
   },
   {
-    src: pieDeptMaker,
-    label: '參賽者科系分佈',
-    tag: '【創客交流組】',
+    chart: STATS_CHARTS.makerDepartment,
+    label: '2025創客組院系分布',
+    tag: '',
     left: 434.307,
     top: 352.682,
     labelLeft: 616.808,
@@ -244,9 +243,9 @@ function PiePanel() {
     >
       {PIES.map((pie) => (
         <div key={pie.label + pie.tag}>
-          <img
-            src={pie.src}
-            alt={pie.label + pie.tag}
+          <div
+            role="group"
+            aria-label={pie.chart.title}
             className="absolute"
             style={{
               left: px(pie.left - PIE_PAD_X),
@@ -254,7 +253,9 @@ function PiePanel() {
               width: px(PIE_SVG),
               aspectRatio: '1 / 1',
             }}
-          />
+          >
+            <StatsPieChart chart={pie.chart} />
+          </div>
           <p
             className="font-noto text-ink absolute text-center font-semibold"
             style={{
@@ -458,10 +459,10 @@ export default function StatsAccordion() {
         >
           成果平台網址
         </span>
-        {/* TODO: 成果平台上線後補上正式網址 */}
         <a
-          href="#"
-          onClick={(event) => event.preventDefault()}
+          href={RESULT_PLATFORM_URL}
+          target="_blank"
+          rel="noopener noreferrer"
           className="font-zen text-periwinkle absolute left-1/2 w-full -translate-x-1/2 -translate-y-1/2 text-center underline-offset-4 transition hover:underline"
           style={{
             top: `${((CARD_LINK_CENTER / H_CARD) * 100).toFixed(4)}%`,

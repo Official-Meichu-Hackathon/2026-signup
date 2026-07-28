@@ -42,12 +42,12 @@ export default function MobileStatsView({
         <img
           src={bgGradient}
           alt=""
-          className="pointer-events-none absolute top-0 left-0 h-[52%] w-full object-cover select-none"
+          className="page-glow pointer-events-none absolute top-0 left-0 h-[52%] w-full object-cover select-none"
         />
         <img
           src={bgGradient}
           alt=""
-          className="pointer-events-none absolute bottom-[3%] left-0 h-[34%] w-full rotate-180 object-cover select-none"
+          className="page-glow pointer-events-none absolute bottom-[3%] left-0 h-[34%] w-full rotate-180 object-cover select-none"
         />
         <MobileStatsStars />
 

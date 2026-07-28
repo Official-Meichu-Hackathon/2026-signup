@@ -162,22 +162,33 @@ export function ZoomedFace({
 }) {
   const isLogitech = problem.sponsor === '羅技'
   const isAmd = problem.sponsor === 'AMD'
+  const isAdvantest = problem.sponsor === '愛德萬測試'
+  const isNxp = problem.sponsor === '恩智浦半導體'
+  const usesAmdLayout = isAmd || isAdvantest || isNxp
   const isGoogle = problem.sponsor === 'Google'
   const logitechNoteLines = [
     '請務必簽署附件之保密協定，',
     '並於回傳組別繳費證明的郵件的同時，',
     '一併繳交個人的保密協定同意書，方為報名成功。',
   ]
-  const logoBoxHeight = isLogitech ? 172 : isAmd ? 176 : isGoogle ? 85.263 : 120
+  const logoBoxHeight = isLogitech
+    ? 172
+    : usesAmdLayout
+      ? 176
+      : isGoogle
+        ? 85.263
+        : 120
   const logoImageWidth = isLogitech
     ? 344
-    : isAmd
+    : usesAmdLayout
       ? 404
       : isGoogle
         ? 261.458
         : undefined
+  const nxpLogoWidths = [256, 250]
+  const logoRowWidth = isNxp ? 514 : undefined
   const sponsorBoxStyle =
-    isAmd || isGoogle
+    usesAmdLayout || isGoogle
       ? {
           width: zoomCq(zpx(278)),
           height: zoomCq(zpx(96)),
@@ -186,8 +197,8 @@ export function ZoomedFace({
           justifyContent: 'center',
         }
       : undefined
-  const isLargeHashtagCard = isLogitech || isAmd || isGoogle
-  const hashtagBoxWidth = isAmd ? 572 : isGoogle ? 493 : undefined
+  const isLargeHashtagCard = isLogitech || usesAmdLayout || isGoogle
+  const hashtagBoxWidth = usesAmdLayout ? 572 : isGoogle ? 493 : undefined
   const contentTop = isGoogle ? '14%' : '9%'
   const contentGap = isLogitech || isGoogle ? 13 : 18
   const noticeBoxStyle = isGoogle
@@ -224,18 +235,35 @@ export function ZoomedFace({
             高 logo（聚陽、愛德萬）受高度上限，皆比先前放大許多 */}
           <div
             className="flex w-full items-center justify-center"
-            style={{ height: zoomCq(zpx(logoBoxHeight)), gap: zoomCq(zpx(20)) }}
+            style={{
+              width: logoRowWidth ? zoomCq(zpx(logoRowWidth)) : undefined,
+              height: zoomCq(zpx(logoBoxHeight)),
+              gap: zoomCq(zpx(isNxp ? 8 : 20)),
+            }}
           >
-            {problem.logos.map((logo) => (
+            {problem.logos.map((logo, index) => (
               <img
                 key={logo}
                 src={logo}
                 alt={problem.sponsor}
-                className="max-h-full max-w-[46%] object-contain"
+                className={`max-h-full object-contain ${
+                  isNxp ? 'max-w-none' : 'max-w-[46%]'
+                }`}
                 style={
-                  logoImageWidth
-                    ? { width: zoomCq(zpx(logoImageWidth)), maxWidth: '100%' }
-                    : undefined
+                  isNxp
+                    ? {
+                        width: zoomCq(zpx(nxpLogoWidths[index])),
+                        transform:
+                          index === 0
+                            ? `translateX(${zoomCq(zpx(32))}) scale(1.1)`
+                            : `translateX(-${zoomCq(zpx(40))}) scale(1.6)`,
+                      }
+                    : logoImageWidth
+                      ? {
+                          width: zoomCq(zpx(logoImageWidth)),
+                          maxWidth: '100%',
+                        }
+                      : undefined
                 }
               />
             ))}
@@ -499,6 +527,9 @@ export default function ProblemDeck() {
                 height: spot.height,
                 borderRadius: spot.radius,
                 zIndex: spot.zIndex,
+                boxShadow: isZoomed
+                  ? undefined
+                  : `0 0 ${cq(px(44))} ${cq(px(12))} rgba(255,255,255,0.72)`,
                 transitionDelay: zoomed === null ? `${index * 50}ms` : '0ms',
               }}
             >
