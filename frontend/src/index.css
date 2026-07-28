@@ -724,6 +724,14 @@ body {
     opacity: 0.05;
   }
 }
+
+/* Keep the long meteor constellation below the desktop card deck. */
+@media (min-width: 768px) {
+  .problem-meteor-endpoint {
+    transform: translateY(clamp(80px, 7vw, 128px));
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .twinkle,
   .twinkle-soft {
