@@ -1070,6 +1070,41 @@ body {
     0 10px 30px rgba(0, 0, 0, 0.25);
 }
 
+/* Safari repeatedly repaints a backdrop-filter while a parent is animating.
+   The panel fades/scales with a lightweight fill, then restores the glass. */
+@keyframes stats-panel-enter {
+  from {
+    opacity: 0;
+    transform: scaleY(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+.stats-panel-enter {
+  animation: stats-panel-enter 400ms var(--ease-out-strong) both;
+  will-change: transform, opacity;
+}
+
+.stats-panel-enter .glass-dark {
+  animation: stats-panel-glass 400ms step-end both;
+}
+
+@keyframes stats-panel-glass {
+  0%,
+  99% {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  100% {
+    backdrop-filter: blur(70px);
+    -webkit-backdrop-filter: blur(70px);
+  }
+}
+
 .maker-panel {
   background:
     radial-gradient(
@@ -1124,6 +1159,9 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .stats-panel-enter {
+    animation: none;
+  }
   .twinkle,
   .twinkle-soft {
     animation: none !important;

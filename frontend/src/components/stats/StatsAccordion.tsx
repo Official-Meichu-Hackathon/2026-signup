@@ -219,12 +219,11 @@ function Collapsible({
   isOpen: boolean
   children: React.ReactNode
 }) {
+  if (!isOpen) return null
+
   return (
-    <div
-      className="grid transition-[grid-template-rows] duration-500"
-      style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}
-    >
-      <div className="overflow-hidden">{children}</div>
+    <div className="stats-panel-enter origin-top">
+      <div>{children}</div>
     </div>
   )
 }
