@@ -9,11 +9,11 @@ import bgGradient from '../assets/Problems/bg-gradient.png'
 
 export default function ProblemsView() {
   const [isMobile, setIsMobile] = useState(
-    () => window.matchMedia('(max-width: 480px)').matches,
+    () => window.matchMedia('(max-width: 767px)').matches,
   )
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(max-width: 480px)')
+    const mediaQuery = window.matchMedia('(max-width: 767px)')
     const onChange = (event: MediaQueryListEvent) => setIsMobile(event.matches)
     mediaQuery.addEventListener('change', onChange)
     return () => mediaQuery.removeEventListener('change', onChange)

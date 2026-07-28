@@ -23,13 +23,13 @@ const GLOW_H = `${((1064 / DESIGN_H) * 100).toFixed(4)}%`
 // footer 電腦版（1366:61578）在設計稿裡貼齊頁框底部（3882..4096）。頁面高度鎖死
 // 之後內容不再撐滿整頁，故 footer 改成絕對定位貼底，不能留在文件流裡。
 export default function StatsView() {
-  // 與題目說明頁同一個切換點：480px 以下改用手機版版面。
+  // 與題目說明頁及 Tailwind 的 md 斷點一致：768px 以下改用手機版版面。
   const [isMobile, setIsMobile] = useState(
-    () => window.matchMedia('(max-width: 480px)').matches,
+    () => window.matchMedia('(max-width: 767px)').matches,
   )
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(max-width: 480px)')
+    const mediaQuery = window.matchMedia('(max-width: 767px)')
     const onChange = (event: MediaQueryListEvent) => setIsMobile(event.matches)
     mediaQuery.addEventListener('change', onChange)
     return () => mediaQuery.removeEventListener('change', onChange)
