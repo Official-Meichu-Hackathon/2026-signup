@@ -128,11 +128,6 @@ export default function StaffAndThanks() {
       </div>
 
       <div className="media-block flex w-full max-w-[917px] flex-col items-center gap-8 md:gap-[50px]">
-        <SectionTitle>企業廣告</SectionTitle>
-        <div className="h-[300px] w-full bg-[#f4f5f5] md:h-[491px]" />
-      </div>
-
-      <div className="media-block flex w-full max-w-[917px] flex-col items-center gap-8 md:gap-[50px]">
         <SectionTitle>YouTube影片</SectionTitle>
         <div className="h-[300px] w-full bg-[#f4f5f5] md:h-[491px]" />
       </div>

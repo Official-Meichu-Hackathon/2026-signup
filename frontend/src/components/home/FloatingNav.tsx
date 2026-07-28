@@ -31,7 +31,6 @@ const cssVars = {
 } as React.CSSProperties
 
 const NAV_BOTTOM_OFFSET = 24
-const NAV_HEIGHT = HEIGHT
 
 export default function FloatingNav() {
   const [onLightBg, setOnLightBg] = useState(false)
@@ -41,7 +40,7 @@ export default function FloatingNav() {
   useEffect(() => {
     function updateNavState() {
       const navBottom = window.innerHeight - NAV_BOTTOM_OFFSET
-      const navTop = navBottom - NAV_HEIGHT
+      const navTop = navBottom - HEIGHT
       const lightSections = document.querySelectorAll(
         '[data-nav-theme="light"]',
       )

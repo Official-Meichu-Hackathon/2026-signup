@@ -19,7 +19,7 @@ const BACKGROUND_SEQUENCE = [bg1, bg2, bg3]
 const RESIZE_SCROLL_SECTION = '[data-resize-scroll-section]'
 const RESIZE_GESTURE_IDLE_MS = 300
 const LIGHT_TRANSITION_START_RATIO = 1
-const LIGHT_TRANSITION_START_OFFSET = 300
+const LIGHT_TRANSITION_START_OFFSET = 500
 
 type ResizeScrollAnchor = {
   section: string
@@ -290,14 +290,17 @@ export default function Home() {
             const isLastBackground = index === BACKGROUND_SEQUENCE.length - 1
 
             return (
-              <div key={bg} className="relative w-full shrink-0">
+              <div
+                key={bg}
+                className="home-background-frame relative w-full shrink-0 overflow-hidden"
+              >
                 <img
                   src={bg}
                   alt=""
                   loading={index === 0 ? 'eager' : 'lazy'}
                   decoding="async"
                   fetchPriority={index === 0 ? 'high' : 'low'}
-                  className="block h-auto w-full"
+                  className="home-background-image block h-auto w-full max-w-none"
                 />
                 {isLastBackground && (
                   <div className="absolute inset-x-0 bottom-0 h-[38%] bg-gradient-to-b from-transparent via-black/80 to-black" />

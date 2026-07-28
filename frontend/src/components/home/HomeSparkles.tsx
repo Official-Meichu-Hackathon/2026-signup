@@ -6,20 +6,6 @@ import sparkleField5 from '../../assets/home/sparkle-field-5.svg'
 import sparkleGroupEdge from '../../assets/home/sparkle-group-edge.svg'
 import sparkleGroupLarge from '../../assets/home/sparkle-group-large.svg'
 import sparkleGroupSmall from '../../assets/home/sparkle-group-small.svg'
-import sparkleLoading from '../../assets/home/sparkle-loading.svg'
-import sparkleSource from '../../assets/home/sparkle-source.svg'
-
-export function LoadingSparkles({ className = '' }: { className?: string }) {
-  return (
-    <img src={sparkleLoading} alt="" aria-hidden="true" className={className} />
-  )
-}
-
-export function FigmaSparkle({ className = '' }: { className?: string }) {
-  return (
-    <img src={sparkleSource} alt="" aria-hidden="true" className={className} />
-  )
-}
 
 function DecorativeStar({
   src,
