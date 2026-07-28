@@ -68,10 +68,10 @@ export default function FormStep({
         />
         <div className="relative z-10">
           <div className="flex items-center pb-2 md:pb-8">
-            <div className="mr-2.5 flex h-6 w-6 items-center justify-center rounded-full bg-white/10 text-xs font-bold text-white ring-1 ring-white/40 md:mr-4 md:h-11 md:w-11 md:text-base">
+            <div className="mr-2.5 flex h-6 w-6 items-center justify-center rounded-full bg-white/10 text-[0.625rem] font-bold text-white ring-1 ring-white/40 md:mr-4 md:h-11 md:w-11 md:text-base">
               <span className="font-zen">{stepOrder}</span>
             </div>
-            <p className="text-[0.875rem] text-white md:text-3xl">{stepName}</p>
+            <p className="text-[0.75rem] text-white md:text-3xl">{stepName}</p>
           </div>
           {children}
           <NextStepButton
