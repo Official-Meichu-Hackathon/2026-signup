@@ -113,7 +113,7 @@ export default function FileUpload({
         <QuestionTitle title={title} />
       </h3>
       {description && (
-        <p className="mx-4 mt-1.5 text-[0.5rem] whitespace-pre-line text-white/80 md:mt-2 md:text-base md:leading-normal">
+        <p className="mx-4 mt-1.5 text-[0.5rem] whitespace-pre-line text-white/80 md:mt-2 md:text-base">
           {description}
         </p>
       )}
@@ -192,7 +192,7 @@ export default function FileUpload({
             <p className="text-darkblue text-[0.625rem] font-bold md:text-lg">
               拖移檔案到這裡 或 點擊選擇檔案
             </p>
-            <p className="mt-1.5 text-[0.5rem] font-normal text-[#8f9cc4] md:mt-2 md:text-base md:leading-normal">
+            <p className="mt-1.5 text-[0.5rem] font-normal text-[#8f9cc4] md:mt-2 md:text-base">
               支援格式：{accept.join(', ')}
               <br />
               檔案大小限制：{formatFileSize(maxSize)}

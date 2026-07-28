@@ -19,8 +19,8 @@ export default function PlayerTabs({
       aria-label="參賽者"
       // Pulled up by the active tab's height so its bottom edge meets the card
       // top; the tabs protrude above the card body. Tabs keep their natural
-      // width; the strip just never exceeds 75% of the card, past which they
-      // shrink and the labels ellipsise (參…).
+      // width and the strip is budgeted to 75% of the card — the fluid label
+      // size below is derived from that share.
       className="relative z-20 -mt-9 flex max-w-[75%] items-end gap-0 md:-mt-[4.875rem]"
     >
       {Array.from({ length: playerCount }, (_, index) => {
@@ -53,11 +53,9 @@ export default function PlayerTabs({
               aria-hidden
               className="pointer-events-none absolute inset-0 rounded-t-xl bg-gradient-to-b from-white/15 to-transparent md:rounded-t-[2.5rem]"
             />
-            {/* Never ellipsise: the mobile size shrinks with the viewport so
-                all 5 labels stay whole inside the 75% cap. Each tab gets 15% of
-                the card (viewport - rail - gutters), which leaves
-                3.75vw - 5.625px per character across 4 characters plus
-                padding. */}
+            {/* Fluid rather than truncated, so all 5 labels stay whole: at 15%
+                of the card per tab, 4 characters plus padding leave
+                3.75vw - 5.625px each. */}
             <span
               className={`relative z-10 text-[clamp(6px,calc(3.75vw_-_5.625px),10px)] font-bold whitespace-nowrap text-white md:text-xl ${
                 isActive ? '' : 'text-white/85'
