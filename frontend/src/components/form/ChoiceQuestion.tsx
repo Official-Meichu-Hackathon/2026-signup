@@ -21,10 +21,10 @@ export default function ChoiceQuestion({
   const groupName = useId()
 
   return (
-    <div className="py-4 whitespace-pre-line md:py-8">
+    <div className="py-2 whitespace-pre-line md:py-8">
       <QuestionHeader title={title} />
       {pdf && (
-        <p className="mx-4 mt-2 text-xs leading-snug text-white/80 md:mt-3 md:text-xl md:leading-relaxed">
+        <p className="mx-4 mt-1.5 text-[0.6875rem] leading-snug text-white/80 md:mt-3 md:text-xl md:leading-relaxed">
           <a
             href={pdf}
             target="_blank"
@@ -37,7 +37,7 @@ export default function ChoiceQuestion({
         </p>
       )}
       {description && (
-        <p className="mx-4 mt-2 text-xs leading-snug whitespace-pre-line text-white/80 md:mt-3 md:text-xl md:leading-relaxed">
+        <p className="mx-4 mt-1.5 text-[0.6875rem] leading-snug whitespace-pre-line text-white/80 md:mt-3 md:text-xl md:leading-relaxed">
           {description}
         </p>
       )}
@@ -55,7 +55,7 @@ export default function ChoiceQuestion({
               onChange={() => onChange(option)}
               className="checked:border-darkblue h-5 w-5 cursor-pointer appearance-none rounded-full border-[0.1875rem] border-[#B1A2CA] bg-[#D8D8D8] checked:bg-[radial-gradient(circle,_#2d3e63_0%,_#2d3e63_50%,_transparent_55%)] md:h-11 md:w-11"
             />
-            <span className="text-sm whitespace-nowrap text-white md:text-xl">
+            <span className="text-xs whitespace-nowrap text-white md:text-xl">
               {option}
             </span>
           </label>

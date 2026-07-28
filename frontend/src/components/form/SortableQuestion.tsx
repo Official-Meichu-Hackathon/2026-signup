@@ -65,7 +65,7 @@ function SortableRow({ option, index }: { option: string; index: number }) {
 
   return (
     <div className="flex items-center gap-3">
-      <div className="rounded-lg px-2 py-1.5 text-sm font-bold whitespace-nowrap text-white md:px-3 md:py-2 md:text-xl">
+      <div className="rounded-lg px-1.5 py-1 text-xs font-bold whitespace-nowrap text-white md:px-3 md:py-2 md:text-xl">
         志願序{rankLabels[index]}
       </div>
 
@@ -85,7 +85,7 @@ function SortableRow({ option, index }: { option: string; index: number }) {
       >
         <DragHandle className={isDragging ? 'opacity-0' : ''} />
         <span
-          className={`text-darkblue text-sm md:text-xl ${
+          className={`text-darkblue text-xs md:text-xl ${
             isDragging ? 'opacity-0' : ''
           }`}
         >
@@ -140,7 +140,7 @@ export default function SortableQuestion({
   }
 
   return (
-    <div className="py-4 md:py-8">
+    <div className="py-2 md:py-8">
       <QuestionHeader title={title} description={description} />
       <DndContext
         sensors={sensors}
@@ -151,7 +151,7 @@ export default function SortableQuestion({
         onDragCancel={handleDragCancel}
       >
         <SortableContext items={value} strategy={verticalListSortingStrategy}>
-          <div className="mx-4 mt-3 flex flex-col gap-3 md:mt-5 md:gap-4">
+          <div className="mx-4 mt-2 flex flex-col gap-2 md:mt-5 md:gap-4">
             {value.map((option, index) => (
               <SortableRow key={option} option={option} index={index} />
             ))}
@@ -167,7 +167,7 @@ export default function SortableQuestion({
             {activeId ? (
               <div className="group border-darkblue flex items-center rounded-md border-[0.1875rem] bg-white p-2 shadow-2xl md:p-3">
                 <DragHandle />
-                <span className="text-darkblue text-sm md:text-xl">
+                <span className="text-darkblue text-xs md:text-xl">
                   {activeId}
                 </span>
               </div>
@@ -177,7 +177,7 @@ export default function SortableQuestion({
         )}
       </DndContext>
 
-      <div className="mx-4 mt-3 text-xs text-white/70">
+      <div className="mx-4 mt-2 text-[0.6875rem] text-white/70 md:text-xs">
         💡 拖拉項目來調整順序
       </div>
     </div>

@@ -351,7 +351,7 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
           />
 
           {/* 參賽者經歷: 4 free-text fields, each ≤100 chars */}
-          <div className="pt-4 md:pt-8">
+          <div className="pt-2 md:pt-8">
             <QuestionHeader title="★參賽者經歷" />
           </div>
           <TextQuestion
