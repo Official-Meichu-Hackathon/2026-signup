@@ -728,7 +728,7 @@ body {
 /* Keep the long meteor constellation below the desktop card deck. */
 @media (min-width: 768px) {
   .problem-meteor-endpoint {
-    transform: translateY(clamp(80px, 7vw, 128px));
+    transform: translateY(clamp(40px, 3.5vw, 64px));
   }
 }
 
