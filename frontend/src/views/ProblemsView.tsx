@@ -5,6 +5,7 @@ import ProblemDeck from '../components/problems/ProblemDeck'
 import MobileProblemsView from './MobileProblemsView'
 import ProblemStars from '../components/problems/ProblemStars'
 import MakerCta from '../components/problems/MakerCta'
+import MakerCtaStars from '../components/problems/MakerCtaStars'
 import bgGradient from '../assets/Problems/bg-gradient.png'
 
 export default function ProblemsView() {
@@ -67,7 +68,11 @@ export default function ProblemsView() {
             與題目 PDF 連結；未公開時是靜態的「尚未公開」。 */}
         <section className="mt-10 flex w-full max-w-[961px] flex-col items-center">
           <div aria-hidden className="h-[100px] w-[183px] self-end md:mr-2" />
-          <div className="mt-6 w-full">
+          {/* relative 讓 MakerCtaStars 能錨在面板的框上。三顆大星原本在
+              ProblemStars 裡，但那層的高度由視窗寬度決定、面板卻是排版流決定的，
+              視窗一變寬星星就會滑到 footer 旁邊，故改成跟著面板走。 */}
+          <div className="relative mt-6 w-full">
+            <MakerCtaStars />
             <MakerCta />
           </div>
         </section>
