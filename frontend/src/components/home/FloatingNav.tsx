@@ -24,6 +24,7 @@ const cssVars = {
   '--nav-gap': 'clamp(20px, calc(9.95vw - 56.4px), 63px)',
   '--nav-links-gap': 'clamp(16px, calc(9.26vw - 55.1px), 56px)',
   '--nav-px': 'clamp(12px, 1.417vw, 17px)',
+  '--nav-tail-space': 'clamp(24px, 3.5vw, 42px)',
   '--nav-font': 'clamp(14px, 1.667vw, 20px)',
   '--nav-logo-offset':
     'max(0px, calc((var(--nav-collapsed-w) - 2 * var(--nav-px) - var(--nav-logo-w)) / 2))',
@@ -81,7 +82,7 @@ export default function FloatingNav() {
       style={cssVars}
     >
       <div
-        className={`flex h-[var(--nav-h)] w-max max-w-[var(--nav-collapsed-w)] items-center gap-[var(--nav-gap)] overflow-hidden rounded-full border border-white/10 px-[var(--nav-px)] shadow-[0px_4px_12px_0px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-[max-width,background-color] duration-500 ease-out group-focus-within:max-w-[calc(100vw-48px)] group-hover:max-w-[calc(100vw-48px)] ${
+        className={`flex h-[var(--nav-h)] w-max max-w-[var(--nav-collapsed-w)] items-center gap-[var(--nav-gap)] overflow-hidden rounded-full border border-white/10 pr-[var(--nav-tail-space)] pl-[var(--nav-px)] shadow-[0px_4px_12px_0px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-[max-width,background-color] duration-500 ease-out group-focus-within:max-w-[calc(100vw-48px)] group-hover:max-w-[calc(100vw-48px)] ${
           onLightBg
             ? 'bg-[rgba(70,100,172,0.4)]'
             : 'bg-[rgba(173,171,171,0.36)]'
@@ -102,7 +103,9 @@ export default function FloatingNav() {
                   weight === 'medium' ? 'font-medium' : 'font-normal'
                 } ${
                   activeHref === href
-                    ? 'text-[#989898]'
+                    ? onLightBg
+                      ? 'text-[#4664ac]'
+                      : 'text-[#989898]'
                     : 'text-white hover:text-white/70'
                 }`}
               >
