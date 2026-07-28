@@ -4,8 +4,8 @@ import logoCloudMosa from '../assets/Problems/logo-cloudmosa.png'
 import logoLogitech from '../assets/Problems/logo-logitech.png'
 import logoAmdItri from '../assets/Problems/logo-amd-itri.png'
 import logoMakalot from '../assets/Problems/logo-makalot.png'
-import logoNxp from '../assets/Problems/logo-nxp.png'
-import logoWtMicro from '../assets/Problems/logo-wtmicro.png'
+import logoNxp from '../assets/Problems/logo-nxp-figma.png'
+import logoWtMicro from '../assets/Problems/logo-wtmicro-figma.png'
 import logoAdvantest from '../assets/Problems/logo-advantest.png'
 import logoGoogle from '../assets/Problems/logo-google.png'
 
@@ -66,7 +66,7 @@ export const PROBLEMS: Problem[] = [
   {
     sponsor: '恩智浦半導體',
     logos: [logoNxp, logoWtMicro],
-    hashtags: HASHTAG_PLACEHOLDER,
+    hashtags: ['#實體 AI（Physical AI）', '#邊緣 AI（Edge AI）', '#機器人'],
     paragraphs: [
       '善用邊緣運算與人工智慧、結合語音影像等感測辨識，兼顧功能與資訊安全，打造具即時反應的智慧創新應用。',
       '例如，使用 FRDM i.MX93 開發板做為感測中心，以 Wi-Fi 方式連接各式感測器(如:攝影鏡頭)，進行物品辨識以判斷物品是否正常運作。這些感測器資料可以結合在一起，透過大數據、AI 演算法,做出更多不同的應用，亦可連接到手機 APP 控制，相關資料在各設備間的連結，可透過 IW416 Wi-Fi 進行安全傳輸。',
@@ -75,7 +75,7 @@ export const PROBLEMS: Problem[] = [
   {
     sponsor: '愛德萬測試',
     logos: [logoAdvantest],
-    hashtags: HASHTAG_PLACEHOLDER,
+    hashtags: ['#AI', '#數據分析', '#邊緣運算'],
     paragraphs: [],
   },
   {

@@ -2,6 +2,7 @@
 
 html {
   scroll-behavior: smooth;
+  overscroll-behavior: none;
 }
 
 @theme {
@@ -77,28 +78,31 @@ html {
   animation: pop-in-right 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* Fluid scaling engine — the whole page is sized in rem, so scaling the root
-   font-size makes every rem-based measure (title, nav, rail, card, fields,
-   footer, spacing) shrink/grow together with the viewport, matching the two
-   Figma frames as reference widths and interpolating smoothly between them.
-   Mobile frame = 390px, desktop frame = 1440px, both authored at a 16px base.
-   Container max-widths stay in px (upper bounds only) so they don't
-   double-shrink. Breakpoint layout switch stays at Tailwind's md (768px). */
+/* The page is sized in rem off the 16px Figma base (mobile frame 390px,
+   desktop 1440px). Desktop keeps a constant root: a vw-derived font-size
+   cancels out browser zoom (Cmd +/- scales 100vw in CSS px by the same
+   factor), so rem elements would freeze while px ones zoomed. Widths flex on
+   their own, so nothing needs vw to fit. Layout switch stays at md (768px). */
 :root {
   /* 390px mobile frame at a 16px base → 1rem = 100vw/24.375 (390 ÷ 16). */
   font-size: clamp(13px, calc(100vw / 24.375), 16px);
 }
 @media (min-width: 768px) {
   :root {
-    /* Continuous across the whole desktop range (≈768–1800px) so every
-       rem-based element — including the rem-width side rail — scales with the
-       window instead of freezing. 1440px frame at 16px base → 100vw/90. */
-    font-size: clamp(8.5px, calc(100vw / 90), 20px);
+    font-size: 16px;
   }
 }
 
 body {
   @apply font-noto bg-white text-neutral-900;
+}
+
+.home-page {
+  overflow-anchor: none;
+  /* Decorative sparkles intentionally extend past their section canvases.
+     Keep that artwork from widening the document without creating a scroll
+     container that would interfere with the sticky vision section. */
+  overflow-x: clip;
 }
 
 .vision-mobile,
@@ -111,6 +115,120 @@ body {
 .group-intro-desktop,
 .rules-desktop {
   display: flex;
+}
+
+/* Keep the group selector attached to the viewport edge on screens wider
+   than the 1440px Figma canvas, while the main content stays centered. */
+@media (min-width: 1440px) {
+  .group-edge-tabs {
+    transform: translateX(calc((1440px - 100vw) / 2));
+  }
+}
+
+/*
+ * Home-page sparkles from the Figma instances in node 40:343.
+ * Each field owns the same coordinate system as its section, so resizing
+ * scales positions and glow extents together instead of moving the stars
+ * relative to a title's text box.
+ */
+.home-figma-sparkle {
+  position: absolute;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+  transform-origin: center;
+}
+
+.group-title-sparkles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 1440 / 1024;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.group-title-sparkle-large {
+  top: 1.3672%;
+  left: 27.3611%;
+  width: 16.3194%;
+  height: 22.0703%;
+}
+
+.group-title-sparkle-small {
+  top: 13.084%;
+  left: 57.5156%;
+  width: 11.2114%;
+  height: 15.366%;
+  transform: rotate(15deg);
+}
+
+.group-title-sparkle-edge {
+  top: 93.8926%;
+  left: 94.7174%;
+  width: 13.0556%;
+  height: 16.6016%;
+  transform: rotate(-11.44deg);
+}
+
+.awards-sparkle-canvas {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  display: block;
+  width: min(100%, 1440px);
+  transform: translateX(-50%);
+  container-type: inline-size;
+  pointer-events: none;
+}
+
+.awards-sparkle-field {
+  position: absolute;
+  top: calc(130px - 12.9861cqw);
+  left: 2.6275%;
+  width: 98.329%;
+  aspect-ratio: 1415.936 / 2047.462;
+  pointer-events: none;
+}
+
+.awards-sparkle-1 {
+  top: -2.474%;
+  left: -3.633%;
+  width: 21.433%;
+  height: 13.955%;
+}
+
+.awards-sparkle-2 {
+  top: 6.586%;
+  left: 12.06%;
+  width: 13.66%;
+  height: 8.413%;
+  transform: rotate(-11.44deg);
+}
+
+.awards-sparkle-3 {
+  top: 82.77%;
+  left: 76.84%;
+  width: 19.967%;
+  height: 17.143%;
+  transform: rotate(140.87deg) skewX(27.55deg) scale(0.72);
+}
+
+.awards-sparkle-4 {
+  top: 89.88%;
+  left: 73.38%;
+  width: 17.359%;
+  height: 9.93%;
+  transform: rotate(40.77deg) skewX(-35.07deg) scale(0.68);
+}
+
+.awards-sparkle-5 {
+  top: 91.55%;
+  left: 89.78%;
+  width: 14.308%;
+  height: 9.302%;
+  transform: rotate(-78.77deg) skewX(-30.65deg) scale(0.72);
 }
 
 .rules-desktop-copy > ul {
@@ -134,6 +252,18 @@ body {
 }
 
 @media (max-width: 767px) {
+  .awards-sparkle-canvas {
+    display: none;
+  }
+
+  /* The mobile composition uses the 40%–100% range of each background.
+     Making that 60% crop fill the viewport preserves the original aspect
+     ratio without generating duplicate mobile assets. */
+  .home-background-image {
+    width: 166.6667%;
+    transform: translateX(-40%);
+  }
+
   /* On `body` (not `html`), this triggers the CSS overflow-propagation
      rule: `body`'s overflow becomes the viewport's own scroll box instead
      of `html`'s. Since `body` has no explicit height and always grows to
@@ -162,7 +292,7 @@ body {
   }
 
   .home-hero-cta {
-    top: 323px;
+    top: calc(224px + 25.28vw);
     left: 39.23%;
     width: 56.41%;
   }
@@ -172,11 +302,11 @@ body {
   }
 
   .vision-desktop {
-    display: none;
+    display: none !important;
   }
 
   .vision-mobile {
-    display: flex;
+    display: flex !important;
     flex-direction: column;
     align-items: center;
     gap: 26px;
@@ -205,7 +335,7 @@ body {
   .group-intro-desktop,
   .rules-desktop,
   .staff-desktop {
-    display: none;
+    display: none !important;
   }
 
   .mobile-home-title,
@@ -223,7 +353,7 @@ body {
   }
 
   .group-intro-mobile {
-    display: flex;
+    display: flex !important;
     flex-direction: column;
     align-items: center;
     gap: 38px;
@@ -232,68 +362,111 @@ body {
   }
 
   .group-mobile-panel {
+    --mobile-panel-fill: #beb3d3;
+    --mobile-inactive-tab-fill: #b1a2ca;
     position: relative;
-    width: min(calc(100vw - 32px), 278px);
-    min-height: 469px;
+    isolation: isolate;
+    width: min(calc(100vw - 32px), 284px);
+    height: 469px;
+  }
+
+  .group-mobile-panel::before {
+    position: absolute;
+    z-index: 1;
+    top: 33px;
+    bottom: 0;
+    left: 5px;
+    right: 0;
+    border: 1px solid rgba(244, 245, 245, 0.72);
+    border-radius: 0 10px 10px 10px;
+    background: var(--mobile-panel-fill);
+    box-shadow:
+      0 0 20px rgba(255, 255, 255, 0.5),
+      0 4px 40px rgba(255, 255, 255, 0.42);
+    content: '';
+    pointer-events: none;
   }
 
   .group-mobile-tabs {
     position: absolute;
-    z-index: 2;
-    top: 0;
-    left: 0;
+    z-index: 3;
+    top: 5px;
+    left: 5px;
     display: flex;
-    height: 35px;
-    align-items: flex-end;
+    height: 29px;
+    align-items: stretch;
   }
 
   .group-mobile-tabs button {
+    -webkit-appearance: none;
+    appearance: none;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 76.65px;
     height: 29px;
-    min-width: 75px;
-    padding: 0 12px;
-    border: 1px solid rgba(244, 245, 245, 0.8);
-    border-bottom: 0;
-    border-radius: 15px 15px 0 0;
-    background: rgba(177, 162, 202, 0.66);
+    padding: 0;
+    border: 0;
+    border-radius: 10px 10px 0 0;
+    background-color: var(--mobile-inactive-tab-fill);
+    background-image: none;
     color: #fff;
+    -webkit-tap-highlight-color: transparent;
+    font-family: 'Noto Sans', 'Noto Sans TC', sans-serif;
     font-size: 11px;
     font-weight: 500;
     line-height: 13px;
+    filter: none;
+    opacity: 1;
+    transition: none;
   }
 
   .group-mobile-tabs button + button {
-    min-width: 102px;
+    width: 99.13px;
   }
 
   .group-mobile-tabs button.is-active {
-    height: 35px;
-    background: rgba(198, 184, 218, 0.95);
+    z-index: 1;
+    height: 30px;
+    border: 1px solid rgba(244, 245, 245, 0.72);
+    border-bottom: 0;
+    background-color: var(--mobile-panel-fill);
+    box-shadow: none;
+  }
+
+  .staff-mobile-row > button:focus-visible,
+  .group-mobile-workshop:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.85);
+    outline-offset: -3px;
+  }
+
+  .group-mobile-tabs button:focus-visible,
+  .rules-mobile-tabs button:focus-visible {
+    outline: none;
   }
 
   .group-mobile-card {
     position: absolute;
-    top: 29px;
-    left: 0;
+    z-index: 2;
+    top: 56.08px;
+    left: 33.5px;
     display: flex;
-    width: calc(100% - 5px);
-    min-height: 434px;
+    width: 212px;
+    height: 401px;
     flex-direction: column;
     align-items: center;
-    padding: 27px 30px 20px;
-    overflow: hidden;
-    border: 1px solid rgba(244, 245, 245, 0.75);
-    border-radius: 0 18px 18px 18px;
-    background: rgba(177, 162, 202, 0.78);
-    box-shadow:
-      7px 8px 0 rgba(206, 194, 224, 0.68),
-      0 10px 30px rgba(0, 0, 0, 0.25),
-      inset 0 1px 8px rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(35px);
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
   }
 
   .group-mobile-card > img {
-    width: 100%;
-    max-width: 212px;
+    width: 212px;
+    max-width: none;
     height: 131px;
     flex: none;
     border-radius: 15px;
@@ -306,6 +479,7 @@ body {
     gap: 15px;
     margin-top: 17px;
     color: #f6f6f6;
+    font-family: 'Noto Sans', 'Noto Sans TC', sans-serif;
     font-size: 11px;
     font-weight: 600;
     line-height: 15px;
@@ -313,12 +487,16 @@ body {
   }
 
   .group-mobile-workshop {
+    flex: none;
+    align-self: center;
     margin-top: auto;
+    margin-bottom: 10px;
     padding: 5px 15px;
     border: 1px solid #d27f90;
     border-radius: 40px;
     background: rgba(244, 218, 225, 0.3);
     color: rgba(219, 131, 150, 0.92);
+    font-family: 'Chiron Hei HK', sans-serif;
     font-size: 14px;
     font-weight: 800;
     box-shadow: 0 4px 5px rgba(210, 127, 144, 0.4);
@@ -329,7 +507,7 @@ body {
   }
 
   .rules-mobile {
-    display: flex;
+    display: flex !important;
     flex-direction: column;
     align-items: center;
     gap: 38px;
@@ -338,73 +516,125 @@ body {
   }
 
   .rules-mobile-panel {
+    --mobile-panel-fill: #c5bad7;
+    --mobile-inactive-tab-fill: #b9abcf;
     position: relative;
-    width: min(calc(100vw - 32px), 279px);
-    min-height: 607px;
-    padding-top: 28px;
+    isolation: isolate;
+    width: min(calc(100vw - 32px), 284px);
+    height: 607px;
   }
 
   .rules-mobile-panel.is-maker {
-    min-height: 363px;
+    --mobile-panel-fill: #c4bad7;
+    --mobile-inactive-tab-fill: #b8abcf;
+    height: 363px;
+  }
+
+  .rules-mobile-panel::before {
+    position: absolute;
+    z-index: 1;
+    top: 36px;
+    bottom: 0;
+    left: 6px;
+    right: 0;
+    border: 1px solid rgba(244, 245, 245, 0.72);
+    border-radius: 0 10px 10px 10px;
+    background: var(--mobile-panel-fill);
+    box-shadow:
+      0 0 20px rgba(255, 255, 255, 0.5),
+      0 4px 40px rgba(255, 255, 255, 0.42);
+    content: '';
+    pointer-events: none;
   }
 
   .rules-mobile-tabs {
     position: absolute;
-    z-index: 2;
-    top: 0;
-    left: 0;
+    z-index: 3;
+    top: 6px;
+    left: 6px;
     display: flex;
-    align-items: flex-end;
+    height: 31px;
+    align-items: stretch;
   }
 
   .rules-mobile-tabs button {
-    height: 28px;
-    padding: 0 14px;
-    border: 1px solid rgba(244, 245, 245, 0.78);
-    border-bottom: 0;
-    border-radius: 14px 14px 0 0;
-    background: rgba(177, 162, 202, 0.68);
+    -webkit-appearance: none;
+    appearance: none;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 76.37px;
+    height: 31px;
+    padding: 0;
+    border: 0;
+    border-radius: 10px 10px 0 0;
+    background-color: var(--mobile-inactive-tab-fill);
+    background-image: none;
     color: #fff;
+    -webkit-tap-highlight-color: transparent;
+    font-family: 'Noto Sans', 'Noto Sans TC', sans-serif;
     font-size: 12px;
     font-weight: 600;
     line-height: 12px;
+    font-variation-settings:
+      'CTGR' 0,
+      'wdth' 100;
+    filter: none;
+    opacity: 1;
+    transition: none;
+  }
+
+  .rules-mobile-tabs button + button {
+    width: 98.77px;
   }
 
   .rules-mobile-tabs button.is-active {
-    z-index: 2;
-    background: rgba(198, 184, 218, 0.98);
-    box-shadow: 0 -8px 18px rgba(255, 255, 255, 0.46);
+    z-index: 1;
+    height: 32px;
+    border: 1px solid rgba(244, 245, 245, 0.72);
+    border-bottom: 0;
+    background-color: var(--mobile-panel-fill);
+    box-shadow: none;
   }
 
   .rules-mobile-copy {
-    min-height: 579px;
-    padding: 22px 16px 18px 20px;
-    border: 1px solid rgba(244, 245, 245, 0.78);
-    border-radius: 0 16px 16px 16px;
-    background: rgba(193, 178, 213, 0.95);
+    position: absolute;
+    z-index: 2;
+    top: 50px;
+    bottom: 15px;
+    left: 17px;
+    width: 234px;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
     color: #f6f6f6;
+    font-family: 'Noto Sans', 'Noto Sans TC', sans-serif;
     font-size: 10px;
     font-weight: 600;
     line-height: 15px;
+    font-variation-settings:
+      'CTGR' 100,
+      'wdth' 100;
+    letter-spacing: 0;
+    word-break: break-word;
     text-align: justify;
-    box-shadow:
-      6px 7px 0 rgba(177, 162, 202, 0.72),
-      0 0 25px rgba(255, 255, 255, 0.68),
-      inset 0 1px 8px rgba(255, 255, 255, 0.42);
-  }
-
-  .rules-mobile-panel.is-maker .rules-mobile-copy {
-    min-height: 335px;
+    text-justify: inter-character;
+    box-shadow: none;
   }
 
   .rules-mobile-copy > ul,
   .rules-mobile-copy ul ul {
+    margin: 0;
+    padding: 0;
     list-style: disc;
-    padding-left: 15px;
+    list-style-position: outside;
   }
 
-  .rules-mobile-copy ul ul {
-    padding-left: 15px;
+  .rules-mobile-copy > ul > li,
+  .rules-mobile-copy > ul > li > ul > li {
+    margin-left: 15px;
   }
 
   .home-awards {
@@ -412,26 +642,19 @@ body {
     padding: 0 0 72px !important;
   }
 
-  .home-awards .relative:has(> .home-awards-title) {
-    width: min(calc(100vw - 40px), 272px);
-  }
-
   .home-awards-title {
     color: #f6f6f6;
   }
 
-  .home-awards-title ~ * {
-    display: none;
-  }
-
   .home-award-list {
-    width: min(calc(100vw - 40px), 272px) !important;
+    width: min(calc(100vw - 32px), 420px) !important;
     gap: 38px !important;
   }
 
   .award-card {
+    height: auto !important;
     min-height: 177px;
-    padding: 32px 19px !important;
+    padding: 32px 5px 32px 19px !important;
   }
 
   .award-card:first-child,
@@ -440,6 +663,8 @@ body {
   }
 
   .award-card > p {
+    position: static !important;
+    width: auto !important;
     font-size: 14px !important;
     line-height: 15.6px;
   }
@@ -449,9 +674,13 @@ body {
     color: #f6ff7b;
     font-size: 10px !important;
     line-height: 14px;
+    white-space: normal !important;
+    overflow-wrap: anywhere;
   }
 
   .award-card > div:last-child {
+    position: static !important;
+    width: auto !important;
     margin-top: 14px;
     font-size: 12px !important;
     line-height: 16px !important;
@@ -463,7 +692,14 @@ body {
   }
 
   .award-card > div:last-child .grid {
-    gap: 0;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 16px 0;
+  }
+
+  .award-card > div:last-child .grid > div {
+    width: auto !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere;
   }
 
   .home-awards-signup {
@@ -472,7 +708,7 @@ body {
 
   .partner-sections {
     width: 100%;
-    gap: 64px !important;
+    gap: 0 !important;
     padding: 48px 0 40px !important;
   }
 
@@ -481,43 +717,122 @@ body {
   }
 
   .partner-main {
-    width: min(calc(100vw - 40px), 249px) !important;
+    position: relative;
+    width: 249px !important;
+    min-height: 299.22px;
   }
 
-  .partner-logo-grid {
-    width: 100%;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 24px !important;
-    row-gap: 24px !important;
+  .partner-main > div {
+    gap: 24px !important;
   }
 
-  .partner-logo {
-    height: 42px !important;
-    max-width: 111px !important;
+  .partner-main-grid {
+    width: 249px !important;
+    height: 259.22px !important;
+    max-width: none !important;
+    aspect-ratio: auto !important;
   }
 
-  .partner-main .partner-logo:last-child {
-    grid-column: 1 / -1;
-    width: 55px;
+  .partner-logo-logitech {
+    top: 0 !important;
+    left: 1px !important;
+    width: 109px !important;
+    height: 52px !important;
+  }
+
+  .partner-logo-amd {
+    top: 5.18px !important;
+    left: 150.5px !important;
+    width: 83px !important;
+    height: 20px !important;
+  }
+
+  .partner-logo-cloudmosa {
+    top: 76px !important;
+    left: 10px !important;
+    width: 91px !important;
+    height: 22px !important;
+  }
+
+  .partner-logo-google {
+    top: 60.18px !important;
+    left: 147.5px !important;
+    width: 89px !important;
+    height: 29px !important;
+  }
+
+  .partner-logo-nxp {
+    top: 122px !important;
+    left: 2px !important;
+    width: 107px !important;
+    height: 52.22px !important;
+  }
+
+  .partner-logo-advantest {
+    top: 124.18px !important;
+    left: 137.5px !important;
+    width: 109px !important;
+    height: 49px !important;
+  }
+
+  .partner-logo-eclat {
+    position: absolute;
+    top: 247.6px;
+    left: 97.5px;
+    width: 55px !important;
+    height: 45.86px !important;
+    margin: 0 !important;
+  }
+
+  .partner-special {
+    margin-top: 71px !important;
+    gap: 24px !important;
   }
 
   .partner-special-logo {
-    width: 53px;
+    width: 53px !important;
     height: 65px !important;
   }
 
-  .partner-sponsors .partner-logo-grid {
-    width: 111px;
-    grid-template-columns: 1fr;
-    gap: 35px !important;
+  .partner-sponsors {
+    margin-top: 41px !important;
+    gap: 14px !important;
   }
 
-  .partner-sponsors .partner-logo {
-    height: 54px !important;
+  .sponsor-tier-list {
+    width: 168px !important;
+    gap: 25px !important;
   }
 
-  .partner-coming-soon {
-    display: none;
+  .sponsor-tier-label {
+    height: 36px;
+    font-size: 13px !important;
+    line-height: 44px;
+  }
+
+  .sponsor-tier-tsmc {
+    width: 97px !important;
+  }
+
+  .sponsor-tier-maicoin {
+    width: 120px !important;
+  }
+
+  .sponsor-tier-phison {
+    width: 111px !important;
+  }
+
+  .sponsor-tier-pixart {
+    width: 168px !important;
+    gap: 0 !important;
+  }
+
+  .partner-sponsors + .partner-placeholder {
+    margin-top: 56px !important;
+  }
+
+  .partner-placeholder + .partner-placeholder {
+    margin-top: 64px !important;
   }
 
   .staff-and-thanks {
@@ -538,7 +853,7 @@ body {
   .thanks-block > div {
     gap: 3px;
     color: #4664ac;
-    font-size: 10px !important;
+    font-size: 14px !important;
     line-height: 15px;
   }
 
@@ -551,12 +866,8 @@ body {
     height: 140px !important;
   }
 
-  .thanks-block + .media-block > div {
-    display: none;
-  }
-
   .staff-mobile {
-    display: flex;
+    display: flex !important;
     width: min(calc(100vw - 40px), 270px);
     flex-direction: column;
     align-items: center;
@@ -564,12 +875,22 @@ body {
   }
 
   .staff-mobile-list {
+    position: relative;
     width: 100%;
+    height: 221px;
+    overflow: visible;
+  }
+
+  .staff-mobile-list.has-expanded {
+    height: 274px;
+    overflow: hidden;
   }
 
   .staff-mobile-row {
-    position: relative;
-    margin-top: -2px;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 45px;
     overflow: hidden;
     border: 1px solid #f4f5f5;
     border-radius: 15px 15px 0 0;
@@ -579,8 +900,10 @@ body {
       inset 0 1px 8px rgba(255, 255, 255, 0.5);
   }
 
-  .staff-mobile-row:first-child {
-    margin-top: 0;
+  .staff-mobile-list:not(.has-expanded) .staff-mobile-row:last-child {
+    height: 65px;
+    background: linear-gradient(180deg, #b1a2ca 39.158%, #fff 82.938%);
+    box-shadow: none;
   }
 
   .staff-mobile-row > button {
@@ -589,14 +912,26 @@ body {
     height: 33px;
     align-items: center;
     justify-content: space-between;
-    padding: 0 11px;
+    padding: 0 19px 0 11px;
     color: #fff;
+    font-family: 'Chiron Hei HK', sans-serif;
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 800;
+    line-height: normal;
+  }
+
+  .staff-mobile-row > button > span:last-child {
+    width: 10px;
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 400;
+    line-height: 10px;
+    text-align: center;
   }
 
   .staff-mobile-row.is-expanded {
+    height: 100px;
     background: #d8d8d8;
+    box-shadow: none;
   }
 
   .staff-mobile-row.is-expanded > button {
@@ -604,8 +939,9 @@ body {
   }
 
   .staff-mobile-members {
-    padding: 0 18px 14px;
+    padding: 0 18px;
     color: #2d3e63;
+    font-family: 'Noto Sans', 'Noto Sans TC', sans-serif;
     font-size: 10px;
     font-weight: 500;
     line-height: 14px;
@@ -625,6 +961,7 @@ body {
 
   .site-header-actions {
     gap: 10px !important;
+    margin-top: 0 !important;
   }
 
   .site-signup {
@@ -656,6 +993,14 @@ body {
   }
 }
 
+/* A narrow desktop Safari window still benefits from the wider fluid cards,
+   while a real phone should keep the compact design-frame width. */
+@media (max-width: 767px) and (hover: none) and (pointer: coarse) {
+  .home-award-list {
+    width: min(calc(100vw - 32px), 280px) !important;
+  }
+}
+
 /* Glowing title text per the 2026 design (報名方式 / 報名黑客松 heroes) */
 .glow-text {
   text-shadow:
@@ -670,6 +1015,27 @@ body {
     0 0 30px rgba(160, 180, 255, 0.22);
 }
 
+/* 頁面背景光暈（bg-gradient.png）專用。
+   素材 707×1000，發光只在上緣約 45%，從一半以下整片都是不透明的
+   rgb(10,4,4)。頁面通常鋪兩張：一張貼齊 top-0、一張 bottom-0 + rotate-180，
+   後者畫在前者之上。旋轉後那片「不透明近黑」會變成它的『上緣』，於是在
+   y = 頁面高度 − 1064 的位置，把下面那張的藍色一刀切掉，形成一條橫貫整頁
+   的硬邊；頁面一長高（縮放、開合手風琴）邊就跟著移動。
+   這裡把沒有資訊量的暗尾淡出，讓兩張只靠發光的部分疊合，接縫就消失了。 */
+.page-glow {
+  -webkit-mask-image: linear-gradient(to bottom, #000 42%, transparent 72%);
+  mask-image: linear-gradient(to bottom, #000 42%, transparent 72%);
+}
+
+.stats-layer {
+  will-change: transform;
+}
+
+.glass-suspend .glass-dark {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
 .glass-dark {
   background: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(70px);
@@ -677,6 +1043,41 @@ body {
   box-shadow:
     inset 0 1px 8px rgba(255, 255, 255, 0.5),
     0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* Safari repeatedly repaints a backdrop-filter while a parent is animating.
+   The panel fades/scales with a lightweight fill, then restores the glass. */
+@keyframes stats-panel-enter {
+  from {
+    opacity: 0;
+    transform: scaleY(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+.stats-panel-enter {
+  animation: stats-panel-enter 400ms var(--ease-out-strong) both;
+  will-change: transform, opacity;
+}
+
+.stats-panel-enter .glass-dark {
+  animation: stats-panel-glass 400ms step-end both;
+}
+
+@keyframes stats-panel-glass {
+  0%,
+  99% {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  100% {
+    backdrop-filter: blur(70px);
+    -webkit-backdrop-filter: blur(70px);
+  }
 }
 
 .maker-panel {
@@ -724,7 +1125,18 @@ body {
     opacity: 0.05;
   }
 }
+
+/* Keep the long meteor constellation below the desktop card deck. */
+@media (min-width: 768px) {
+  .problem-meteor-endpoint {
+    transform: translateY(clamp(40px, 3.5vw, 64px));
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .stats-panel-enter {
+    animation: none;
+  }
   .twinkle,
   .twinkle-soft {
     animation: none !important;

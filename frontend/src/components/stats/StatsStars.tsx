@@ -7,19 +7,34 @@ import star6 from '../../assets/Stats/star-6.svg'
 import star7 from '../../assets/Stats/star-7.svg'
 
 // 參賽數據電腦_星星閃爍（570:1341）：頁面底層的 7 顆星。設計稿裡這層是
-// 1423.368×4096.23、擺在 1440×4096 頁框的 (6, 88)，故換算成頁面百分比是
-// left 0.4167% / width 98.845% / top 2.1484% / height 100%（底部超出的
-// 2% 由頁面的 overflow-hidden 裁掉）。
-const LAYER_LEFT = (6 / 1440) * 100
-const LAYER_WIDTH = (1423.368 / 1440) * 100
-const LAYER_TOP = (88 / 4096) * 100
+// 1423.368×4096.23、擺在 1440×4096 頁框的 (6, 88)。
+const PAGE_W = 1440
+const LAYER_X = 6
+const LAYER_Y = 88
+const LAYER_W = 1423.368
+const LAYER_H = 4096.23
+
+// 星星的大小與位置一律只跟「頁面寬度」連動，完全不吃頁面高度：把設計稿的 px
+// 換成 cqw（星層掛 @container，故 1cqw = 頁面寬度的 1%），而不是用百分比 ——
+// top/height 的百分比會對到頁面高度。StatsView 現在已經把頁高照設計稿比例鎖死，
+// 兩者結果相同，但用 cqw 可以確保就算之後頁高又改成跟著內容長，星星也不會像
+// 以前那樣被壓扁 2.24 倍、或是展開時跟著位移。
+const cqw = (designPx: number) => `${((designPx / PAGE_W) * 100).toFixed(4)}cqw`
 
 // 每顆星的三層結構與 ProblemStars 相同，原因也一樣：
-//   1. 外層 = 設計稿量到的外框（旋轉後的 bounding box），用百分比定位；
+//   1. 外層 = 設計稿量到的外框（旋轉後的 bounding box），用 cqw 定位；
 //   2. 中層 = 未旋轉的原始框（innerW/innerH），旋轉與傾斜掛在這層；
 //   3. img  = 素材本身。素材的 viewBox 為了容納「星座光暈」(白色 drop shadow
 //      20/40/50) 而往外擴，所以要用負的 left/top 加上 >100% 的寬高把圖推回去，
 //      否則星星會縮成中間一小點。
+//
+// left/top/width/height 是星層座標系的百分比（left/width 對 1423.368、
+// top/height 對 4096.23），換算成 cqw 交給下面的 render 做。
+//
+// 注意：這組數字是專案沿用、經設計確認過的那一版，「不是」Figma 目前的值。實測
+// 兩者有 5 顆不一致，其中 570:1314 在 Figma 上的 x 已經被拖到 1422.9（= 幾乎整顆
+// 落在頁面右緣之外，畫面內只剩 11px），照抄會讓設計稿中最大的那顆星消失，所以維
+// 持這一版。要重新對 Figma 之前請先確認那顆是不是被誤拖出去了。
 interface Star {
   src: string
   left: number
@@ -124,7 +139,8 @@ const STARS: Star[] = [
     delay: 1.2,
   },
   {
-    // 570:1317 — 左下角，貼齊星層底部
+    // 570:1317 — 左下角，貼齊星層底部。星層比頁框高 88，故這顆算出來的 bottom
+    // 是負值（垂在頁面底緣之下），露出上半截。
     src: star6,
     left: 0,
     top: 95.6,
@@ -161,51 +177,55 @@ const STARS: Star[] = [
 
 export default function StatsStars() {
   return (
+    // inset-0 讓星層等於整個頁面框，@container 則讓裡面的 cqw 對到頁面寬度。
     <div
       aria-hidden
-      className="pointer-events-none absolute h-full"
-      style={{
-        left: `${LAYER_LEFT}%`,
-        top: `${LAYER_TOP}%`,
-        width: `${LAYER_WIDTH}%`,
-      }}
+      className="@container pointer-events-none absolute inset-0"
     >
-      {STARS.map((star) => (
-        <div
-          key={star.src}
-          className="absolute"
-          style={{
-            left: `${star.left}%`,
-            top: `${star.top}%`,
-            width: `${star.width}%`,
-            height: `${star.height}%`,
-          }}
-        >
+      {STARS.map((star) => {
+        // 先把星層座標系的百分比換回設計稿 px，再加上星層原點
+        const w = (star.width / 100) * LAYER_W
+        const h = (star.height / 100) * LAYER_H
+        const pageX = LAYER_X + (star.left / 100) * LAYER_W
+        const pageY = LAYER_Y + (star.top / 100) * LAYER_H
+        return (
           <div
+            key={star.src}
             className="absolute"
             style={{
-              left: `${(100 - star.innerW) / 2}%`,
-              top: `${(100 - star.innerH) / 2}%`,
-              width: `${star.innerW}%`,
-              height: `${star.innerH}%`,
-              transform: `rotate(${star.rotate}deg) skewX(${star.skew}deg)`,
+              left: cqw(pageX),
+              top: cqw(pageY),
+              width: cqw(w),
+              // 高度由寬度推出來，形狀才不會隨頁面高度變形
+              aspectRatio: `${w} / ${h}`,
             }}
           >
-            <img
-              src={star.src}
-              alt=""
-              className="animate-star-twinkle absolute max-w-none"
+            <div
+              className="absolute"
               style={{
-                left: `${star.imgLeft}%`,
-                top: `${star.imgTop}%`,
-                width: `${star.imgW}%`,
-                height: `${star.imgH}%`,
-                animationDelay: `${star.delay}s`,
+                left: `${(100 - star.innerW) / 2}%`,
+                top: `${(100 - star.innerH) / 2}%`,
+                width: `${star.innerW}%`,
+                height: `${star.innerH}%`,
+                transform: `rotate(${star.rotate}deg) skewX(${star.skew}deg)`,
               }}
-            />
+            >
+              <img
+                src={star.src}
+                alt=""
+                className="animate-star-twinkle absolute max-w-none"
+                style={{
+                  left: `${star.imgLeft}%`,
+                  top: `${star.imgTop}%`,
+                  width: `${star.imgW}%`,
+                  height: `${star.imgH}%`,
+                  animationDelay: `${star.delay}s`,
+                }}
+              />
+            </div>
           </div>
-        </div>
-      ))}
+        )
+      })}
     </div>
   )
 }
