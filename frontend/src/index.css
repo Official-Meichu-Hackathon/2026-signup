@@ -103,6 +103,10 @@ body {
 
 .home-page {
   overflow-anchor: none;
+  /* Decorative sparkles intentionally extend past their section canvases.
+     Keep that artwork from widening the document without creating a scroll
+     container that would interfere with the sticky vision section. */
+  overflow-x: clip;
 }
 
 .vision-mobile,
@@ -254,6 +258,14 @@ body {
 @media (max-width: 767px) {
   .awards-sparkle-canvas {
     display: none;
+  }
+
+  /* The mobile composition uses the 40%–100% range of each background.
+     Making that 60% crop fill the viewport preserves the original aspect
+     ratio without generating duplicate mobile assets. */
+  .home-background-image {
+    width: 166.6667%;
+    transform: translateX(-40%);
   }
 
   html,

@@ -182,7 +182,7 @@ function HeroPhoto({ progress }: { progress: MotionValue<number> }) {
   const filter = useTransform(
     progress,
     [HERO_APPEAR_START, HERO_APPEAR_END],
-    ['blur(25px)', 'blur(0px)'],
+    ['blur(25px) brightness(0.7)', 'blur(0px) brightness(0.7)'],
   )
   // 在照片輪播結束前完全不出現，時間一到才瞬間切換顯示（不是漸層淡入）
   const opacity = useTransform(progress, (p) => (p < HERO_APPEAR_START ? 0 : 1))
