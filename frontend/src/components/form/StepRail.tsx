@@ -67,8 +67,8 @@ export default function StepRail({
               index > 0 ? '-mt-px' : ''
             } ${
               isActive
-                ? 'z-20 w-20 pr-2 pl-4 md:w-52 md:pr-3 md:pl-9'
-                : `z-10 w-16 md:w-40 ${
+                ? 'z-20 w-[4rem] pr-2 pl-3 md:w-[10rem] md:pr-2.5 md:pl-6'
+                : `z-10 w-[3rem] md:w-[7.5rem] ${
                     isReached ? 'cursor-pointer' : 'cursor-default'
                   }`
             }`}
