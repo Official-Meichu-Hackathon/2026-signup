@@ -74,7 +74,7 @@ export default function FormShell({
           alt=""
           draggable={false}
           aria-hidden
-          className="twinkle pointer-events-none absolute top-[118rem] left-[6.5%] hidden w-[46.171px] rotate-[-10deg] drop-shadow-[0_10px_4px_rgba(0,0,0,0.25)] select-none md:block"
+          className="twinkle pointer-events-none absolute top-[118rem] left-[6.5%] hidden w-[2.8857rem] rotate-[-10deg] drop-shadow-[0_10px_4px_rgba(0,0,0,0.25)] select-none md:block"
           style={{ animation: 'twinkle 4.2s ease-in-out infinite 1.4s' }}
         />
         {/* Hero — the glowing title over the shared background layer */}
@@ -86,7 +86,7 @@ export default function FormShell({
         </section>
 
         {/* Content row — flush-left rail + card column, top-aligned. */}
-        <div className="relative z-10 mt-14 flex w-full items-start justify-start gap-2 pr-10 pb-24 pl-0 md:mx-auto md:mt-6 md:w-auto md:max-w-[1600px] md:gap-8 md:pr-12">
+        <div className="relative z-10 mt-14 flex w-full items-start justify-start gap-2 pr-10 pb-24 pl-0 md:mt-6 md:gap-8 md:pr-12">
           <StepRail
             activeSection={activeSection}
             reached={reached}
@@ -94,12 +94,16 @@ export default function FormShell({
             onActiveOffset={setRailOffset}
           />
 
-          {/* Card column — left-aligned so the rail→card gap stays constant at
-              every width. Card top lines up with the active rail tab via
-              --rail-offset. */}
+          {/* Card column — centred in the viewport, not against the rail, so
+              the gap opens up as the window widens. Margin is measured from the
+              column's own start (rail 13rem + gap 2rem) and floors at 0, so the
+              card falls back to sitting beside the rail rather than under it.
+              min-w holds it readable once there's room for it; below lg it
+              flexes freely instead, to stay inside the viewport. Card top lines
+              up with the active rail tab via --rail-offset. */}
           <div className="min-w-0 flex-1">
             <div
-              className="mt-[var(--rail-offset)] md:max-w-[1120px]"
+              className="mt-[var(--rail-offset)] md:ml-[max(0rem,calc((100vw-70rem)/2-15rem))] md:max-w-[70rem] lg:min-w-[40rem]"
               style={{ ['--rail-offset' as string]: `${railOffset}px` }}
             >
               {children}
@@ -115,7 +119,7 @@ export default function FormShell({
             alt=""
             draggable={false}
             aria-hidden
-            className="twinkle pointer-events-none absolute top-8 left-[32%] hidden w-[49.266px] rotate-[-150deg] drop-shadow-[0_10px_4px_rgba(0,0,0,0.25)] select-none md:block"
+            className="twinkle pointer-events-none absolute top-8 left-[32%] hidden w-[3.0791rem] rotate-[-150deg] drop-shadow-[0_10px_4px_rgba(0,0,0,0.25)] select-none md:block"
             style={{ animation: 'twinkle 3.4s ease-in-out infinite 2.1s' }}
           />
         </div>
