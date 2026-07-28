@@ -57,7 +57,10 @@ function HomeView() {
     <>
       <Navbar />
       <Home />
-      <div className="bg-[rgba(177,162,202,0.56)] shadow-[0px_10px_30px_0px_rgba(0,0,0,0.25),inset_0px_1px_8px_0px_rgba(255,255,255,0.5)] backdrop-blur-[35px]">
+      <div
+        data-nav-theme="light"
+        className="bg-[rgba(177,162,202,0.56)] shadow-[0px_10px_30px_0px_rgba(0,0,0,0.25),inset_0px_1px_8px_0px_rgba(255,255,255,0.5)] backdrop-blur-[35px]"
+      >
         <Footer />
       </div>
     </>

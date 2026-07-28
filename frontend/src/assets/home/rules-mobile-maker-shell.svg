@@ -1,6 +1,6 @@
 <svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="373" height="457" viewBox="0 0 373 457" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g id="Union" filter="url(#filter0_ddd_0_20)">
-<path d="M313 76C318.523 76 323 80.4772 323 86V393C323 398.523 318.523 403 313 403H60C54.4772 403 50 398.523 50 393V76H125V56C125 50.4772 129.477 46 135 46H212C217.523 46 222 50.4772 222 56V76H313Z" fill="#F4F5F5" fill-opacity="0.2" shape-rendering="crispEdges"/>
+<path d="M313 76C318.523 76 323 80.4772 323 86V393C323 398.523 318.523 403 313 403H60C54.4772 403 50 398.523 50 393V76H125V56C125 50.4772 129.477 46 135 46H212C217.523 46 222 50.4772 222 56V76H313Z" fill="#F4F5F5" fill-opacity="0.2" stroke="#F4F5F5" stroke-opacity="0.75" stroke-width="1" vector-effect="non-scaling-stroke"/>
 </g>
 <defs>
 <filter id="filter0_ddd_0_20" x="0" y="0" width="373" height="457" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">

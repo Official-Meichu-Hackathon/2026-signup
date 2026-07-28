@@ -246,7 +246,7 @@ export default function EventVision() {
       </div>
 
       <div className="vision-desktop sticky top-0 h-screen w-full overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 z-30 flex flex-col items-center justify-center gap-6 px-6 text-center">
+        <div className="pointer-events-none absolute inset-0 z-30 flex flex-col items-center justify-center gap-6 px-[clamp(60px,8vw,96px)] text-center">
           {/* <div>
             <p className="font-['Zen_Antique'] text-2xl text-[#f6f6f6] [text-shadow:0px_0px_20px_rgba(255,255,255,0.35),0px_4px_40px_rgba(255,255,255,0.2)] md:text-[35px] md:leading-[44px]">
               活動願景

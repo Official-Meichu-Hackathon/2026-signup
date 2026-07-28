@@ -77,7 +77,7 @@ export default function FloatingNav() {
   return (
     <nav
       tabIndex={0}
-      className="floating-nav group fixed bottom-10 left-6 z-50 outline-none"
+      className="floating-nav group fixed bottom-15 left-6 z-50 outline-none"
       style={cssVars}
     >
       <div

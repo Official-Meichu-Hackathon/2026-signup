@@ -26,6 +26,7 @@ const DEPARTMENTS = [
 ] as const
 
 const STAFF_MOBILE_ROW_TOPS = [0, 33, 63, 94, 125, 156, 186] as const
+const STAFF_MOBILE_EXPANDED_OFFSET = 53
 
 const STAFF_GLOWS: Record<(typeof DEPARTMENTS)[number], string> = {
   行政部: staffGlowAdmin,
@@ -97,9 +98,14 @@ export default function StaffAndThanks() {
     (typeof DEPARTMENTS)[number] | null
   >(null)
   const { photo, members } = STAFF[dept]
+  const mobileExpandedOffset =
+    mobileDept === null
+      ? 0
+      : STAFF_MOBILE_EXPANDED_OFFSET -
+        (3 - STAFF[mobileDept].members.length) * 14
 
   return (
-    <div className="staff-and-thanks mx-auto flex w-full max-w-[1177px] flex-col items-center gap-16 px-6 py-16 md:gap-[125px] md:px-[32px] md:py-0 xl:px-0">
+    <div className="staff-and-thanks mx-auto flex w-full flex-col items-center gap-16 px-[clamp(48px,8vw,96px)] py-16 md:gap-[125px] md:py-0">
       <div className="thanks-block flex flex-col items-center gap-8 text-center md:w-[570px] md:gap-[50px]">
         <p className="font-['Zen_Antique'] text-2xl text-[#b1a2ca] md:text-[35px] md:leading-[44px]">
           協辦單位
@@ -131,7 +137,10 @@ export default function StaffAndThanks() {
         <div className="h-[300px] w-full bg-[#f4f5f5] md:h-[491px]" />
       </div>
 
-      <div id="staff" className="w-full">
+      <div
+        id="staff"
+        className="flex w-full max-w-[1177px] flex-col items-center"
+      >
         <div className="staff-desktop flex w-full flex-col items-center gap-8 md:gap-[50px]">
           <SectionTitle>工作人員名單</SectionTitle>
           <div className="relative min-h-[407px] w-full">
@@ -200,6 +209,11 @@ export default function StaffAndThanks() {
             className={`staff-mobile-list ${
               mobileDept === null ? '' : 'has-expanded'
             }`}
+            style={
+              mobileDept === null
+                ? undefined
+                : { height: 221 + mobileExpandedOffset }
+            }
           >
             {DEPARTMENTS.map((department, index) => {
               const expanded = mobileDept === department
@@ -207,7 +221,9 @@ export default function StaffAndThanks() {
                 mobileDept === null ? -1 : DEPARTMENTS.indexOf(mobileDept)
               const rowTop =
                 STAFF_MOBILE_ROW_TOPS[index] +
-                (expandedIndex >= 0 && index > expandedIndex ? 47 : 0)
+                (expandedIndex >= 0 && index > expandedIndex
+                  ? mobileExpandedOffset
+                  : 0)
 
               return (
                 <div

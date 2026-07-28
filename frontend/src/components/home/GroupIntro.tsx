@@ -130,15 +130,15 @@ export default function GroupIntro() {
               <p className="font-noto w-[26px] shrink-0 text-center text-[25px] leading-[40px] font-semibold text-white">
                 組別介紹
               </p>
-              <GlassCard className="flex min-h-[334px] min-w-0 flex-1 flex-wrap items-center justify-center gap-[clamp(28px,3.75vw,54px)] px-[clamp(28px,4vw,57px)] py-[clamp(42px,5vw,72px)]">
+              <GlassCard className="flex min-h-[334px] min-w-0 flex-1 items-center gap-[clamp(16px,3.75vw,54px)] px-[clamp(20px,4vw,57px)] py-[clamp(32px,5vw,72px)]">
                 <img
                   src={image}
                   alt=""
                   loading="lazy"
                   decoding="async"
-                  className="h-[208px] w-[clamp(240px,35%,340px)] shrink-0 rounded-[41px] object-cover"
+                  className="h-[clamp(160px,14.44vw,208px)] w-[clamp(160px,29.5%,340px)] shrink-0 rounded-[clamp(28px,2.85vw,41px)] object-cover"
                 />
-                <p className="font-noto min-w-[260px] flex-1 text-[20px] leading-[32px] font-semibold text-white">
+                <p className="font-noto min-w-0 flex-1 text-[clamp(14px,1.389vw,20px)] leading-[clamp(22px,2.222vw,32px)] font-semibold text-white">
                   {intro}
                 </p>
               </GlassCard>
@@ -148,16 +148,16 @@ export default function GroupIntro() {
               <p className="font-noto w-[26px] shrink-0 text-center text-[25px] leading-[40px] font-semibold text-white">
                 工作坊
               </p>
-              <GlassCard className="flex min-h-[334px] min-w-0 flex-1 flex-wrap items-center gap-[clamp(28px,3.75vw,54px)] px-[clamp(28px,4vw,57px)] py-[63px]">
-                <div className="flex min-w-[260px] flex-1 flex-col gap-px">
-                  <p className="font-noto text-[20px] leading-[32px] font-semibold text-white">
+              <GlassCard className="flex min-h-[334px] min-w-0 flex-1 items-center gap-[clamp(16px,3.75vw,54px)] px-[clamp(20px,4vw,57px)] py-[clamp(32px,4.375vw,63px)]">
+                <div className="flex min-w-0 flex-1 flex-col gap-px">
+                  <p className="font-noto text-[clamp(14px,1.389vw,20px)] leading-[clamp(22px,2.222vw,32px)] font-semibold text-white">
                     {workshop}
                   </p>
-                  <p className="font-noto w-full text-right text-[20px] leading-[26px] font-light text-[#9fc2ff]">
+                  <p className="font-noto w-full text-right text-[clamp(14px,1.389vw,20px)] leading-[clamp(20px,1.806vw,26px)] font-light text-[#9fc2ff]">
                     點擊查詢詳細內容
                   </p>
                 </div>
-                <div className="h-[208px] w-[clamp(240px,35%,340px)] shrink-0 rounded-[41px] bg-white" />
+                <div className="h-[clamp(160px,14.44vw,208px)] w-[clamp(160px,29.5%,340px)] shrink-0 rounded-[clamp(28px,2.85vw,41px)] bg-white" />
               </GlassCard>
             </div>
           </div>

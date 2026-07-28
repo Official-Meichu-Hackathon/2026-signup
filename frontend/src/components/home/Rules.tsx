@@ -145,12 +145,14 @@ export default function Rules() {
                 <div className="absolute top-[24px] left-[19px] h-[63px] w-[167px] rounded-t-[30px] bg-[#d8d0e4]" />
                 <div className="absolute top-[24px] left-[184px] h-[63px] w-[233px] rounded-t-[30px] bg-[#b1a2ca]" />
                 <div
-                  className="absolute top-[-22px] left-[-31px] h-[120px] w-[330px] overflow-hidden"
+                  className="absolute top-[-22px] left-[-31px] h-[160px] w-[215px] overflow-hidden"
                   style={{
                     maskImage:
-                      'linear-gradient(to bottom, black 0%, black 48%, rgba(0,0,0,0.65) 68%, transparent 92%, transparent 100%)',
+                      'linear-gradient(to bottom, black 0%, black 48%, rgba(0,0,0,0.65) 68%, transparent 96%, transparent 100%), linear-gradient(to right, black 0%, black 80%, rgba(0,0,0,0.7) 90%, transparent 100%)',
+                    maskComposite: 'intersect',
                     WebkitMaskImage:
-                      'linear-gradient(to bottom, black 0%, black 48%, rgba(0,0,0,0.65) 68%, transparent 92%, transparent 100%)',
+                      'linear-gradient(to bottom, black 0%, black 48%, rgba(0,0,0,0.65) 68%, transparent 96%, transparent 100%), linear-gradient(to right, black 0%, black 80%, rgba(0,0,0,0.7) 90%, transparent 100%)',
+                    WebkitMaskComposite: 'source-in',
                   }}
                 >
                   <img
@@ -193,12 +195,14 @@ export default function Rules() {
                 <div className="absolute top-[23px] left-[25px] h-[63px] w-[167px] rounded-t-[30px] bg-[#b1a2ca]" />
                 <div className="absolute top-[22px] left-[192px] h-[64px] w-[233px] rounded-t-[30px] bg-[#d8d0e4]" />
                 <div
-                  className="absolute top-[-24px] left-[130px] h-[120px] w-[390px] overflow-hidden"
+                  className="absolute top-[-24px] left-[130px] h-[120px] w-[340px] overflow-hidden"
                   style={{
                     maskImage:
-                      'linear-gradient(to bottom, black 0%, black 48%, rgba(0,0,0,0.65) 68%, transparent 92%, transparent 100%)',
+                      'linear-gradient(to bottom, black 0%, black 48%, rgba(0,0,0,0.65) 68%, transparent 92%, transparent 100%), linear-gradient(to right, black 0%, black 84%, rgba(0,0,0,0.7) 90%, transparent 100%)',
+                    maskComposite: 'intersect',
                     WebkitMaskImage:
-                      'linear-gradient(to bottom, black 0%, black 48%, rgba(0,0,0,0.65) 68%, transparent 92%, transparent 100%)',
+                      'linear-gradient(to bottom, black 0%, black 48%, rgba(0,0,0,0.65) 68%, transparent 92%, transparent 100%), linear-gradient(to right, black 0%, black 84%, rgba(0,0,0,0.7) 90%, transparent 100%)',
+                    WebkitMaskComposite: 'source-in',
                   }}
                 >
                   <img
