@@ -403,7 +403,6 @@ export default function ProblemDeck() {
   const cardRectsBeforeLayout = useRef(new Map<string, DOMRect>())
   const cardAnimations = useRef<Animation[]>([])
   const [deckWidth, setDeckWidth] = useState(DECK_W)
-  const [isDeckAnimating, setIsDeckAnimating] = useState(false)
   const prevZoomed = useRef<number | null>(null)
 
   const captureCardRects = () => {
@@ -413,7 +412,6 @@ export default function ProblemDeck() {
         element.getBoundingClientRect(),
       ]),
     )
-    setIsDeckAnimating(true)
   }
 
   useLayoutEffect(() => {
@@ -461,7 +459,6 @@ export default function ProblemDeck() {
     const timer = window.setTimeout(() => {
       cardAnimations.current.forEach((animation) => animation.cancel())
       cardAnimations.current = []
-      setIsDeckAnimating(false)
     }, 710)
 
     return () => window.clearTimeout(timer)
@@ -600,7 +597,7 @@ export default function ProblemDeck() {
                 boxShadow: isZoomed
                   ? undefined
                   : `0 0 ${cq(px(44))} ${cq(px(12))} rgba(255,255,255,0.72)`,
-                willChange: isDeckAnimating ? 'transform, opacity' : undefined,
+                willChange: 'transform',
               }}
             >
               <img

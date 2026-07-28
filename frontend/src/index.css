@@ -1056,6 +1056,15 @@ body {
   mask-image: linear-gradient(to bottom, #000 42%, transparent 72%);
 }
 
+.stats-layer {
+  will-change: transform;
+}
+
+.glass-suspend .glass-dark {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
 .glass-dark {
   background: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(70px);
