@@ -35,8 +35,10 @@ import { trackSignUp } from '../lib/analytics'
 
 const CONTACT_EMAIL = '2026mchackathon@gmail.com'
 
-const CONSENT_PLACEHOLDER =
-  'Lorem ipsum dolor sit amet consectetur. Neque ac odio scelerisque magnis ultrices feugiat tortor. Gravida sed in euismod tortor ipsum facilisis lorem. Ultrices ac pellentesque ac tellus consectetur. Arcu amet maecenas commodo a consequat scelerisque. Bibendum phasellus semper id dignissim in nibh ultrices id ut. Nibh pellentesque aliquam quam egestas et. Morbi ac sit nulla aliquam. Pellentesque placerat nibh mauris sit donec. Sed semper diam consectetur tempor scelerisque consequat lectus eu.'
+const CONSENT_AGREE_LINE = '*我已詳細閱讀，並同意以上內容'
+
+// One PDF covering both consents, served from frontend/public/consent/.
+const CONSENT_PDF = '/consent/consent.pdf'
 
 interface SignupViewProps {
   onSuccess: () => void
@@ -93,8 +95,7 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
   )
 
   // 同意書
-  const [assentFirst, setAssentFirst] = useState('')
-  const [assentSecond, setAssentSecond] = useState('')
+  const [assent, setAssent] = useState('')
 
   // 其他
   const [lowIncomeProof, setLowIncomeProof] = useState<File | null>(null)
@@ -154,7 +155,7 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
     validateMaxLength(EXPERIENCE_MAX)(player.project) &&
     validateMaxLength(EXPERIENCE_MAX)(player.competitionExp)
 
-  const assentOk = assentFirst === '是' && assentSecond === '是'
+  const assentOk = assent === '是'
   // 清寒證明 upload is optional despite the design's ★.
   const otherOk = workshopAttendance !== '' && ceremonyAttendance !== ''
 
@@ -169,8 +170,7 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
         isCrossDomain,
         priorityOrder,
         players,
-        assentFirst,
-        assentSecond,
+        assent,
         lowIncomeProof,
         workshopAttendance,
         ceremonyAttendance,
@@ -392,18 +392,12 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
         requiredOk={assentOk}
       >
         <ChoiceQuestion
-          title="★個人資料搜集、處理及利用之告知暨同意書"
-          description={`${CONSENT_PLACEHOLDER}\n\n*我已詳細閱讀，並同意以上內容`}
+          title="★個資蒐集暨智財授權同意書"
+          pdf={CONSENT_PDF}
+          description={CONSENT_AGREE_LINE}
           options={['是']}
-          value={assentFirst}
-          onChange={setAssentFirst}
-        />
-        <ChoiceQuestion
-          title="★智慧財產權聲明暨授權同意書"
-          description={`${CONSENT_PLACEHOLDER}\n\n*我已詳細閱讀，並同意以上內容`}
-          options={['是']}
-          value={assentSecond}
-          onChange={setAssentSecond}
+          value={assent}
+          onChange={setAssent}
         />
       </FormStep>
 
