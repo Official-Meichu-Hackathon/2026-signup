@@ -36,10 +36,10 @@ export default function TextQuestion({
           if (showError && check(e.target.value)) setShowError(false)
         }}
         onBlur={() => setShowError(!check(value))}
-        className="text-darkblue placeholder-darkblue/40 focus:border-darkblue mx-[2%] mt-2 w-[96%] rounded-md border-[0.1875rem] border-[#B1A2CA] bg-[#D8D8D8] p-1.5 text-[0.6875rem] font-normal focus:outline-none md:mt-5 md:p-3 md:text-xl"
+        className="text-darkblue placeholder-darkblue/40 focus:border-darkblue mx-[2%] mt-2 w-[96%] rounded-md border-[0.1875rem] border-[#B1A2CA] bg-[#D8D8D8] p-1.5 text-[0.625rem] font-normal focus:outline-none md:mt-5 md:p-3 md:text-xl"
       />
       {showError && (
-        <p className="mx-4 mt-1.5 text-[0.5625rem] text-red-400 md:text-sm">
+        <p className="mx-4 mt-1.5 text-[0.5rem] text-red-400 md:text-sm">
           {invalidMessage}
         </p>
       )}
