@@ -35,7 +35,10 @@ const GROUPS: NavGroup[] = [
   {
     label: '報名方式',
     href: '/registration',
-    children: [{ label: '報名資訊', href: '/registration' }],
+    children: [
+      { label: '報名時程', href: '/registration#報名時程' },
+      { label: '報名資訊', href: '/registration' },
+    ],
   },
 ]
 
