@@ -108,29 +108,31 @@ export default function FileUpload({
   }
 
   return (
-    <div className="py-4 md:py-6">
-      <h3 className="text-base text-white md:text-lg">
+    <div className="py-2 md:py-6">
+      <h3 className="text-[0.625rem] text-white md:text-lg">
         <QuestionTitle title={title} />
       </h3>
       {description && (
-        <p className="mx-4 mt-2 whitespace-pre-line text-white/80">
+        <p className="mx-4 mt-1.5 text-[0.5rem] whitespace-pre-line text-white/80 md:mt-2 md:text-base">
           {description}
         </p>
       )}
 
       {error && (
         <div className="mx-4 mt-3 rounded-lg border border-red-400/40 bg-red-500/10 p-3">
-          <p className="text-sm text-red-300">{error}</p>
+          <p className="text-[0.5rem] text-red-300 md:text-sm">{error}</p>
         </div>
       )}
       {uploaded && (
         <div className="mx-4 mt-3 rounded-lg border border-green-400/40 bg-green-500/10 p-3">
-          <p className="text-sm text-green-300">檔案上傳成功！</p>
+          <p className="text-[0.5rem] text-green-300 md:text-sm">
+            檔案上傳成功！
+          </p>
         </div>
       )}
 
       <div
-        className={`mx-4 mt-3 rounded-2xl border-2 bg-[#F6F6F6] p-6 text-center transition-colors ${
+        className={`mx-4 mt-2 rounded-2xl border-2 bg-[#F6F6F6] p-4 text-center transition-colors md:mt-3 md:p-6 ${
           isUploading
             ? 'cursor-not-allowed border-[#B1A2CA]'
             : isDragging
@@ -162,17 +164,19 @@ export default function FileUpload({
         />
         {isUploading ? (
           <>
-            <span className="border-darkblue mx-auto mb-4 block h-12 w-12 animate-spin rounded-full border-b-2" />
-            <p className="text-darkblue text-lg">上傳中...</p>
+            <span className="border-darkblue mx-auto mb-3 block h-8 w-8 animate-spin rounded-full border-b-2 md:mb-4 md:h-12 md:w-12" />
+            <p className="text-darkblue text-[0.625rem] md:text-lg">
+              上傳中...
+            </p>
           </>
         ) : value ? (
-          <p className="text-darkblue text-lg">
+          <p className="text-darkblue text-[0.625rem] md:text-lg">
             檔案已選擇，點擊此區域可以重新選擇檔案
           </p>
         ) : (
           <>
             <svg
-              className="text-darkblue mx-auto mb-3 h-8 w-8"
+              className="text-darkblue mx-auto mb-2 h-6 w-6 md:mb-3 md:h-8 md:w-8"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -185,10 +189,10 @@ export default function FileUpload({
               <polyline points="17 8 12 3 7 8" />
               <line x1="12" y1="3" x2="12" y2="15" />
             </svg>
-            <p className="text-darkblue text-lg font-bold">
+            <p className="text-darkblue text-[0.625rem] font-bold md:text-lg">
               拖移檔案到這裡 或 點擊選擇檔案
             </p>
-            <p className="mt-2 text-base font-normal text-[#8f9cc4]">
+            <p className="mt-1.5 text-[0.5rem] font-normal text-[#8f9cc4] md:mt-2 md:text-base">
               支援格式：{accept.join(', ')}
               <br />
               檔案大小限制：{formatFileSize(maxSize)}
@@ -198,10 +202,12 @@ export default function FileUpload({
       </div>
 
       {value && (
-        <div className="mx-4 mt-4 flex items-center justify-between rounded-lg border border-white/10 bg-white/5 p-3">
+        <div className="mx-4 mt-2.5 flex items-center justify-between rounded-lg border border-white/10 bg-white/5 p-2.5 md:mt-4 md:p-3">
           <div>
-            <p className="font-medium text-white">{value.name}</p>
-            <p className="text-sm font-normal text-white/50">
+            <p className="text-[0.5625rem] font-medium text-white md:text-base">
+              {value.name}
+            </p>
+            <p className="text-[0.5rem] font-normal text-white/50 md:text-sm">
               {formatFileSize(value.size)}
               {uploaded && <span className="text-green-300"> ✓ 上傳完成</span>}
             </p>
@@ -210,7 +216,7 @@ export default function FileUpload({
             type="button"
             onClick={removeFile}
             disabled={isUploading}
-            className="cursor-pointer text-red-300 hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-50"
+            className="cursor-pointer text-[0.5625rem] text-red-300 hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-50 md:text-base"
           >
             移除
           </button>

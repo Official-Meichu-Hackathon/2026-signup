@@ -86,7 +86,7 @@ export default function FormShell({
         </section>
 
         {/* Content row — flush-left rail + card column, top-aligned. */}
-        <div className="relative z-10 mt-14 flex w-full items-start justify-start gap-2 pr-10 pb-24 pl-0 md:mt-6 md:gap-8 md:pr-12">
+        <div className="relative z-10 mt-14 flex w-full items-start justify-start gap-1.5 pr-4 pb-24 pl-0 md:mt-6 md:gap-8 md:pr-12">
           <StepRail
             activeSection={activeSection}
             reached={reached}
