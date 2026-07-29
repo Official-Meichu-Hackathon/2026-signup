@@ -36,6 +36,9 @@ const CONTENT_MS = 780 // 標題縮到頂端＋說明文字與連結浮現
 
 type Stage = 'idle' | 'fading' | 'reveal' | 'content'
 
+const MAKER_PROBLEM_DETAILS_URL =
+  'https://docs.google.com/document/d/10dB3iZReJZ-uT2fVgQWBuNdGp5iJ0w7UpmpnZbsIX44/edit?tab=t.0'
+
 // 星座光暈（Variant7 之前為原尺寸，Variant8 的字較小故光暈也按比例縮小）
 const glow = (scale: number) =>
   [
@@ -74,10 +77,7 @@ const ORG_LOGOS = [
 ]
 
 const PARAGRAPH = [
-  '在四個子題中，運用 AI、大數據、物聯網等技術，',
-  '針對市政服務提出創新解方，從智慧交通、公共安全到環境檢測，',
-  '打造更即時、便利、貼近市民需求的智慧應用，',
-  '共創友善高效的未來城市。',
+  '競賽主題：新竹市AI領航青年數位工具補助—提升數位工具資安防禦與行政效能創新方案',
 ]
 
 export default function MakerCta() {
@@ -253,8 +253,9 @@ export default function MakerCta() {
         {/* 詳細題目說明 >>（937:61388：中心 y 83.18%、三級標題 30/44）。
             TODO: 待主辦提供題目說明 PDF 的網址後換掉 href */}
         <a
-          href="#"
-          onClick={(event) => event.preventDefault()}
+          href={MAKER_PROBLEM_DETAILS_URL}
+          target="_blank"
+          rel="noopener noreferrer"
           className="font-noto text-periwinkle ease-out-strong absolute left-1/2 -translate-x-1/2 -translate-y-1/2 text-center font-semibold transition-all hover:underline"
           style={{
             top: pctY(447.2),
