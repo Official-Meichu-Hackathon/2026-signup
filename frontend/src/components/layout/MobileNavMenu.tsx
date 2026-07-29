@@ -142,7 +142,7 @@ export default function MobileNavMenu({
                   to={group.href}
                   onClick={onClose}
                   style={{ fontSize: labelSize }}
-                  className="font-noto-tc md:font-chiron flex flex-1 items-center self-stretch pl-4 font-normal text-white"
+                  className="font-noto-tc flex flex-1 items-center self-stretch pl-4 font-normal text-white"
                 >
                   {group.label}
                 </Link>
@@ -163,7 +163,7 @@ export default function MobileNavMenu({
                       to={child.href}
                       onClick={onClose}
                       style={{ fontSize: labelSize }}
-                      className="font-noto-tc md:font-chiron w-full pl-4 font-light text-white/90 hover:text-white md:font-normal"
+                      className="font-noto-tc w-full pl-4 font-light text-white/90 hover:text-white md:font-light"
                     >
                       {child.label}
                     </Link>
@@ -179,7 +179,7 @@ export default function MobileNavMenu({
               to={link.href}
               onClick={onClose}
               style={{ fontSize: labelSize }}
-              className="font-noto-tc md:font-chiron w-full pl-4 font-normal text-white"
+              className="font-noto-tc w-full pl-4 font-normal text-white"
             >
               {link.label}
             </Link>
