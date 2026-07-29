@@ -8,8 +8,7 @@ import iconMinus from '../../assets/Stats/icon-minus.svg'
 import carouselArrow from '../../assets/Stats/carousel-arrow.svg'
 import { TESTIMONIALS } from './testimonials'
 import { RESULT_PLATFORM_URL } from './resultPlatform'
-import StatsPieChart from './StatsPieChart'
-import { STATS_CHARTS } from './statsData'
+import statsChart from '../../assets/Stats/stats_chart.svg'
 
 // 參賽數據(電腦) 378:362。設計稿元件寬 1222.14，頁面上的 instance（378:632）
 // 放大到 1394（1440 版面左右各留 23）。故一律以元件座標系為基準，用 cq()
@@ -59,79 +58,6 @@ const barTitleGlow = [
   `0 ${cq(12.439)} ${cq(155.489)} rgba(255,255,255,0.5)`,
 ].join(', ')
 
-// 圓餅圖面板（Frame 39 378:422）：941×673.79 的深色圓角面板，四張圓餅並非
-// 整齊的 2×2，下排整體往左偏約半格，是設計稿刻意的錯落排列。座標與尺寸都
-// 換算成面板自身的百分比，面板縮放時才會整體等比跟著動。
-const PIE_PANEL_W = 940.998
-const PIE_PANEL_H = 673.792
-
-// 圓的直徑 = 設計稿 Frame 90–93（378:423 等）的邊長。
-const PIE_BOX = 239.467
-
-const px = (n: number) => `${((n / PIE_PANEL_W) * 100).toFixed(4)}%`
-const py = (n: number) => `${((n / PIE_PANEL_H) * 100).toFixed(4)}%`
-
-// 圓餅素材的 viewBox 是 478.935 見方，圓本身只占正中央的 239.467，四周留白是
-// 給 filter0_ddd 光暈用的。故整張圖要照 478.935 擺（= 圓的兩倍），再把左上角
-// 往回推一整圈留白，圓才會落在設計稿標定的位置與大小；直接照 239.467 擺會讓
-// 圓只剩設計稿的一半大。
-const PIE_SVG = 478.935
-
-// 圓心在 viewBox 裡是 (239.467, 229.889)：水平置中，垂直則因為兩層陰影的
-// dy=9.5787 讓 Figma 把匯出範圍往下擴，圓相對整張圖偏上，故上下留白不等寬。
-const PIE_PAD_X = 239.467 - PIE_BOX / 2
-const PIE_PAD_Y = 229.889 - PIE_BOX / 2
-const PIES = [
-  {
-    chart: STATS_CHARTS.grade,
-    label: '2025參賽者年級分布',
-    tag: '',
-    left: 250.265,
-    top: 92.406,
-    // 標題（378:439–442）：上排在圓餅上方、下排在圓餅下方
-    labelLeft: 175.571,
-    labelTop: 63.914,
-    labelWidth: 193.969,
-  },
-  {
-    chart: STATS_CHARTS.hackerDepartment,
-    label: '2025黑客組院系分布',
-    tag: '',
-    left: 604.487,
-    top: 97.796,
-    labelLeft: 542.883,
-    labelTop: 57.754,
-    labelWidth: 160.94,
-  },
-  {
-    chart: STATS_CHARTS.school,
-    label: '2025參賽者學校分布',
-    tag: '',
-    left: 87.015,
-    top: 352.682,
-    labelLeft: 198.672,
-    labelTop: 599.867,
-    labelWidth: 215.521,
-  },
-  {
-    chart: STATS_CHARTS.makerDepartment,
-    label: '2025創客組院系分布',
-    tag: '',
-    left: 434.307,
-    top: 352.682,
-    labelLeft: 616.808,
-    labelTop: 592.167,
-    labelWidth: 157.09,
-  },
-]
-
-const PIE_LABEL_SIZE = 20.021
-const PIE_LABEL_LEADING = 30.802
-
-// 感言區塊（黑客組感言電腦 570:1405、創客組感言電腦 570:1413，同一個元件）。
-// 元件框是 843.452×786.462，但卡片只占其中 y=166.258 起的 444.522——上下那
-// 兩段透明留白是設計稿拿來讓【黑客組】標題壓上去的，兩個 instance 因此在設計
-// 稿裡是互相重疊的。這裡只實作看得見的這一列，標題間距仍交給外層的 flex gap。
 const QUOTE_ROW_W = 843.452
 const QUOTE_CARD_W = 645.127
 const QUOTE_CARD_H = 444.522
@@ -235,49 +161,12 @@ function Collapsible({
 
 function PiePanel() {
   return (
-    // 圓餅素材放大到 478.935 後，光暈會溢出面板 12–47px；設計稿的 Frame 39
-    // 本身會裁切內容，故這裡也要 overflow-hidden，讓光暈收在圓角面板內。
-    <div
-      className="glass-dark relative mx-auto overflow-hidden"
-      style={{
-        width: pctW(PIE_PANEL_W),
-        ...ratio(PIE_PANEL_W, PIE_PANEL_H),
-        borderRadius: cq(40),
-      }}
-    >
-      {PIES.map((pie) => (
-        <div key={pie.label + pie.tag}>
-          <div
-            role="group"
-            aria-label={pie.chart.title}
-            className="absolute"
-            style={{
-              left: px(pie.left - PIE_PAD_X),
-              top: py(pie.top - PIE_PAD_Y),
-              width: px(PIE_SVG),
-              aspectRatio: '1 / 1',
-            }}
-          >
-            <StatsPieChart chart={pie.chart} />
-          </div>
-          <p
-            className="font-noto text-ink absolute text-center font-semibold"
-            style={{
-              left: px(pie.labelLeft),
-              top: py(pie.labelTop),
-              width: px(pie.labelWidth),
-              fontSize: cq(PIE_LABEL_SIZE),
-              lineHeight: cq(PIE_LABEL_LEADING),
-            }}
-          >
-            <span className="block">{pie.label}</span>
-            {pie.tag && (
-              <span className="text-periwinkle block">{pie.tag}</span>
-            )}
-          </p>
-        </div>
-      ))}
-    </div>
+    <img
+      src={statsChart}
+      alt="參賽者年級、黑客組科系、學校與創客組科系分布統計"
+      className="mx-auto block w-full"
+      style={{ aspectRatio: '1244 / 818' }}
+    />
   )
 }
 

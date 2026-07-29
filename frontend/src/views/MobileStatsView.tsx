@@ -14,7 +14,9 @@ import bgGradient from '../assets/Problems/bg-gradient.png'
 // 位移 —— 先前兩張漸層的 h-[52%]／h-[34%] 都是對「頁面高度」取百分比，內容一長
 // 背景就跟著抽長；頁高固定之後同一組百分比就變成純粹由寬度決定了。
 const PAGE_W = 390
-const PAGE_H = 1816
+// 手機統計圖改用完整設計稿 SVG 後，展開內容比原本的動態圓餅圖高 164px。
+// 保持所有既有定位不變，只延長背景畫布，避免成果平台卡片被裁切。
+const PAGE_H = 1980
 
 // 設計稿座標 → 頁框百分比。頁高已由寬度鎖死，故兩者都只跟寬度連動。
 const pctX = (n: number) => `${((n / PAGE_W) * 100).toFixed(4)}%`
