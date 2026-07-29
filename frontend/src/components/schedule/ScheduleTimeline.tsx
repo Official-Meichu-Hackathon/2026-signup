@@ -340,6 +340,11 @@ export default function ScheduleTimeline({
 
   const maskFor = (p: number) => {
     const pct = p * 100
+    if (device === 'mobile') {
+      return `linear-gradient(to bottom, black ${pct}%, transparent ${pct}%)`
+    }
+
+    // 桌面版維持原樣
     return `linear-gradient(to bottom, black ${Math.max(0, pct - 6)}%, transparent ${pct}%)`
   }
   // Soft-edged reveal (not a hard cut): fully visible above the furthest
@@ -450,6 +455,8 @@ export default function ScheduleTimeline({
             inset: line.box,
             WebkitMaskImage: lineMask,
             maskImage: lineMask,
+            willChange: 'transform', // 提示瀏覽器這個元素會變動，優化 GPU 處理
+            imageRendering: 'crisp-edges', // 某些瀏覽器有效
             // Only mobile's mask is a plain (non-motion) string that flips
             // once per day via React state — this transition is what makes
             // that read as a smooth auto-connect instead of an instant pop.
@@ -461,14 +468,213 @@ export default function ScheduleTimeline({
           }}
         >
           <div className="absolute" style={{ inset: line.bleed }}>
-            <img src={line.src} alt="" className="h-full w-full" />
+            {/* 👇 1. 如果是手機版 09/19 */}
+            {device === 'mobile' && selectedDay === '19' && (
+              <svg
+                viewBox="0 0 181 440"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-full w-full"
+              >
+                <g id="mobile-line-19">
+                  <g filter="url(#filter-shadow-19)">
+                    <path
+                      d="M78.7523 12.2231L35.7036 75.0859L61.9528 134.725L111.301 173.41L92.4019 224.989L13.6543 273.345L166.95 353.939L103.952 424.861"
+                      stroke="#D9D9D9"
+                      vectorEffect="non-scaling-stroke"
+                      strokeWidth="1.2" // 🌟 09/19 的粗細
+                    />
+                  </g>
+                </g>
+                <defs>
+                  <filter
+                    id="filter-shadow-19"
+                    x="-0.00155735"
+                    y="7.11679e-05"
+                    width="180.495"
+                    height="439.21"
+                    filterUnits="userSpaceOnUse"
+                    colorInterpolationFilters="sRGB"
+                  >
+                    <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                    <feColorMatrix
+                      in="SourceAlpha"
+                      type="matrix"
+                      values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                      result="hardAlpha"
+                    />
+                    <feOffset />
+                    <feGaussianBlur stdDeviation="0.5" />
+                    <feComposite in2="hardAlpha" operator="out" />
+                    <feColorMatrix
+                      type="matrix"
+                      values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.01 0"
+                    />
+                    <feBlend
+                      mode="normal"
+                      in2="BackgroundImageFix"
+                      result="effect1_dropShadow_0_1"
+                    />
+                    <feColorMatrix
+                      in="SourceAlpha"
+                      type="matrix"
+                      values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                      result="hardAlpha"
+                    />
+                    <feOffset dy="1.04997" />
+                    <feGaussianBlur stdDeviation="1.1" />
+                    <feComposite in2="hardAlpha" operator="out" />
+                    <feColorMatrix
+                      type="matrix"
+                      values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.01 0"
+                    />
+                    <feBlend
+                      mode="normal"
+                      in2="effect1_dropShadow_0_1"
+                      result="effect2_dropShadow_0_1"
+                    />
+                    <feColorMatrix
+                      in="SourceAlpha"
+                      type="matrix"
+                      values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                      result="hardAlpha"
+                    />
+                    <feOffset dy="1.04997" />
+                    <feGaussianBlur stdDeviation="2.6" />
+                    <feComposite in2="hardAlpha" operator="out" />
+                    <feColorMatrix
+                      type="matrix"
+                      values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                    />
+                    <feBlend
+                      mode="normal"
+                      in2="effect2_dropShadow_0_1"
+                      result="effect3_dropShadow_0_1"
+                    />
+                    <feBlend
+                      mode="normal"
+                      in="SourceGraphic"
+                      in2="effect3_dropShadow_0_1"
+                      result="shape"
+                    />
+                  </filter>
+                </defs>
+              </svg>
+            )}
+
+            {/* 👇 2. 如果是手機版 09/20 */}
+            {device === 'mobile' && selectedDay === '20' && (
+              <svg
+                viewBox="0 0 575 1986"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-full w-full"
+              >
+                <g id="mobile-line-20">
+                  <g filter="url(#filter-shadow-20)">
+                    <path
+                      d="M175.262 46.707L307.262 178.707L119.262 402.707L307.262 626.707L51.2617 914.707L175.262 1098.71L523.262 1254.71L279.262 1554.71L407.262 1930.71"
+                      stroke="#D9D9D9"
+                      vectorEffect="non-scaling-stroke"
+                      strokeWidth="1.5" // 🌟 09/20 的粗細 (可自行調整，例如 1.2 或 2)
+                    />
+                  </g>
+                </g>
+                <defs>
+                  <filter
+                    id="filter-shadow-20"
+                    x="0"
+                    y="0"
+                    width="574.859"
+                    height="1985.03"
+                    filterUnits="userSpaceOnUse"
+                    colorInterpolationFilters="sRGB"
+                  >
+                    <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                    <feColorMatrix
+                      in="SourceAlpha"
+                      type="matrix"
+                      values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                      result="hardAlpha"
+                    />
+                    <feOffset />
+                    <feGaussianBlur stdDeviation="0.5" />
+                    <feComposite in2="hardAlpha" operator="out" />
+                    <feColorMatrix
+                      type="matrix"
+                      values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"
+                    />
+                    <feBlend
+                      mode="normal"
+                      in2="BackgroundImageFix"
+                      result="effect1_dropShadow_0_1"
+                    />
+                    <feColorMatrix
+                      in="SourceAlpha"
+                      type="matrix"
+                      values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                      result="hardAlpha"
+                    />
+                    <feOffset dy="4" />
+                    <feGaussianBlur stdDeviation="10" />
+                    <feComposite in2="hardAlpha" operator="out" />
+                    <feColorMatrix
+                      type="matrix"
+                      values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                    />
+                    <feBlend
+                      mode="normal"
+                      in2="effect1_dropShadow_0_1"
+                      result="effect2_dropShadow_0_1"
+                    />
+                    <feColorMatrix
+                      in="SourceAlpha"
+                      type="matrix"
+                      values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                      result="hardAlpha"
+                    />
+                    <feOffset dy="4" />
+                    <feGaussianBlur stdDeviation="25" />
+                    <feComposite in2="hardAlpha" operator="out" />
+                    <feColorMatrix
+                      type="matrix"
+                      values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                    />
+                    <feBlend
+                      mode="normal"
+                      in2="effect2_dropShadow_0_1"
+                      result="effect3_dropShadow_0_1"
+                    />
+                    <feBlend
+                      mode="normal"
+                      in="SourceGraphic"
+                      in2="effect3_dropShadow_0_1"
+                      result="shape"
+                    />
+                  </filter>
+                </defs>
+              </svg>
+            )}
+
+            {/* 👇 3. 剩下的電腦版維持用 img 載入 */}
+            {device === 'desktop' && (
+              <img
+                src={line.src}
+                alt=""
+                className="h-full w-full"
+                style={{ imageRendering: 'crisp-edges' }}
+              />
+            )}
           </div>
         </motion.div>
 
         {EVENTS[device][selectedDay].map(({ time, label, dot, text }) => (
           <div key={time}>
+            {/* Mobile keeps a tighter glow than desktop's — at this dot's
+                small size, the same 10px blur read as a hazy blob covering
+                the whole dot rather than a crisp point with a soft halo. */}
             <span
-              className="absolute size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[0_0_10px_3px_rgba(255,255,255,0.65)]"
+              className={`absolute size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white ${device === 'mobile' ? 'shadow-[0_0_4px_1px_rgba(255,255,255,0.7)]' : 'shadow-[0_0_10px_3px_rgba(255,255,255,0.65)]'}`}
               style={{ top: `${dot.top}%`, left: `${dot.left}%` }}
             />
             {/* Figma's mobile mock (node 136:209) hand-breaks the two
