@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import staffAdmin from '../../assets/home/staff-admin.webp'
 import staffMarketing from '../../assets/home/staff-marketing.webp'
 import staffPr from '../../assets/home/staff-pr.webp'
@@ -84,6 +84,8 @@ const STAFF: Record<
   },
 }
 
+const STAFF_PHOTOS = Object.values(STAFF).map(({ photo }) => photo)
+
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
     <p className="staff-section-title text-center font-['Zen_Antique'] text-2xl text-[#b1a2ca] [text-shadow:0px_0px_20px_rgba(255,255,255,0.5),0px_4px_40px_rgba(255,255,255,0.5),0px_4px_50px_rgba(255,255,255,0.5)] md:text-[35px] md:leading-[44px]">
@@ -104,8 +106,16 @@ export default function StaffAndThanks() {
       : STAFF_MOBILE_EXPANDED_OFFSET -
         (3 - STAFF[mobileDept].members.length) * 14
 
+  useEffect(() => {
+    STAFF_PHOTOS.forEach((src) => {
+      const preloadImage = new Image()
+      preloadImage.src = src
+      void preloadImage.decode().catch(() => undefined)
+    })
+  }, [])
+
   return (
-    <div className="staff-and-thanks mx-auto flex w-full flex-col items-center gap-16 px-[clamp(48px,8vw,80px)] py-16 md:gap-[113px] md:py-0">
+    <div className="staff-and-thanks mx-auto flex w-full flex-col items-center gap-16 px-[clamp(48px,8vw,96px)] py-16 md:gap-[113px] md:py-0">
       <div className="thanks-block flex flex-col items-center gap-8 text-center md:w-[570px] md:gap-[50px]">
         <p className="font-['Zen_Antique'] text-2xl text-[#b1a2ca] md:text-[35px] md:leading-[44px]">
           協<span className="font-['Noto_Serif_TC'] font-bold">辦</span>單位
@@ -121,7 +131,11 @@ export default function StaffAndThanks() {
           特別感謝
         </p>
         <div className="flex flex-col gap-2 font-['Zen_Antique'] text-xl text-[#4664AC] md:text-[40px] md:leading-[44px]">
-          <p>國立陽明交通大學產學運籌中心</p>
+          <p>
+            國立陽明交通大學
+            <span className="font-['Noto_Serif_TC'] font-bold">產</span>
+            學運籌中心
+          </p>
           <p>國立陽明交通大學電機工程學系</p>
           <p>Colde Garage</p>
         </div>
@@ -185,7 +199,7 @@ export default function StaffAndThanks() {
               <img
                 src={photo}
                 alt={`${dept}合照`}
-                loading="lazy"
+                loading="eager"
                 decoding="async"
                 className="ml-[clamp(24px,5.84%,65px)] h-[251px] w-[clamp(230px,36.48%,406px)] shrink-0 rounded-[30px] object-cover"
               />
@@ -232,15 +246,16 @@ export default function StaffAndThanks() {
                     onClick={() => setMobileDept(expanded ? null : department)}
                   >
                     <span>{department}</span>
-                    <span aria-hidden>{expanded ? '−' : '+'}</span>
+                    <span className="staff-mobile-toggle" aria-hidden>
+                      <span className="staff-mobile-toggle-plus">+</span>
+                      <span className="staff-mobile-toggle-minus">−</span>
+                    </span>
                   </button>
-                  {expanded && (
-                    <div className="staff-mobile-members">
-                      {STAFF[department].members.map((line) => (
-                        <p key={line}>{line}</p>
-                      ))}
-                    </div>
-                  )}
+                  <div className="staff-mobile-members" aria-hidden={!expanded}>
+                    {STAFF[department].members.map((line) => (
+                      <p key={line}>{line}</p>
+                    ))}
+                  </div>
                 </div>
               )
             })}

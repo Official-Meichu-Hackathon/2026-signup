@@ -43,6 +43,8 @@ const CONTENT: Record<
   },
 }
 
+const GROUP_CARD_IMAGES = Object.values(CONTENT).map(({ image }) => image)
+
 function GlassCard({
   children,
   className = '',
@@ -163,6 +165,14 @@ export default function GroupIntro() {
   const { image, intro, workshop, workshopDetail, workshopDetailAlt } =
     CONTENT[tab]
 
+  useEffect(() => {
+    GROUP_CARD_IMAGES.forEach((src) => {
+      const preloadImage = new Image()
+      preloadImage.src = src
+      void preloadImage.decode().catch(() => undefined)
+    })
+  }, [])
+
   const openWorkshopDetail = (event: React.MouseEvent<HTMLButtonElement>) => {
     workshopTriggerRef.current = event.currentTarget
     setIsWorkshopDetailOpen(true)
@@ -191,7 +201,7 @@ export default function GroupIntro() {
             ))}
           </div>
           <div className="group-mobile-card">
-            <img src={image} alt="" loading="lazy" decoding="async" />
+            <img src={image} alt="" loading="eager" decoding="async" />
             <div className="group-mobile-copy">
               <p>{intro}</p>
               <p>{workshop}</p>
@@ -243,7 +253,7 @@ export default function GroupIntro() {
                 <img
                   src={image}
                   alt=""
-                  loading="lazy"
+                  loading="eager"
                   decoding="async"
                   className="h-[clamp(160px,14.44vw,208px)] w-[clamp(160px,29.5%,340px)] shrink-0 rounded-[clamp(28px,2.85vw,41px)] object-cover"
                 />
@@ -266,7 +276,7 @@ export default function GroupIntro() {
                     type="button"
                     onClick={openWorkshopDetail}
                     aria-haspopup="dialog"
-                    className="font-noto w-[164px] cursor-pointer text-right text-[clamp(14px,1.389vw,20px)] leading-[clamp(20px,1.806vw,26px)] font-light text-[#9fc2ff] transition-colors hover:text-white focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9fc2ff]"
+                    className="font-noto w-[164px] cursor-pointer text-left text-[clamp(14px,1.389vw,20px)] leading-[clamp(20px,1.806vw,26px)] font-light text-[#9fc2ff] transition-colors hover:text-white focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9fc2ff]"
                   >
                     點擊查詢詳細內容
                   </button>

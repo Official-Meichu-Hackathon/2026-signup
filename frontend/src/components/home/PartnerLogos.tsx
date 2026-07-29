@@ -11,6 +11,7 @@ import logoPhison from '../../assets/home/logo-phison.webp'
 import logoMaicoin from '../../assets/home/logo-maicoin.webp'
 import logoPixart from '../../assets/home/logo-pixart.webp'
 import logoCathay from '../../assets/home/logo-cathay.webp'
+import logoNchc from '../../assets/home/logo-nchc.webp'
 
 const partnerUrls = {
   logitech: 'https://www.logitech.com/zh-tw',
@@ -183,6 +184,19 @@ export default function PartnerLogos() {
         className="partner-block partner-sponsors mt-16 flex w-full flex-col items-center gap-6 md:mt-[187px] md:max-w-[617px] md:gap-[60px]"
       >
         <SectionTitle>贊助企業</SectionTitle>
+        <div className="sponsor-tier sponsor-tier-cathay flex w-[411px] flex-col items-start">
+          <SponsorTierLabel>Platinum</SponsorTierLabel>
+          <div className="relative aspect-[4096/1458] w-full">
+            <img
+              src={logoCathay}
+              alt="國泰金控 Cathay Financial Holdings"
+              loading="lazy"
+              decoding="async"
+              className="absolute inset-0 h-full w-full max-w-none object-cover"
+            />
+          </div>
+        </div>
+
         <div className="sponsor-tier-list flex w-full flex-col items-center gap-[87px]">
           <div className="sponsor-tier sponsor-tier-tsmc flex w-[305px] flex-col items-start">
             <SponsorTierLabel>Gold</SponsorTierLabel>
@@ -238,18 +252,18 @@ export default function PartnerLogos() {
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="sponsor-tier sponsor-tier-cathay flex w-[411px] flex-col items-start">
-          <SponsorTierLabel>Platinum</SponsorTierLabel>
-          <div className="relative aspect-[4096/1458] w-full">
-            <img
-              src={logoCathay}
-              alt="國泰金控 Cathay Financial Holdings"
-              loading="lazy"
-              decoding="async"
-              className="absolute inset-0 h-full w-full max-w-none object-cover"
-            />
-          </div>
+      <div className="partner-block partner-network mt-24 flex w-full flex-col items-center gap-6 md:mt-[113px] md:gap-[60px]">
+        <SectionTitle>網路贊助</SectionTitle>
+        <div className="h-[30px] w-[151px] md:h-[74px] md:w-[378px]">
+          <img
+            src={logoNchc}
+            alt="國家高速網路與計算中心 NCHC"
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover"
+          />
         </div>
       </div>
 

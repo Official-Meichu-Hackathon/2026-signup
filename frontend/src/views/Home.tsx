@@ -40,6 +40,16 @@ export default function Home() {
   const { scrollY } = useScroll()
 
   useEffect(() => {
+    // Mobile browsers resize the visual viewport whenever their address bar
+    // expands or collapses during a scroll. Treating that as a desktop window
+    // resize makes the anchor-restoration logic call scrollTo and visibly jump
+    // to another section. This preservation behavior is only needed for
+    // desktop resizing and browser zoom.
+    const desktopResizeMedia = window.matchMedia(
+      '(min-width: 768px) and (pointer: fine)',
+    )
+    if (!desktopResizeMedia.matches) return
+
     let resizeFrame = 0
     let scrollTimer = 0
     let settleFrame = 0
@@ -170,6 +180,11 @@ export default function Home() {
     function handleResize() {
       window.clearTimeout(scrollTimer)
       window.clearTimeout(resizeTimer)
+
+      if (!desktopResizeMedia.matches) {
+        activeResizeAnchor = null
+        return
+      }
 
       // Keep the first anchor for the entire zoom gesture. Using each
       // intermediate correction as the next baseline would accumulate a small
