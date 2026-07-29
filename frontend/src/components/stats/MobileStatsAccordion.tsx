@@ -239,7 +239,13 @@ function QuoteArrow({
   )
 }
 
-function TestimonialCarousel({ quotes }: { quotes: string[] }) {
+function TestimonialCarousel({
+  quotes,
+  attribution,
+}: {
+  quotes: string[]
+  attribution?: string
+}) {
   const [index, setIndex] = useState(0)
   const step = (delta: number) =>
     setIndex((index + delta + quotes.length) % quotes.length)
@@ -270,6 +276,20 @@ function TestimonialCarousel({ quotes }: { quotes: string[] }) {
         >
           {quotes[index]}
         </p>
+        {attribution && (
+          <p
+            className="font-noto absolute right-0 bottom-0 font-medium"
+            style={{
+              right: mq(21),
+              bottom: mq(9),
+              color: '#D8D8D8',
+              fontSize: mq(10),
+              lineHeight: mq(13),
+            }}
+          >
+            {attribution}
+          </p>
+        )}
       </div>
       <QuoteArrow side="next" onClick={() => step(1)} />
     </div>
@@ -360,14 +380,20 @@ export default function MobileStatsAccordion() {
             style={{ gap: mq(QUOTES_HEADING_GAP) }}
           >
             <GroupHeading>【黑客組】</GroupHeading>
-            <TestimonialCarousel quotes={TESTIMONIALS.hacker} />
+            <TestimonialCarousel
+              quotes={TESTIMONIALS.hacker}
+              attribution="-來自2024黑客組參賽者"
+            />
           </div>
           <div
             className="flex flex-col"
             style={{ gap: mq(QUOTES_HEADING_GAP) }}
           >
             <GroupHeading>【創客交流組】</GroupHeading>
-            <TestimonialCarousel quotes={TESTIMONIALS.maker} />
+            <TestimonialCarousel
+              quotes={TESTIMONIALS.maker}
+              attribution="-來自2024創客組參賽者"
+            />
           </div>
         </div>
       </Collapsible>
