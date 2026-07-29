@@ -115,7 +115,7 @@ export default function MobileNavMenu({
         aria-label="收起選單背景"
         tabIndex={open ? 0 : -1}
         onClick={onClose}
-        className={`fixed inset-0 z-30 cursor-default bg-black/35 transition-opacity duration-300 ${
+        className={`fixed inset-0 z-90 cursor-default bg-black/35 transition-opacity duration-300 ${
           open ? 'opacity-100' : 'pointer-events-none opacity-0'
         }`}
       />
@@ -129,7 +129,7 @@ export default function MobileNavMenu({
           paddingLeft: contentPaddingX,
           paddingRight: contentPaddingX,
         }}
-        className={`fixed top-0 right-0 z-40 h-full transform border-l border-white/40 pt-[76px] backdrop-blur-[5px] transition-transform duration-300 ease-out sm:pt-[84px] md:pt-[96px] ${
+        className={`fixed top-0 right-0 z-100 h-full transform border-l border-white/40 pt-[50px] backdrop-blur-[5px] transition-transform duration-300 ease-out sm:pt-[50px] md:pt-[50px] ${
           open ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
