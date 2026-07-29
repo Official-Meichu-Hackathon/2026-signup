@@ -105,7 +105,7 @@ export default function StaffAndThanks() {
         (3 - STAFF[mobileDept].members.length) * 14
 
   return (
-    <div className="staff-and-thanks mx-auto flex w-full flex-col items-center gap-16 px-[clamp(48px,8vw,96px)] py-16 md:gap-[125px] md:py-0">
+    <div className="staff-and-thanks mx-auto flex w-full flex-col items-center gap-16 px-[clamp(48px,8vw,80px)] py-16 md:gap-[113px] md:py-0">
       <div className="thanks-block flex flex-col items-center gap-8 text-center md:w-[570px] md:gap-[50px]">
         <p className="font-['Zen_Antique'] text-2xl text-[#b1a2ca] md:text-[35px] md:leading-[44px]">
           協<span className="font-['Noto_Serif_TC'] font-bold">辦</span>單位
