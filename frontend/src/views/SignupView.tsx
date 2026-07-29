@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import FormShell from '../components/form/FormShell'
 import { RAIL_SECTIONS, type Section } from '../components/form/railSections'
-import FormStep from '../components/form/FormStep'
+import FormStep, { type ScrollMode } from '../components/form/FormStep'
 import TextQuestion from '../components/form/TextQuestion'
 import ChoiceQuestion from '../components/form/ChoiceQuestion'
 import SortableQuestion from '../components/form/SortableQuestion'
@@ -66,6 +66,7 @@ function firstStepOfSection(section: Section, playerCount: number): number {
 
 export default function SignupView({ onSuccess }: SignupViewProps) {
   const [currentStep, setCurrentStep] = useState(1)
+  const [scrollMode, setScrollMode] = useState<ScrollMode>('smooth')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState(false)
 
@@ -186,11 +187,20 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
     }
   }
 
+  // 下一步 animates to the next card, rail jumps land on it without animating
+  // (the rail offset moves the card, so staying put isn't possible), and tab
+  // switches within 基本資料 keep the card where it is.
+  const goToStep = (step: number, mode: ScrollMode = 'smooth') => {
+    setScrollMode(mode)
+    setCurrentStep(step)
+  }
+
   const stepProps = {
     totalSteps,
     currentStep,
     isSubmitting,
-    onStepChange: setCurrentStep,
+    scrollMode,
+    onStepChange: goToStep,
     onSubmit: () => void submit(),
   }
 
@@ -205,7 +215,7 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
   )
   const goToSection = (section: Section) => {
     const target = firstStepOfSection(section, playerCount)
-    if (target <= currentStep) setCurrentStep(target)
+    if (target <= currentStep) goToStep(target, 'snap')
   }
 
   return (
@@ -258,10 +268,7 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
         <PlayerTabs
           playerCount={playerCount}
           activeIndex={currentStep - 2}
-          onSelect={(i) => {
-            const target = i + 2
-            if (target <= currentStep) setCurrentStep(target)
-          }}
+          onSelect={(i) => goToStep(i + 2, 'none')}
         />
       )}
 

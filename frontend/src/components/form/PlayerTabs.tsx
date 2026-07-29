@@ -7,7 +7,7 @@ interface PlayerTabsProps {
 }
 
 // Participant tab strip on top of the card during the 基本資料 stage. Active tab
-// is taller; navigation is backward-only.
+// is taller; any tab is selectable in either direction.
 
 export default function PlayerTabs({
   playerCount,
@@ -21,11 +21,11 @@ export default function PlayerTabs({
       // top; the tabs protrude above the card body. Tabs keep their natural
       // width and the strip is budgeted to 75% of the card — the fluid label
       // size below is derived from that share.
-      className="relative z-20 -mt-9 flex max-w-[75%] items-end gap-0 md:-mt-[4.875rem]"
+      // Height pinned to the active tab's so tab transitions don't shift the card.
+      className="relative z-20 -mt-9 flex h-9 max-w-[75%] items-end gap-0 md:-mt-[4.875rem] md:h-[4.875rem]"
     >
       {Array.from({ length: playerCount }, (_, index) => {
         const isActive = index === activeIndex
-        const isReachable = index <= activeIndex
         const label = `參賽者${PLAYER_ORDER_LABELS[index]}`
         return (
           <button
@@ -33,8 +33,7 @@ export default function PlayerTabs({
             type="button"
             aria-label={label}
             aria-current={isActive ? 'step' : undefined}
-            disabled={!isReachable}
-            onClick={() => isReachable && onSelect(index)}
+            onClick={() => onSelect(index)}
             // Glass tab, rounded top only so it merges into the card. Flush
             // stacking; active is taller with a brighter fill. Padding is on
             // the base class so both states stay the same width.
@@ -43,9 +42,7 @@ export default function PlayerTabs({
             } ${
               isActive
                 ? 'z-20 h-9 border-white/25 bg-black/30 shadow-[inset_0_1px_8px_rgba(255,255,255,0.3),0_0_28px_rgba(120,150,255,0.2)] md:h-[4.875rem]'
-                : `z-10 h-7 border-white/15 bg-black/45 shadow-[inset_0_1px_8px_rgba(255,255,255,0.18)] md:h-[3.5rem] ${
-                    isReachable ? 'cursor-pointer' : 'cursor-default'
-                  }`
+                : 'z-10 h-7 cursor-pointer border-white/15 bg-black/45 shadow-[inset_0_1px_8px_rgba(255,255,255,0.18)] md:h-[3.5rem]'
             }`}
           >
             {/* Sheen overlay (pointer-events-none). */}

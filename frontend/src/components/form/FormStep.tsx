@@ -1,6 +1,9 @@
 import { useEffect, useRef, type ReactNode } from 'react'
 import NextStepButton from './NextStepButton'
 
+// How the card reacts to becoming active: animate to it, jump to it, or stay put.
+export type ScrollMode = 'smooth' | 'snap' | 'none'
+
 interface FormStepProps {
   stepOrder: number
   totalSteps: number
@@ -8,6 +11,7 @@ interface FormStepProps {
   currentStep: number
   requiredOk: boolean
   isSubmitting: boolean
+  scrollMode: ScrollMode
   onStepChange: (step: number) => void
   onSubmit: () => void
   children: ReactNode
@@ -27,6 +31,7 @@ export default function FormStep({
   currentStep,
   requiredOk,
   isSubmitting,
+  scrollMode,
   onStepChange,
   onSubmit,
   children,
@@ -36,13 +41,13 @@ export default function FormStep({
   const isLastStep = stepOrder === totalSteps
 
   useEffect(() => {
-    if (isActive && stepOrder > 1) {
-      containerRef.current?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      })
-    }
-  }, [isActive, stepOrder])
+    const el = containerRef.current
+    if (!el || !isActive || stepOrder === 1 || scrollMode === 'none') return
+    el.scrollIntoView({
+      behavior: scrollMode === 'smooth' ? 'smooth' : 'instant',
+      block: 'start',
+    })
+  }, [scrollMode, isActive, stepOrder])
 
   const handleNext = () => {
     if (isLastStep) {
