@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import {
-  animate,
   motion,
   useMotionValue,
   useMotionValueEvent,
@@ -89,8 +88,8 @@ const LINE_20 = {
 }
 
 const TABS_20 = {
-  sat: { w: 9.975, h: 8.627, top: 0 },
-  sun: { w: 13.093, h: 8.627, top: 8.627 },
+  sat: { w: 9.975, h: 9.827, top: 0 },
+  sun: { w: 13.093, h: 9.827, top: 9.827 },
 }
 
 // Percentages read off the Figma frames (node 816:2013 for desktop, 136:209's
@@ -166,7 +165,7 @@ const EVENTS: Record<Device, Record<Day, EventItem[]>> = {
       },
       {
         time: '10:30-12:00',
-        label: 'Coding...... / 企業博覽會 / 娛樂交流活動',
+        label: 'Coding...... / 企業博覽會 / \n             娛樂交流活動',
         dot: { top: 46.58, left: 28.38 },
         text: { top: 45.32, left: 32.09 },
       },
@@ -190,7 +189,7 @@ const EVENTS: Record<Device, Record<Day, EventItem[]>> = {
       },
       {
         time: '19:30-21:00',
-        label: 'Coding...... / 娛樂交流活動',
+        label: `Coding...... / \n${' '.repeat(13)}娛樂交流活動`,
         dot: { top: 91.59, left: 56.41 },
         text: { top: 90.62, left: 60.06 },
       },
@@ -248,15 +247,15 @@ const TABS: Record<
 > = {
   desktop: {
     '19': {
-      sat: { w: 13.283, h: 10.016, top: 0 },
-      sun: { w: 10.121, h: 10.016, top: 10.016 },
+      sat: { w: 13.283, h: 11.216, top: 0 },
+      sun: { w: 10.121, h: 11.216, top: 11.216 },
     },
     '20': TABS_20,
   },
   mobile: {
     '19': {
-      sat: { w: 14.72, h: 10.03, top: 0 },
-      sun: { w: 11.21, h: 10.03, top: 10.06 },
+      sat: { w: 14.72, h: 11.23, top: 0 },
+      sun: { w: 11.21, h: 11.23, top: 11.26 },
     },
     '20': TABS_20,
   },
@@ -280,17 +279,20 @@ function DayTab({
       type="button"
       onClick={onClick}
       style={style}
-      className={`absolute overflow-clip rounded-tr-[65px] rounded-br-[65px] border shadow-[0_10px_30px_rgba(0,0,0,0.25)] backdrop-blur-[35px] transition-all duration-300 ease-out ${active ? 'border-white/30 bg-white/15' : 'border-white/20 bg-white/10'}`}
+      className={`absolute overflow-clip rounded-tr-[20px] rounded-br-[20px] border shadow-[0_10px_30px_rgba(0,0,0,0.25)] backdrop-blur-[14px] transition-all duration-300 ease-out ${active ? 'border-white/35 bg-white/20' : 'border-white/25 bg-white/12'}`}
     >
-      <div className="absolute inset-0 rounded-[inherit] shadow-[inset_0_1px_8px_rgba(255,255,255,0.5)]" />
+      <div className="absolute inset-0 rounded-[inherit] bg-gradient-to-br from-white/25 via-white/5 to-transparent shadow-[inset_0_1px_8px_rgba(255,255,255,0.5)]" />
       <p className="font-noto absolute top-[22.6%] left-1/2 -translate-x-1/2 text-center text-[clamp(0.75rem,2.08vw,1.875rem)] leading-[1.47] font-semibold whitespace-nowrap text-white">
         {date}
       </p>
       {/* Sized off the viewport (like the text), not the pill's own width —
           the pill's width differs between active/inactive states, but the
-          circle+label shouldn't shrink with it or the label overflows it. */}
-      <div className="absolute top-[52.2%] left-1/2 aspect-square w-[clamp(0.875rem,3.75vw,3.375rem)] -translate-x-1/2 rounded-full border border-white" />
-      <p className="font-zen absolute inset-x-0 top-[53.8%] text-center text-[clamp(0.328rem,1.39vw,1.25rem)] leading-[2.2] text-white">
+          circle+label shouldn't shrink with it or the label overflows it.
+          Right-aligned (not centered) — the label's own width matches the
+          circle's so its centered text still lands inside the circle
+          instead of drifting once the circle moved. */}
+      <div className="absolute top-[52.2%] right-[clamp(0.75rem,3vw,1.75rem)] aspect-square w-[clamp(0.875rem,3.75vw,3.375rem)] rounded-full border border-white" />
+      <p className="font-zen absolute top-[53.8%] right-[clamp(0.75rem,3vw,1.75rem)] w-[clamp(0.875rem,3.75vw,3.375rem)] text-center text-[clamp(0.328rem,1.39vw,1.25rem)] leading-[2.2] text-white">
         {day}
       </p>
     </button>
@@ -325,8 +327,7 @@ export default function ScheduleTimeline({
   // its own page.
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset:
-      device === 'mobile' ? ['start 35%', 'end 45%'] : ['start end', 'end end'],
+    offset: ['start end', 'end end'],
   })
   // Ratchets up with scrollYProgress but never back down, so scrolling back
   // up doesn't retract the line once it's been drawn — once connected, a
@@ -337,24 +338,6 @@ export default function ScheduleTimeline({
   const maxProgress19 = useMotionValue(0)
   const maxProgress20 = useMotionValue(0)
 
-  useEffect(() => {
-    const target = selectedDay === '19' ? maxProgress19 : maxProgress20
-    if (device === 'mobile') {
-      const controls = animate(target, 1, {
-        duration: 1.2,
-        ease: [0.25, 0.1, 0.25, 1],
-      })
-      return () => controls.stop()
-    } else {
-      const v = scrollYProgress.get()
-      if (v > target.get()) target.set(v)
-    }
-  }, [device, selectedDay, scrollYProgress, maxProgress19, maxProgress20])
-
-  useMotionValueEvent(scrollYProgress, 'change', (v) => {
-    const target = selectedDay === '19' ? maxProgress19 : maxProgress20
-    if (v > target.get()) target.set(v)
-  })
   const maskFor = (p: number) => {
     const pct = p * 100
     return `linear-gradient(to bottom, black ${Math.max(0, pct - 6)}%, transparent ${pct}%)`
@@ -364,7 +347,52 @@ export default function ScheduleTimeline({
   // as a comet trail drawing the constellation rather than a wipe.
   const lineMask19 = useTransform(maxProgress19, maskFor)
   const lineMask20 = useTransform(maxProgress20, maskFor)
-  const lineMask = selectedDay === '19' ? lineMask19 : lineMask20
+
+  useEffect(() => {
+    if (device === 'mobile') return
+    const target = selectedDay === '19' ? maxProgress19 : maxProgress20
+    const v = scrollYProgress.get()
+    if (v > target.get()) target.set(v)
+  }, [device, selectedDay, scrollYProgress, maxProgress19, maxProgress20])
+
+  useMotionValueEvent(scrollYProgress, 'change', (v) => {
+    if (device === 'mobile') return
+    const target = selectedDay === '19' ? maxProgress19 : maxProgress20
+    if (v > target.get()) target.set(v)
+  })
+
+  // Mobile screens run proportionally much taller relative to the timeline
+  // than desktop's, so tying the reveal to scroll position (like desktop)
+  // left too much of the page still scrollable with the line only partly
+  // drawn — auto-connect instead, independent of scroll. This is plain
+  // React state, not maxProgress19/20: useTransform's derived output never
+  // recomputed when maxProgress was set outside of useScroll's own update
+  // pump (confirmed by logging maxProgress's 'change' event firing while
+  // lineMask19/20's own 'change' event never did) — apparently that scroll-
+  // linked pipeline only re-evaluates chained transforms inside its own
+  // scroll-driven tick, not on an arbitrary manual `.set()`. Plain state
+  // sidesteps that entirely and re-renders through React as normal.
+  // Tracked per day, and only ever set to true (never back to false), so —
+  // matching desktop's ratchet — flipping between tabs doesn't replay the
+  // connect animation for a day that's already been shown once.
+  const [mobileConnected19, setMobileConnected19] = useState(false)
+  const [mobileConnected20, setMobileConnected20] = useState(false)
+  useEffect(() => {
+    if (device !== 'mobile') return
+    const setConnected =
+      selectedDay === '19' ? setMobileConnected19 : setMobileConnected20
+    const id = requestAnimationFrame(() => setConnected(true))
+    return () => cancelAnimationFrame(id)
+  }, [device, selectedDay])
+
+  const mobileConnected =
+    selectedDay === '19' ? mobileConnected19 : mobileConnected20
+  const lineMask =
+    device === 'mobile'
+      ? maskFor(mobileConnected ? 1 : 0)
+      : selectedDay === '19'
+        ? lineMask19
+        : lineMask20
 
   return (
     <div
@@ -403,19 +431,37 @@ export default function ScheduleTimeline({
         key={selectedDay}
         className="animate-fade-in pointer-events-none absolute inset-0"
       >
-        {/* Masked at the full-container scale (same 0~100% space as each
-            dot's `top`), wrapping the box+bleed-inset nesting the line art
-            itself needs for its drop-shadow bleed — keeps the mask's percent
-            values directly comparable to dot.top instead of needing a
-            conversion between the two coordinate spaces. */}
+        {/* The mask is applied directly on the box-inset div, not on an
+            inset-0 wrapper around it: line.box's own insets already expand
+            past the container's 0~100% where a variant's line art (and its
+            last dot) needs it — e.g. mobile 09/19's box bottom inset is
+            -6.15%, since its last dot sits at top:106.15%. Masking an
+            inset-0 ancestor instead clips that overflow away (the last
+            segment never got revealed), and *resizing* that ancestor to
+            compensate (an earlier attempt) re-based line.box's own
+            percentages on the resized ancestor instead of the container,
+            shifting the whole line out of alignment with the dots. Masking
+            the box div itself sidesteps both: its rendered box already
+            equals the true art bounds, so 0~100% of the mask always matches
+            0~100% of the actual content, however far it overflows. */}
         <motion.div
-          className="absolute inset-0"
-          style={{ WebkitMaskImage: lineMask, maskImage: lineMask }}
+          className="absolute"
+          style={{
+            inset: line.box,
+            WebkitMaskImage: lineMask,
+            maskImage: lineMask,
+            // Only mobile's mask is a plain (non-motion) string that flips
+            // once per day via React state — this transition is what makes
+            // that read as a smooth auto-connect instead of an instant pop.
+            // Desktop's is still a motion value driven frame-by-frame by
+            // scroll position, so it must stay untransitioned there or
+            // every scroll tick would lag behind the actual scroll.
+            transition:
+              device === 'mobile' ? 'mask-image 1.2s ease-out' : undefined,
+          }}
         >
-          <div className="absolute" style={{ inset: line.box }}>
-            <div className="absolute" style={{ inset: line.bleed }}>
-              <img src={line.src} alt="" className="h-full w-full" />
-            </div>
+          <div className="absolute" style={{ inset: line.bleed }}>
+            <img src={line.src} alt="" className="h-full w-full" />
           </div>
         </motion.div>
 
@@ -425,16 +471,13 @@ export default function ScheduleTimeline({
               className="absolute size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[0_0_10px_3px_rgba(255,255,255,0.65)]"
               style={{ top: `${dot.top}%`, left: `${dot.left}%` }}
             />
-            {/* Desktop: no wrap — there's always enough room past the
-                text's start position for even the longest label. Mobile
-                keeps the max-w-[40%] cap (and wraps): the two longest
-                labels genuinely need more width than mobile has left of
-                their start position, and the font is already at this
-                clamp's floor, so nowrap would just overflow invisibly
-                past the canvas's own overflow-hidden edge instead of
-                wrapping — worse than the wrap it's replacing. */}
+            {/* Figma's mobile mock (node 136:209) hand-breaks the two
+                longest labels at a specific "/" with the continuation line
+                indented under the label text. `\n` + NBSP indent in the
+                label string reproduces that break via `whitespace-pre-line`;
+                desktop's `nowrap` collapses the same `\n` back to a space. */}
             <p
-              className={`font-noto absolute w-max text-[clamp(0.6875rem,1.74vw,1.5625rem)] leading-[1.6] font-semibold text-white ${device === 'desktop' ? 'whitespace-nowrap' : 'max-w-[40%]'}`}
+              className={`font-noto absolute w-max text-[clamp(0.6875rem,1.74vw,1.5625rem)] leading-[1.6] font-semibold text-white ${device === 'desktop' ? 'whitespace-nowrap' : 'max-w-[58%] whitespace-pre-line'}`}
               style={{ top: `${text.top}%`, left: `${text.left}%` }}
             >
               {time}&nbsp;&nbsp;{label}
