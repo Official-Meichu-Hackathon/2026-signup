@@ -23,67 +23,74 @@ interface EventItem {
 // 09/20 has no mobile-specific mock in Figma, so both devices share it — its
 // artboard aspect ratio (1604x2156) happens to be close to the real mobile
 // 09/19 one, so reusing it doesn't reflow the page much when switching days.
+// Shifted down 12 points from the raw Figma-read numbers (see DAY20_Y_SHIFT
+// below) — at the original values, the first dot/label fell inside the day
+// tabs' own vertical span (TABS_20 occupies 0~19.654%), overlapping them.
+const DAY20_Y_SHIFT = 12
 const EVENTS_20: EventItem[] = [
   {
     time: '08:00-09:00',
     label: '參賽者簽到＋早餐',
-    dot: { top: 10.81, left: 25.75 },
-    text: { top: 9.98, left: 31.36 },
+    dot: { top: 10.81 + DAY20_Y_SHIFT, left: 25.75 },
+    text: { top: 9.98 + DAY20_Y_SHIFT, left: 31.36 },
   },
   {
     time: '09:00-11:00',
     label: 'Coding...... / 企業博覽會 / 娛樂交流活動',
-    dot: { top: 16.93, left: 33.97 },
-    text: { top: 16.65, left: 38.9 },
+    dot: { top: 16.93 + DAY20_Y_SHIFT, left: 33.97 },
+    text: { top: 16.65 + DAY20_Y_SHIFT, left: 38.9 },
   },
   {
     time: '11:00-12:00',
     label: '午餐',
-    dot: { top: 27.31, left: 22.26 },
-    text: { top: 26.48, left: 26.07 },
+    dot: { top: 27.31 + DAY20_Y_SHIFT, left: 22.26 },
+    text: { top: 26.48 + DAY20_Y_SHIFT, left: 26.07 },
   },
   {
     time: '11:20-12:30',
     label: 'Demo前置準備',
-    dot: { top: 37.69, left: 33.97 },
-    text: { top: 36.91, left: 38.4 },
+    dot: { top: 37.69 + DAY20_Y_SHIFT, left: 33.97 },
+    text: { top: 36.91 + DAY20_Y_SHIFT, left: 38.4 },
   },
   {
     time: '12:30-14:30',
     label: '黑客初賽',
-    dot: { top: 51.05, left: 18.02 },
-    text: { top: 50.73, left: 23.26 },
+    dot: { top: 51.05 + DAY20_Y_SHIFT, left: 18.02 },
+    text: { top: 50.73 + DAY20_Y_SHIFT, left: 23.26 },
   },
   {
     time: '11:50-15:10',
     label: '創客決賽',
-    dot: { top: 59.57, left: 25.75 },
-    text: { top: 58.69, left: 32.36 },
+    dot: { top: 59.57 + DAY20_Y_SHIFT, left: 25.75 },
+    text: { top: 58.69 + DAY20_Y_SHIFT, left: 32.36 },
   },
   {
     time: '15:30-17:30',
     label: '黑客決賽',
-    dot: { top: 66.81, left: 47.43 },
-    text: { top: 65.93, left: 51.42 },
+    dot: { top: 66.81 + DAY20_Y_SHIFT, left: 47.43 },
+    text: { top: 65.93 + DAY20_Y_SHIFT, left: 51.42 },
   },
   {
     time: '17:30-18:00',
     label: '評審、人氣獎結算',
-    dot: { top: 80.71, left: 32.23 },
-    text: { top: 80.38, left: 37.53 },
+    dot: { top: 80.71 + DAY20_Y_SHIFT, left: 32.23 },
+    text: { top: 80.38 + DAY20_Y_SHIFT, left: 37.53 },
   },
   {
     time: '18:10-20:00',
     label: '頒獎 / 抽獎 / 閉幕式',
-    dot: { top: 98.14, left: 40.2 },
-    text: { top: 97.81, left: 44.75 },
+    dot: { top: 98.14 + DAY20_Y_SHIFT, left: 40.2 },
+    text: { top: 97.81 + DAY20_Y_SHIFT, left: 44.75 },
   },
 ]
 
 const LINE_20 = {
   src: timelineLine20,
   aspect: '1604/2156',
-  box: '10.81% 52.56% 1.81% 18.02%',
+  // Top/bottom insets shifted by the same DAY20_Y_SHIFT as the dots above
+  // (translating the box down, not resizing it) so the line stays exactly
+  // on the dots instead of the box being re-scaled to a different height.
+  box: `${10.81 + DAY20_Y_SHIFT}% 52.56% ${1.81 - DAY20_Y_SHIFT}% 18.02%`,
   bleed: '-2.48% -10.93% -2.88% -10.86%',
 }
 
@@ -279,7 +286,7 @@ function DayTab({
       type="button"
       onClick={onClick}
       style={style}
-      className={`absolute overflow-clip rounded-tr-[20px] rounded-br-[20px] border shadow-[0_10px_30px_rgba(0,0,0,0.25)] backdrop-blur-[14px] transition-all duration-300 ease-out ${active ? 'border-white/35 bg-white/20' : 'border-white/25 bg-white/12'}`}
+      className={`absolute overflow-clip rounded-tr-[60px] rounded-br-[60px] border shadow-[0_10px_30px_rgba(0,0,0,0.25)] backdrop-blur-[14px] transition-all duration-300 ease-out ${active ? 'border-white/35 bg-white/20' : 'border-white/25 bg-white/12'}`}
     >
       <div className="absolute inset-0 rounded-[inherit] bg-gradient-to-br from-white/25 via-white/5 to-transparent shadow-[inset_0_1px_8px_rgba(255,255,255,0.5)]" />
       <p className="font-noto absolute top-[22.6%] left-1/2 -translate-x-1/2 text-center text-[clamp(0.75rem,2.08vw,1.875rem)] leading-[1.47] font-semibold whitespace-nowrap text-white">
@@ -288,11 +295,24 @@ function DayTab({
       {/* Sized off the viewport (like the text), not the pill's own width —
           the pill's width differs between active/inactive states, but the
           circle+label shouldn't shrink with it or the label overflows it.
-          Right-aligned (not centered) — the label's own width matches the
-          circle's so its centered text still lands inside the circle
-          instead of drifting once the circle moved. */}
-      <div className="absolute top-[52.2%] right-[clamp(0.75rem,3vw,1.75rem)] aspect-square w-[clamp(0.875rem,3.75vw,3.375rem)] rounded-full border border-white" />
-      <p className="font-zen absolute top-[53.8%] right-[clamp(0.75rem,3vw,1.75rem)] w-[clamp(0.875rem,3.75vw,3.375rem)] text-center text-[clamp(0.328rem,1.39vw,1.25rem)] leading-[2.2] text-white">
+          Anchored the same way as the date above (from the pill's own
+          center via left-1/2) plus a fixed rightward nudge, rather than a
+          fixed distance from the pill's right edge — the active/inactive
+          pill widths differ, so anchoring from the edge instead would slide
+          the circle relative to the (fixed-width, always-centered) date
+          text above it depending on which state is active. */}
+      <div
+        className="absolute top-[52.2%] left-1/2 aspect-square w-[clamp(0.875rem,3.75vw,3.375rem)] rounded-full border border-white"
+        style={{
+          transform: 'translateX(calc(-50% + clamp(0.5rem, 1.6vw, 1.1rem)))',
+        }}
+      />
+      <p
+        className="font-zen absolute top-[53.8%] left-1/2 w-[clamp(0.875rem,3.75vw,3.375rem)] text-center text-[clamp(0.328rem,1.39vw,1.25rem)] leading-[2.2] text-white"
+        style={{
+          transform: 'translateX(calc(-50% + clamp(0.5rem, 1.6vw, 1.1rem)))',
+        }}
+      >
         {day}
       </p>
     </button>
@@ -668,28 +688,39 @@ export default function ScheduleTimeline({
           </div>
         </motion.div>
 
-        {EVENTS[device][selectedDay].map(({ time, label, dot, text }) => (
-          <div key={time}>
-            {/* Mobile keeps a tighter glow than desktop's — at this dot's
-                small size, the same 10px blur read as a hazy blob covering
-                the whole dot rather than a crisp point with a soft halo. */}
-            <span
-              className={`absolute size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white ${device === 'mobile' ? 'shadow-[0_0_4px_1px_rgba(255,255,255,0.7)]' : 'shadow-[0_0_10px_3px_rgba(255,255,255,0.65)]'}`}
-              style={{ top: `${dot.top}%`, left: `${dot.left}%` }}
-            />
-            {/* Figma's mobile mock (node 136:209) hand-breaks the two
-                longest labels at a specific "/" with the continuation line
-                indented under the label text. `\n` + NBSP indent in the
-                label string reproduces that break via `whitespace-pre-line`;
-                desktop's `nowrap` collapses the same `\n` back to a space. */}
-            <p
-              className={`font-noto absolute w-max text-[clamp(0.6875rem,1.74vw,1.5625rem)] leading-[1.6] font-semibold text-white ${device === 'desktop' ? 'whitespace-nowrap' : 'max-w-[58%] whitespace-pre-line'}`}
-              style={{ top: `${text.top}%`, left: `${text.left}%` }}
-            >
-              {time}&nbsp;&nbsp;{label}
-            </p>
-          </div>
-        ))}
+        {/* 注意這裡多抓了一個 index 變數出來 */}
+        {EVENTS[device][selectedDay].map(
+          ({ time, label, dot, text }, index) => {
+            const isBigStar = !(index === 2 || index === 3 || index === 6)
+
+            return (
+              <div key={time}>
+                <span
+                  className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-white ${
+                    device === 'mobile'
+                      ? // 手機版的 大星星 vs 小星星
+                        isBigStar
+                        ? 'size-2 shadow-[0_0_8px_2px_rgba(255,255,255,0.65)]'
+                        : 'size-1 shadow-[0_0_4px_1px_rgba(255,255,255,0.4)]'
+                      : // 電腦版的 大星星 vs 小星星
+                        isBigStar
+                        ? 'size-3 shadow-[0_0_12px_4px_rgba(255,255,255,0.65)]'
+                        : 'size-1.5 shadow-[0_0_6px_2px_rgba(255,255,255,0.4)]'
+                  }`}
+                  style={{ top: `${dot.top}%`, left: `${dot.left}%` }}
+                />
+
+                {/* 原本的文字區塊維持不變 */}
+                <p
+                  className={`font-noto absolute w-max -translate-y-[0.8em] text-[clamp(0.6875rem,1.74vw,1.5625rem)] leading-[1.6] font-semibold text-white ${device === 'desktop' ? 'whitespace-nowrap' : 'max-w-[58%] whitespace-pre-line'}`}
+                  style={{ top: `${dot.top}%`, left: `${text.left}%` }}
+                >
+                  {time}&nbsp;&nbsp;{label}
+                </p>
+              </div>
+            )
+          },
+        )}
       </div>
     </div>
   )
