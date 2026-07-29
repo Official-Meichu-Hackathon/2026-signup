@@ -30,7 +30,7 @@ const GROUPS: NavGroup[] = [
     href: '/registration',
     children: [
       { label: '報名時程', href: '/registration#報名時程' },
-      { label: '報名資訊', href: '/registration' },
+      { label: '報名資訊', href: '/registration#報名資訊' },
     ],
   },
 ]
