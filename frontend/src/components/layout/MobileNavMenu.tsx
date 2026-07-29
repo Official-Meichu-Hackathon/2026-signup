@@ -12,13 +12,6 @@ interface NavGroup {
   children: NavLink[]
 }
 
-// Two collapsible sections (首頁 / 報名方式), each revealing their own
-// sub-links, plus three flat links that always show. Matches node 190:120's
-// three accordion states (closed / 首頁 open / 報名方式 open).
-// Sub-link hashes match the actual section ids rendered in Home.tsx /
-// RegistrationMethodView.tsx (see FloatingNav.tsx for the same id set used
-// by the desktop floating nav) — the previous Chinese-text hashes here never
-// matched any real id, so every link silently did nothing.
 const GROUPS: NavGroup[] = [
   {
     label: '首頁',
@@ -48,11 +41,6 @@ const LEAF_LINKS: NavLink[] = [
   { label: '參賽數據', href: '/stats' },
 ]
 
-// Fluid clamp(min, preferred, max) built from the two Figma frames (mobile:
-// 390px viewport → node 346:1263; desktop: 1440px viewport → node 190:120),
-// linearly interpolated between them instead of snapping at a `md:` breakpoint
-// — 注意事項.txt: "width height 盡量用 vw vh 來寫，不要寫死 (RWD 會出事)".
-// Capped at the desktop frame for the same reason as Footer (see index.css).
 const fluid = (minPx: number, maxPx: number) => {
   const minVw = 390
   const maxVw = 1440
@@ -61,36 +49,30 @@ const fluid = (minPx: number, maxPx: number) => {
   return `clamp(${minPx}px, ${intercept.toFixed(2)}px + ${(slope * 100).toFixed(4)}vw, ${maxPx}px)`
 }
 
-const rowHeight = fluid(37, 56)
-const rowPaddingX = fluid(13, 38)
-const labelSize = fluid(14, 24)
-const drawerWidth = fluid(280, 428)
+// Narrower drawer width to match design (node 190:120 / navbar對照圖2.png)
+const drawerWidth = fluid(290, 500)
+const rowHeight = fluid(38, 56)
+const contentPaddingX = fluid(38, 39)
+const labelSize = fluid(15, 22)
 
 function ToggleIcon({ expanded }: { expanded: boolean }) {
   return (
-    <svg viewBox="0 0 12 12" className="size-3 shrink-0 text-white">
-      <path
-        d="M1 6h10"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      {!expanded && (
-        <path
-          d="M6 1v10"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
+    <svg
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className="size-4 shrink-0 text-white transition-transform duration-200"
+    >
+      {expanded ? (
+        <path d="M3 8h10" strokeLinecap="round" />
+      ) : (
+        <path d="M8 3v10M3 8h10" strokeLinecap="round" />
       )}
     </svg>
   )
 }
 
-// Dividers mark boundaries between rows, except between a group's own
-// children — those stack with no line between them, only picking one back up
-// after the last child (before the next section). Group headers and leaf
-// links always keep their line, expanded or not.
 function Row({
   children,
   onClick,
@@ -102,10 +84,10 @@ function Row({
 }) {
   const style = {
     height: rowHeight,
-    paddingLeft: rowPaddingX,
-    paddingRight: rowPaddingX,
   }
-  const className = `flex w-full items-center justify-between text-left ${divider ? 'border-b border-white/30' : ''}`
+  const className = `flex w-full items-center justify-between text-left ${
+    divider ? 'border-b border-white' : ''
+  }`
   return onClick ? (
     <button type="button" onClick={onClick} style={style} className={className}>
       {children}
@@ -117,11 +99,6 @@ function Row({
   )
 }
 
-// Slides in from the right as a fixed-width overlay panel (not a full-width
-// dropdown pushed down from the header) — matches the reference screenshot,
-// where the drawer is a translucent/blurred overlay on top of the page (not
-// an opaque panel), covering only the right side of the viewport, with no
-// separate close ("X") icon — the hamburger button itself just toggles it.
 export default function MobileNavMenu({
   open,
   onClose,
@@ -138,28 +115,34 @@ export default function MobileNavMenu({
         aria-label="收起選單背景"
         tabIndex={open ? 0 : -1}
         onClick={onClose}
-        className={`fixed inset-0 z-30 cursor-default bg-gray-500/40 transition-opacity duration-300 ${open ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+        className={`fixed inset-0 z-30 cursor-default bg-black/35 transition-opacity duration-300 ${
+          open ? 'opacity-100' : 'pointer-events-none opacity-0'
+        }`}
       />
       <nav
         aria-hidden={!open}
         style={{
           backgroundImage:
-            'linear-gradient(146.2114deg, rgba(244, 244, 244, 0.1) 18.297%, rgba(59, 94, 168, 0.06) 100%)',
+            'linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.05) 100%)',
           width: drawerWidth,
           maxWidth: '100%',
+          paddingLeft: contentPaddingX,
+          paddingRight: contentPaddingX,
         }}
-        className={`fixed top-0 right-0 z-40 h-full transform pt-20 backdrop-blur-[28px] transition-transform duration-300 ease-out ${open ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed top-0 right-0 z-40 h-full transform border-l border-white/40 pt-[76px] backdrop-blur-[5px] transition-transform duration-300 ease-out sm:pt-[84px] md:pt-[96px] ${
+          open ? 'translate-x-0' : 'translate-x-full'
+        }`}
       >
         {GROUPS.map((group) => {
           const expanded = openGroup === group.label
           return (
             <div key={group.label}>
-              <Row>
+              <Row divider={true}>
                 <Link
                   to={group.href}
                   onClick={onClose}
                   style={{ fontSize: labelSize }}
-                  className="font-noto-tc md:font-chiron flex flex-1 items-center self-stretch font-bold text-white md:font-[800]"
+                  className="font-noto-tc md:font-chiron flex flex-1 items-center self-stretch pl-4 font-normal text-white"
                 >
                   {group.label}
                 </Link>
@@ -168,22 +151,19 @@ export default function MobileNavMenu({
                   aria-expanded={expanded}
                   aria-label={`${expanded ? '收合' : '展開'}${group.label}選單`}
                   onClick={() => setOpenGroup(expanded ? null : group.label)}
-                  className="-mx-3 flex shrink-0 items-center self-stretch px-3"
+                  className="-mr-2 flex shrink-0 items-center self-stretch px-2 text-white/90 hover:text-white"
                 >
                   <ToggleIcon expanded={expanded} />
                 </button>
               </Row>
               {expanded &&
-                group.children.map((child, i) => (
-                  <Row
-                    key={child.label}
-                    divider={i === group.children.length - 1}
-                  >
+                group.children.map((child) => (
+                  <Row key={child.label} divider={false}>
                     <Link
                       to={child.href}
                       onClick={onClose}
                       style={{ fontSize: labelSize }}
-                      className="font-noto-tc md:font-chiron w-full font-light text-white md:font-normal"
+                      className="font-noto-tc md:font-chiron w-full pl-4 font-light text-white/90 hover:text-white md:font-normal"
                     >
                       {child.label}
                     </Link>
@@ -192,13 +172,14 @@ export default function MobileNavMenu({
             </div>
           )
         })}
+
         {LEAF_LINKS.map((link) => (
           <Row key={link.label}>
             <Link
               to={link.href}
               onClick={onClose}
               style={{ fontSize: labelSize }}
-              className="font-noto-tc md:font-chiron w-full font-bold text-white md:font-[800]"
+              className="font-noto-tc md:font-chiron w-full pl-4 font-normal text-white"
             >
               {link.label}
             </Link>
