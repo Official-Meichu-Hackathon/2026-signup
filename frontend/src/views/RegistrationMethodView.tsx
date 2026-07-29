@@ -216,7 +216,11 @@ const FAQ_SECTIONS: FaqSection[] = [
           為保護梅竹黑客松協辦企業之權益，參賽者必須配合參賽之企業組別所提出比賽過程之保密協定簽署，若無法配合企業之保密協定，將取消參賽資格。
         </li>
         <li>
-          得獎同學需將作品上傳至<LegalLink>梅竹黑客松成果存放平台</LegalLink>。
+          得獎同學需將作品上傳至
+          <LegalLink href="https://discordapp.com/channels/1458723060487028758/1519006739427623034/1532049671940472986">
+            梅竹黑客松成果存放平台
+          </LegalLink>
+          。
         </li>
       </List>
     ),
