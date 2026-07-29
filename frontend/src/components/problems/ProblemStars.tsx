@@ -1,9 +1,6 @@
 import { useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 import star1 from '../../assets/Problems/star-1.svg'
-import star2 from '../../assets/Problems/star-2.svg'
 import star3 from '../../assets/Problems/star-3.svg'
-import star4 from '../../assets/Problems/star-4.svg'
-import star5 from '../../assets/Problems/star-5.svg'
 import figmaStar1 from '../../assets/Problems/figma-star-1.svg'
 import figmaStar2 from '../../assets/Problems/figma-star-2.svg'
 import figmaStar3 from '../../assets/Problems/figma-star-3.svg'
@@ -54,22 +51,6 @@ const LEGACY_STARS: OverflowStar[] = [
     delay: 0,
   },
   {
-    src: star2,
-    left: 73.67,
-    top: 86.19,
-    width: 26.3,
-    height: 10.29,
-    innerW: 48.31,
-    innerH: 118.54,
-    rotate: 140.87,
-    skew: 27.55,
-    imgLeft: -28.6,
-    imgTop: -18.67,
-    imgW: 157.2,
-    imgH: 140.58,
-    delay: 1.2,
-  },
-  {
     src: star3,
     left: 15.25,
     top: 8.66,
@@ -84,38 +65,6 @@ const LEGACY_STARS: OverflowStar[] = [
     imgW: 213.64,
     imgH: 242.85,
     delay: 2.4,
-  },
-  {
-    src: star4,
-    left: 74.69,
-    top: 92,
-    width: 14.74,
-    height: 5.7,
-    innerW: 68.45,
-    innerH: 87.41,
-    rotate: 40.77,
-    skew: -35.07,
-    imgLeft: -35.99,
-    imgTop: -45.69,
-    imgW: 171.98,
-    imgH: 199.33,
-    delay: 0.6,
-  },
-  {
-    src: star5,
-    left: 93.87,
-    top: 92.39,
-    width: 6.13,
-    height: 7.61,
-    innerW: 114.87,
-    innerH: 57.2,
-    rotate: -78.77,
-    skew: -30.65,
-    imgLeft: -51.58,
-    imgTop: -52.29,
-    imgW: 203.16,
-    imgH: 213.68,
-    delay: 1.8,
   },
 ]
 
@@ -407,12 +356,10 @@ export default function ProblemStars() {
       className="pointer-events-none absolute top-[7.222vw] left-[2.22%] aspect-[1376.367/2020.722] w-[95.58%]"
     >
       {METEOR_LINES.map((line, index) => (
-        <div
-          key={line.src}
-          className="absolute"
-          style={lineStyles[index] ?? { opacity: 0 }}
-        >
-          <img src={line.src} alt="" className="block size-full max-w-none" />
+        <div key={line.src} className="absolute inset-0">
+          <div className="absolute" style={lineStyles[index] ?? { opacity: 0 }}>
+            <img src={line.src} alt="" className="block size-full max-w-none" />
+          </div>
         </div>
       ))}
       {LEGACY_STARS.map((star) => (

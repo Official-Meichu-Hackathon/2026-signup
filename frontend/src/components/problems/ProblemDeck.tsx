@@ -584,7 +584,7 @@ export default function ProblemDeck() {
                 if (element) cardRefs.current.set(problem.sponsor, element)
                 else cardRefs.current.delete(problem.sponsor)
               }}
-              className={`absolute max-w-[calc(100vw-3rem)] overflow-hidden transition-transform duration-200 ${
+              className={`absolute max-w-[calc(100vw-3rem)] overflow-hidden transition-[transform,box-shadow] duration-200 ${
                 isZoomed ? '@container' : 'hover:-translate-y-2'
               }`}
               style={{

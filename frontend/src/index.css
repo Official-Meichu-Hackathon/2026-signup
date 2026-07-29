@@ -1047,23 +1047,7 @@ body {
 
 /* Safari repeatedly repaints a backdrop-filter while a parent is animating.
    The panel fades/scales with a lightweight fill, then restores the glass. */
-@keyframes stats-panel-enter {
-  from {
-    opacity: 0;
-    transform: scaleY(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: scaleY(1);
-  }
-}
-
-.stats-panel-enter {
-  animation: stats-panel-enter 400ms var(--ease-out-strong) both;
-  will-change: transform, opacity;
-}
-
-.stats-panel-enter .glass-dark {
+.stats-panel-glass-transition .glass-dark {
   animation: stats-panel-glass 400ms step-end both;
 }
 
@@ -1126,17 +1110,15 @@ body {
   }
 }
 
-/* Keep the long meteor constellation below the desktop card deck. */
+/* Keep the long meteor constellation clear of both the card deck and footer. */
 @media (min-width: 768px) {
+  .problem-meteor-line,
   .problem-meteor-endpoint {
-    transform: translateY(clamp(40px, 3.5vw, 64px));
+    transform: translateY(clamp(-340px, -20vw, -296px));
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .stats-panel-enter {
-    animation: none;
-  }
   .twinkle,
   .twinkle-soft {
     animation: none !important;

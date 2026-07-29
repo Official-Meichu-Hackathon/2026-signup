@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
+import { useGlassSuspend } from './useGlassSuspend'
 import barStats from '../../assets/Stats/bar-collapsed-1.svg'
 import barQuotes from '../../assets/Stats/bar-collapsed-2.svg'
 import cardLink from '../../assets/Stats/card-link.svg'
@@ -212,37 +213,6 @@ function AccordionBar({
   )
 }
 
-// While the row height animates, every glass surface on the page either
-// resizes (the panel being revealed) or moves (the bars and footer sliding
-// down), so its backdrop-filter blur would be recomputed on every frame —
-// that, not the height animation itself, is what makes the toggle stutter.
-// Same Safari/Chrome behaviour Charlie worked around in stats-panel-glass;
-// here the blur is suspended for the transition and restored at rest.
-const GLASS_SUSPEND_CLASS = 'glass-suspend'
-const COLLAPSE_MS = 500
-let glassSuspendCount = 0
-
-function useGlassSuspend(isOpen: boolean) {
-  const mounted = useRef(false)
-  useEffect(() => {
-    if (!mounted.current) {
-      mounted.current = true
-      return
-    }
-    const root = document.documentElement
-    glassSuspendCount++
-    root.classList.add(GLASS_SUSPEND_CLASS)
-    const release = () => {
-      if (--glassSuspendCount === 0) root.classList.remove(GLASS_SUSPEND_CLASS)
-    }
-    const timer = window.setTimeout(release, COLLAPSE_MS + 50)
-    return () => {
-      window.clearTimeout(timer)
-      release()
-    }
-  }, [isOpen])
-}
-
 function Collapsible({
   isOpen,
   children,
@@ -414,6 +384,12 @@ export default function StatsAccordion() {
 
   // 收合時面板要互相重疊（見 STACK_STEP）；展開時讓出完整高度，內容才不會
   // 被下一塊面板蓋住。
+  //
+  // 這個負 margin 必須跟 Collapsible 的高度動畫「同時、同曲線」漸變。先前它是
+  // 瞬間切換的：一按收合，marginBottom 立刻從 0 跳到負值，下面的內容瞬移上去
+  // 一百多 px，接著高度才慢慢收 —— 那一下就是使用者看到的抖動。故下面兩塊
+  // 都加上 transition-[margin-bottom] duration-500，與 Collapsible 的
+  // duration-500 用同一組 Tailwind 預設緩動，兩段位移才會疊成一次平滑的收合。
   const overlap = (height: number, isOpen: boolean) =>
     isOpen ? '0px' : cq(STACK_STEP - height)
 
@@ -421,7 +397,7 @@ export default function StatsAccordion() {
     <div className="@container w-full max-w-[1394px]">
       {/* 後面的面板要疊在前一塊之上，故 z-index 遞增 */}
       <div
-        className="stats-layer relative z-[1]"
+        className="stats-layer relative z-[1] transition-[margin-bottom] duration-500"
         style={{ marginBottom: overlap(H_BAR_STATS, openStats) }}
       >
         <AccordionBar
@@ -445,7 +421,7 @@ export default function StatsAccordion() {
       </Collapsible>
 
       <div
-        className="stats-layer relative z-[2]"
+        className="stats-layer relative z-[2] transition-[margin-bottom] duration-500"
         style={{ marginBottom: overlap(H_BAR_QUOTES, openQuotes) }}
       >
         <AccordionBar

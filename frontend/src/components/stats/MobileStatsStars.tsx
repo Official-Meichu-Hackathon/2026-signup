@@ -9,6 +9,14 @@ import star7 from '../../assets/Stats/mobile-stars/star-7.svg'
 const DESIGN_WIDTH = 398.385
 const DESIGN_HEIGHT = 1146.491
 
+// 星層在設計稿頁框（165:1204，390×1816）裡是擺在 (-4, 53) 的，先前寫死 top-0
+// left-0 等於整層往左上偏了。位置一律換算成頁框寬度的百分比：高度由 aspect-ratio
+// 從寬度推導，故整層只跟寬度連動，不會被頁面高度拉伸。
+const PAGE_W = 390
+const PAGE_H = 1816
+const LAYER_X = -4
+const LAYER_Y = 53
+
 interface Star {
   src: string
   left: number
@@ -145,8 +153,13 @@ export default function MobileStatsStars() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute top-0 left-0 z-0 w-full"
-      style={{ aspectRatio: `${DESIGN_WIDTH} / ${DESIGN_HEIGHT}` }}
+      className="pointer-events-none absolute z-0"
+      style={{
+        left: `${((LAYER_X / PAGE_W) * 100).toFixed(4)}%`,
+        top: `${((LAYER_Y / PAGE_H) * 100).toFixed(4)}%`,
+        width: `${((DESIGN_WIDTH / PAGE_W) * 100).toFixed(4)}%`,
+        aspectRatio: `${DESIGN_WIDTH} / ${DESIGN_HEIGHT}`,
+      }}
     >
       {STARS.map((star) => (
         <div
