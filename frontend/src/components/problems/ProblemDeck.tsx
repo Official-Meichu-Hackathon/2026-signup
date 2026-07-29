@@ -162,9 +162,10 @@ export function ZoomedFace({
 }) {
   const isLogitech = problem.sponsor === '羅技'
   const isAmd = problem.sponsor === 'AMD'
+  const isCloudMosa = problem.sponsor === 'CloudMosa'
   const isAdvantest = problem.sponsor === '愛德萬測試'
   const isNxp = problem.sponsor === '恩智浦半導體'
-  const usesAmdLayout = isAmd || isAdvantest || isNxp
+  const usesAmdLayout = isAmd || isCloudMosa || isAdvantest || isNxp
   const isGoogle = problem.sponsor === 'Google'
   const logitechNoteLines = [
     '請務必簽署附件之保密協定，',
@@ -199,7 +200,7 @@ export function ZoomedFace({
       : undefined
   const isLargeHashtagCard = isLogitech || usesAmdLayout || isGoogle
   const hashtagBoxWidth = usesAmdLayout ? 572 : isGoogle ? 493 : undefined
-  const contentTop = isGoogle ? '14%' : '9%'
+  const contentTop = isGoogle ? '18%' : '9%'
   const contentGap = isLogitech || isGoogle ? 13 : 18
   const noticeBoxStyle = isGoogle
     ? {
@@ -584,7 +585,7 @@ export default function ProblemDeck() {
                 if (element) cardRefs.current.set(problem.sponsor, element)
                 else cardRefs.current.delete(problem.sponsor)
               }}
-              className={`absolute max-w-[calc(100vw-3rem)] overflow-hidden transition-transform duration-200 ${
+              className={`absolute max-w-[calc(100vw-3rem)] overflow-hidden transition-[transform,box-shadow] duration-200 ${
                 isZoomed ? '@container' : 'hover:-translate-y-2'
               }`}
               style={{

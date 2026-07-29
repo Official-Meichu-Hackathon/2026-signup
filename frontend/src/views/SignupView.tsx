@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import FormShell from '../components/form/FormShell'
 import { RAIL_SECTIONS, type Section } from '../components/form/railSections'
-import FormStep from '../components/form/FormStep'
+import FormStep, { type ScrollMode } from '../components/form/FormStep'
 import TextQuestion from '../components/form/TextQuestion'
 import ChoiceQuestion from '../components/form/ChoiceQuestion'
 import SortableQuestion from '../components/form/SortableQuestion'
@@ -66,6 +66,7 @@ function firstStepOfSection(section: Section, playerCount: number): number {
 
 export default function SignupView({ onSuccess }: SignupViewProps) {
   const [currentStep, setCurrentStep] = useState(1)
+  const [scrollMode, setScrollMode] = useState<ScrollMode>('smooth')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState(false)
 
@@ -155,6 +156,12 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
     validateMaxLength(EXPERIENCE_MAX)(player.project) &&
     validateMaxLength(EXPERIENCE_MAX)(player.competitionExp)
 
+  // Tabs switch freely, so leaving 基本資料 needs every player.
+  const incompletePlayers = players
+    .slice(0, playerCount)
+    .flatMap((player, i) => (playerOk(player) ? [] : PLAYER_ORDER_LABELS[i]))
+  const allPlayersOk = incompletePlayers.length === 0
+
   const assentOk = assent === '是'
   // 清寒證明 upload is optional despite the design's ★.
   const otherOk = workshopAttendance !== '' && ceremonyAttendance !== ''
@@ -186,11 +193,18 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
     }
   }
 
+  // 下一步 animates, rail jumps land instantly, tab switches stay put.
+  const goToStep = (step: number, mode: ScrollMode = 'smooth') => {
+    setScrollMode(mode)
+    setCurrentStep(step)
+  }
+
   const stepProps = {
     totalSteps,
     currentStep,
     isSubmitting,
-    onStepChange: setCurrentStep,
+    scrollMode,
+    onStepChange: goToStep,
     onSubmit: () => void submit(),
   }
 
@@ -205,7 +219,7 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
   )
   const goToSection = (section: Section) => {
     const target = firstStepOfSection(section, playerCount)
-    if (target <= currentStep) setCurrentStep(target)
+    if (target <= currentStep) goToStep(target, 'snap')
   }
 
   return (
@@ -258,10 +272,7 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
         <PlayerTabs
           playerCount={playerCount}
           activeIndex={currentStep - 2}
-          onSelect={(i) => {
-            const target = i + 2
-            if (target <= currentStep) setCurrentStep(target)
-          }}
+          onSelect={(i) => goToStep(i + 2, 'none')}
         />
       )}
 
@@ -271,7 +282,14 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
           {...stepProps}
           stepOrder={index + 2}
           stepName={`基本資料 ( 參賽者${PLAYER_ORDER_LABELS[index]} )`}
-          requiredOk={playerOk(players[index])}
+          requiredOk={
+            index === playerCount - 1 ? allPlayersOk : playerOk(players[index])
+          }
+          disabledHint={
+            index === playerCount - 1 && incompletePlayers.length > 0
+              ? `請先完成參賽者${incompletePlayers.join('、')}的必填欄位`
+              : undefined
+          }
         >
           <TextQuestion
             title="★姓名"

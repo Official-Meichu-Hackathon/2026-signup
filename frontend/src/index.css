@@ -709,7 +709,7 @@ body {
   .partner-sections {
     width: 100%;
     gap: 0 !important;
-    padding: 48px 0 40px !important;
+    padding: 48px 0 32px !important;
   }
 
   .partner-block {
@@ -741,7 +741,7 @@ body {
   }
 
   .partner-logo-amd {
-    top: 5.18px !important;
+    top: 16px !important;
     left: 150.5px !important;
     width: 83px !important;
     height: 20px !important;
@@ -755,7 +755,7 @@ body {
   }
 
   .partner-logo-google {
-    top: 60.18px !important;
+    top: 72.5px !important;
     left: 147.5px !important;
     width: 89px !important;
     height: 29px !important;
@@ -769,7 +769,7 @@ body {
   }
 
   .partner-logo-advantest {
-    top: 124.18px !important;
+    top: 123.5px !important;
     left: 137.5px !important;
     width: 109px !important;
     height: 49px !important;
@@ -827,17 +827,22 @@ body {
     gap: 0 !important;
   }
 
-  .partner-sponsors + .partner-placeholder {
+  .sponsor-tier-cathay {
+    width: 144px !important;
+  }
+
+  .partner-sponsors + .partner-network {
     margin-top: 56px !important;
   }
 
+  .partner-network + .partner-placeholder,
   .partner-placeholder + .partner-placeholder {
     margin-top: 64px !important;
   }
 
   .staff-and-thanks {
-    gap: 80px !important;
-    padding: 40px 0 58px !important;
+    gap: 64px !important;
+    padding: 32px 0 58px !important;
   }
 
   .thanks-block {
@@ -879,6 +884,7 @@ body {
     width: 100%;
     height: 221px;
     overflow: visible;
+    transition: height 320ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 
   .staff-mobile-list.has-expanded {
@@ -898,6 +904,11 @@ body {
     box-shadow:
       0 10px 30px rgba(0, 0, 0, 0.25),
       inset 0 1px 8px rgba(255, 255, 255, 0.5);
+    transition:
+      top 320ms cubic-bezier(0.23, 1, 0.32, 1),
+      height 320ms cubic-bezier(0.23, 1, 0.32, 1),
+      background 220ms ease,
+      box-shadow 220ms ease;
   }
 
   .staff-mobile-list:not(.has-expanded) .staff-mobile-row:last-child {
@@ -918,14 +929,41 @@ body {
     font-size: 14px;
     font-weight: 800;
     line-height: normal;
+    transition: color 220ms ease;
   }
 
-  .staff-mobile-row > button > span:last-child {
+  .staff-mobile-toggle {
+    position: relative;
+    display: block;
     width: 10px;
+    height: 14px;
     font-family: 'Noto Sans', sans-serif;
     font-weight: 400;
-    line-height: 10px;
+    line-height: 14px;
     text-align: center;
+  }
+
+  .staff-mobile-toggle > span {
+    position: absolute;
+    inset: 0;
+    transition:
+      opacity 180ms ease,
+      transform 280ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .staff-mobile-toggle-minus {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.7);
+  }
+
+  .staff-mobile-row.is-expanded .staff-mobile-toggle-plus {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.7);
+  }
+
+  .staff-mobile-row.is-expanded .staff-mobile-toggle-minus {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
   }
 
   .staff-mobile-row.is-expanded {
@@ -945,6 +983,20 @@ body {
     font-size: 10px;
     font-weight: 500;
     line-height: 14px;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition:
+      opacity 180ms ease,
+      transform 240ms cubic-bezier(0.23, 1, 0.32, 1),
+      visibility 0s linear 240ms;
+  }
+
+  .staff-mobile-row.is-expanded .staff-mobile-members {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 90ms, 90ms, 0s;
   }
 
   .site-header {
@@ -1047,23 +1099,7 @@ body {
 
 /* Safari repeatedly repaints a backdrop-filter while a parent is animating.
    The panel fades/scales with a lightweight fill, then restores the glass. */
-@keyframes stats-panel-enter {
-  from {
-    opacity: 0;
-    transform: scaleY(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: scaleY(1);
-  }
-}
-
-.stats-panel-enter {
-  animation: stats-panel-enter 400ms var(--ease-out-strong) both;
-  will-change: transform, opacity;
-}
-
-.stats-panel-enter .glass-dark {
+.stats-panel-glass-transition .glass-dark {
   animation: stats-panel-glass 400ms step-end both;
 }
 
@@ -1126,17 +1162,15 @@ body {
   }
 }
 
-/* Keep the long meteor constellation below the desktop card deck. */
+/* Keep the long meteor constellation clear of both the card deck and footer. */
 @media (min-width: 768px) {
+  .problem-meteor-line,
   .problem-meteor-endpoint {
-    transform: translateY(clamp(40px, 3.5vw, 64px));
+    transform: translateY(clamp(-340px, -20vw, -296px));
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .stats-panel-enter {
-    animation: none;
-  }
   .twinkle,
   .twinkle-soft {
     animation: none !important;

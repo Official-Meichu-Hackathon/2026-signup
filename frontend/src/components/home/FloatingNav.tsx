@@ -19,7 +19,7 @@ const HEIGHT = 76
 const cssVars = {
   '--nav-h': `${HEIGHT}px`,
   '--nav-logo-h': '48px',
-  '--nav-logo-w': 'clamp(80px, 10.25vw, 123px)',
+  '--nav-logo-w': '123px',
   '--nav-collapsed-w': '182px',
   '--nav-gap': 'clamp(20px, calc(9.95vw - 56.4px), 63px)',
   '--nav-links-gap': 'clamp(16px, calc(9.26vw - 55.1px), 56px)',

@@ -6,7 +6,7 @@ import logoAmdItri from '../assets/Problems/logo-amd-itri.png'
 import logoMakalot from '../assets/Problems/logo-makalot.png'
 import logoNxp from '../assets/Problems/logo-nxp-figma.png'
 import logoWtMicro from '../assets/Problems/logo-wtmicro-figma.png'
-import logoAdvantest from '../assets/Problems/logo-advantest.png'
+import logoAdvantest from '../assets/Problems/logo-advantest-2.svg'
 import logoGoogle from '../assets/Problems/logo-google.png'
 
 // 題目全文於比賽當天另行公布，網站上一律只放 hashtag 提示，沒有公開/未公開
@@ -32,7 +32,7 @@ export const PROBLEMS: Problem[] = [
   {
     sponsor: 'CloudMosa',
     logos: [logoCloudMosa],
-    hashtags: HASHTAG_PLACEHOLDER,
+    hashtags: ['#雲端運算', '#網頁開發', '#數位平權'],
     paragraphs: [
       '透過 CloudMosa 提供之 Cloud Phone，開發一款具備完整功能與良好體驗的應用程式，並用以提升教育學習、資訊查詢、實用工具應用、天氣預報等服務品質，改變偏遠地區與第三世界國家的生活樣態，讓現代網路服務能走進每個人的生活。',
     ],

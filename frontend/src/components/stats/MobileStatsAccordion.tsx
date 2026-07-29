@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useGlassSuspend } from './useGlassSuspend'
 import barStats from '../../assets/Stats/m-bar-stats.svg'
 import barQuotes from '../../assets/Stats/m-bar-quotes.svg'
 import cardLink from '../../assets/Stats/m-card-link.svg'
@@ -7,8 +8,7 @@ import iconMinus from '../../assets/Stats/m-icon-minus.svg'
 import carouselArrow from '../../assets/Stats/carousel-arrow.svg'
 import { TESTIMONIALS } from './testimonials'
 import { RESULT_PLATFORM_URL } from './resultPlatform'
-import StatsPieChart from './StatsPieChart'
-import { STATS_CHARTS } from './statsData'
+import statsChartMobile from '../../assets/Stats/stats_chart_mobile.svg'
 
 // 參賽數據(手機) 165:1219。設計稿是一個 393 寬的元件，四個 variant 分別是
 // 兩條手風琴的開合組合（Frame 61 全收 / 62 開數據 / 63 開感言 / 60 全開）。
@@ -24,6 +24,9 @@ const ratio = (w: number, h: number) => ({ aspectRatio: `${w} / ${h}` })
 const H_BAR_STATS = 80
 const H_BAR_QUOTES = 71
 const H_CARD_LINK = 210
+
+const OPEN_GAP_TOP = 75 - H_BAR_STATS
+const OPEN_GAP_BOTTOM = 35
 
 // 收合時三塊面板的頂端每隔 50px 排一塊（Frame 61 的 y = 0 / 50 / 100），
 // 面板本身比這個間距高，所以會互相重疊、疊成一落卡片。
@@ -66,68 +69,6 @@ const barTitleGlow = [
 
 // 圓餅圖面板（Frame 39 165:1284）：283×655 的深色圓角面板，四張圓餅在手機版
 // 改成直向排列（電腦版是 2×2 錯落），每張標題都在自己的圓餅上方。
-const PIE_PANEL_W = 283
-const PIE_PANEL_H = 655
-const PIE_PANEL_RADIUS = 20
-// 面板頂端在橫幅頂端下方 75，而橫幅本身高 80，故內容區要往上收 5。
-const OPEN_GAP_TOP = 75 - H_BAR_STATS
-const OPEN_GAP_BOTTOM = 35
-
-const px = (n: number) => `${((n / PIE_PANEL_W) * 100).toFixed(4)}%`
-const py = (n: number) => `${((n / PIE_PANEL_H) * 100).toFixed(4)}%`
-
-// 與電腦版同一個坑：素材 viewBox 是圓的兩倍（設計稿的 img inset 是
-// -50%/-46%/-50%/-54%，即整張圖佔節點框的 200%），四周留白是光暈用的。
-// 直接照 100 擺會讓圓只剩設計稿的一半大。
-const PIE_BOX = 100
-const PIE_SVG = PIE_BOX * 2
-const PIE_PAD_X = PIE_BOX * 0.5
-// 陰影 dy 讓匯出範圍往下擴，圓相對整張圖偏上，故上下留白不等寬。
-const PIE_PAD_Y = PIE_BOX * 0.46
-
-// 三級標題(手機版)：Noto Sans Medium 12 / 行高 12
-const PIE_LABEL_SIZE = 12
-const PIE_LABEL_LEADING = 12
-
-const PIES = [
-  {
-    chart: STATS_CHARTS.grade,
-    label: '2025參賽者年級分布',
-    tag: '',
-    top: 60,
-    labelCenter: 40,
-    labelWidth: 81,
-  },
-  {
-    chart: STATS_CHARTS.school,
-    label: '2025參賽者學校分布',
-    tag: '',
-    top: 202,
-    labelCenter: 181,
-    labelWidth: 90,
-  },
-  {
-    chart: STATS_CHARTS.hackerDepartment,
-    label: '2025黑客組院系分布',
-    tag: '',
-    top: 361,
-    labelCenter: 332.5,
-    labelWidth: 90,
-  },
-  {
-    chart: STATS_CHARTS.makerDepartment,
-    label: '2025創客組院系分布',
-    tag: '',
-    top: 520,
-    labelCenter: 484,
-    labelWidth: 90,
-  },
-]
-const PIE_LEFT = 92
-
-// 感言區塊（黑客組感言手機 366:306）：元件框 370×345，卡片只占其中 y=75 起
-// 的 283×195，上下留白是設計稿拿來讓【黑客組】標題壓上去的。這裡只實作看得見
-// 的那一列，標題間距交給外層 flex。
 const QUOTE_ROW_W = 370
 const QUOTE_CARD_W = 283
 const QUOTE_CARD_H = 195
@@ -218,6 +159,9 @@ function AccordionBar({
   )
 }
 
+// 與電腦版同一套收合動畫：用 grid-template-rows 1fr↔0fr 撐開／收起（純 CSS 就能
+// 對未知高度做動畫），並在動畫期間暫停玻璃材質的 backdrop-filter，否則每一幀都要
+// 重算模糊，收合會卡頓。useGlassSuspend 與電腦版共用同一份，見該檔註解。
 function Collapsible({
   isOpen,
   children,
@@ -225,53 +169,27 @@ function Collapsible({
   isOpen: boolean
   children: React.ReactNode
 }) {
+  useGlassSuspend(isOpen)
   return (
-    <div className={isOpen ? 'block' : 'hidden'}>
-      <div className="overflow-hidden">{children}</div>
+    <div
+      className="grid transition-[grid-template-rows] duration-500"
+      style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}
+    >
+      <div className="overflow-hidden">
+        <div className="stats-layer">{children}</div>
+      </div>
     </div>
   )
 }
 
 function PiePanel() {
   return (
-    <div
-      className="glass-dark relative mx-auto overflow-hidden"
-      style={{
-        width: pct(PIE_PANEL_W),
-        ...ratio(PIE_PANEL_W, PIE_PANEL_H),
-        borderRadius: mq(PIE_PANEL_RADIUS),
-      }}
-    >
-      {PIES.map((pie) => (
-        <div key={pie.label + pie.tag}>
-          <div
-            role="group"
-            aria-label={pie.chart.title}
-            className="absolute max-w-none"
-            style={{
-              left: px(PIE_LEFT - PIE_PAD_X),
-              top: py(pie.top - PIE_PAD_Y),
-              width: px(PIE_SVG),
-              aspectRatio: '1 / 1',
-            }}
-          >
-            <StatsPieChart chart={pie.chart} />
-          </div>
-          <p
-            className="font-noto text-ink absolute left-1/2 -translate-x-1/2 -translate-y-1/2 text-center font-medium"
-            style={{
-              top: py(pie.labelCenter),
-              width: px(pie.labelWidth),
-              fontSize: mq(PIE_LABEL_SIZE),
-              lineHeight: mq(PIE_LABEL_LEADING),
-            }}
-          >
-            <span>{pie.label}</span>
-            {pie.tag && <span className="text-periwinkle">{pie.tag}</span>}
-          </p>
-        </div>
-      ))}
-    </div>
+    <img
+      src={statsChartMobile}
+      alt="參賽者年級、黑客組科系、學校與創客組科系分布統計"
+      className="mx-auto block w-full"
+      style={{ aspectRatio: '343 / 715' }}
+    />
   )
 }
 
@@ -321,7 +239,13 @@ function QuoteArrow({
   )
 }
 
-function TestimonialCarousel({ quotes }: { quotes: string[] }) {
+function TestimonialCarousel({
+  quotes,
+  attribution,
+}: {
+  quotes: string[]
+  attribution?: string
+}) {
   const [index, setIndex] = useState(0)
   const step = (delta: number) =>
     setIndex((index + delta + quotes.length) % quotes.length)
@@ -352,6 +276,20 @@ function TestimonialCarousel({ quotes }: { quotes: string[] }) {
         >
           {quotes[index]}
         </p>
+        {attribution && (
+          <p
+            className="font-noto absolute right-0 bottom-0 font-medium"
+            style={{
+              right: mq(21),
+              bottom: mq(9),
+              color: '#D8D8D8',
+              fontSize: mq(10),
+              lineHeight: mq(13),
+            }}
+          >
+            {attribution}
+          </p>
+        )}
       </div>
       <QuoteArrow side="next" onClick={() => step(1)} />
     </div>
@@ -378,6 +316,11 @@ export default function MobileStatsAccordion() {
 
   // 收合時面板要互相重疊（見 STACK_STEP）；展開時讓出完整高度，內容才不會被
   // 下一塊面板蓋住。
+  //
+  // 這個負 margin 必須跟 Collapsible 的高度動畫「同時、同曲線」漸變。若讓它瞬間
+  // 切換，一按收合 marginBottom 會立刻從 0 跳到負值、下面的內容瞬移上去，接著高度
+  // 才慢慢收 —— 電腦版先前就是這個抖動。故下面兩塊都加上
+  // transition-[margin-bottom] duration-500，與 Collapsible 用同一組緩動。
   const overlap = (height: number, isOpen: boolean) =>
     isOpen ? '0px' : mq(STACK_STEP - height)
 
@@ -385,7 +328,7 @@ export default function MobileStatsAccordion() {
     <div className="@container w-full">
       {/* 後面的面板要疊在前一塊之上，故 z-index 遞增 */}
       <div
-        className="relative z-[1]"
+        className="stats-layer relative z-[1] transition-[margin-bottom] duration-500"
         style={{ marginBottom: overlap(H_BAR_STATS, openStats) }}
       >
         <AccordionBar
@@ -411,7 +354,7 @@ export default function MobileStatsAccordion() {
       </Collapsible>
 
       <div
-        className="relative z-[2]"
+        className="stats-layer relative z-[2] transition-[margin-bottom] duration-500"
         style={{ marginBottom: overlap(H_BAR_QUOTES, openQuotes) }}
       >
         <AccordionBar
@@ -437,14 +380,20 @@ export default function MobileStatsAccordion() {
             style={{ gap: mq(QUOTES_HEADING_GAP) }}
           >
             <GroupHeading>【黑客組】</GroupHeading>
-            <TestimonialCarousel quotes={TESTIMONIALS.hacker} />
+            <TestimonialCarousel
+              quotes={TESTIMONIALS.hacker}
+              attribution="-來自2024黑客組參賽者"
+            />
           </div>
           <div
             className="flex flex-col"
             style={{ gap: mq(QUOTES_HEADING_GAP) }}
           >
             <GroupHeading>【創客交流組】</GroupHeading>
-            <TestimonialCarousel quotes={TESTIMONIALS.maker} />
+            <TestimonialCarousel
+              quotes={TESTIMONIALS.maker}
+              attribution="-來自2024創客組參賽者"
+            />
           </div>
         </div>
       </Collapsible>

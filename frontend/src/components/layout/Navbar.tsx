@@ -54,7 +54,7 @@ export default function Navbar() {
           <img
             src={logo}
             alt="梅竹黑客松"
-            className={`site-logo h-[45px] w-[100px] object-contain object-bottom transition duration-300 sm:h-[55px] sm:w-[125px] md:h-[67px] md:w-[148px] ${onLightBg ? 'invert' : ''}`}
+            className={`site-logo h-[45px] w-[100px] object-contain transition duration-300 sm:h-[55px] sm:w-[125px] md:h-[67px] md:w-[148px] ${onLightBg ? 'invert' : ''}`}
           />
         </Link>
         <div className="site-header-actions flex items-center gap-[12px] sm:gap-[20px] md:gap-[37px]">

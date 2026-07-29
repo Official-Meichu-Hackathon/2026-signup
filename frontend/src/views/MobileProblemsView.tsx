@@ -4,12 +4,16 @@ import Navbar from '../components/layout/Navbar'
 import MakerCta from '../components/problems/MakerCta'
 import MobileProblemDeck from '../components/problems/MobileProblemDeck'
 import bgGradient from '../assets/Problems/bg-gradient.png'
-import star1 from '../assets/Problems/star-1.svg'
-import star2 from '../assets/Problems/star-2.svg'
-import star3 from '../assets/Problems/star-3.svg'
-import star4 from '../assets/Problems/star-4.svg'
-import mobileStar1 from '../assets/Problems/mobile-star-1.svg'
-import mobileStar3 from '../assets/Problems/mobile-star-3.svg'
+import titleStar1 from '../assets/Problems/mobile-title-star-1.svg'
+import titleStar2 from '../assets/Problems/mobile-title-star-2.svg'
+import titleStar3 from '../assets/Problems/mobile-title-star-3.svg'
+import figmaStar1 from '../assets/Problems/mobile-figma-star-1.svg'
+import figmaStar2 from '../assets/Problems/mobile-figma-star-2.svg'
+import figmaStar3 from '../assets/Problems/mobile-figma-star-3.svg'
+import figmaStar4 from '../assets/Problems/mobile-figma-star-4.svg'
+import figmaStar5 from '../assets/Problems/mobile-figma-star-5.svg'
+import figmaStar6 from '../assets/Problems/mobile-figma-star-6.svg'
+import figmaStar7 from '../assets/Problems/mobile-figma-star-7.svg'
 
 const DESIGN_WIDTH = 390
 const DESIGN_HEIGHT = 1816
@@ -33,24 +37,36 @@ interface TitleStar {
 
 const TITLE_STARS: TitleStar[] = [
   {
-    src: mobileStar1,
+    src: titleStar1,
     left: 0,
     top: 82.42,
     width: 56.16,
     height: 17.58,
-    rotate: 77.31,
+    rotate: 167.31,
     imgLeft: -48.19,
     imgTop: -20.84,
     imgW: 196.38,
     imgH: 145.3,
   },
   {
-    src: mobileStar3,
+    src: titleStar2,
+    left: 63.97,
+    top: 0,
+    width: 36.03,
+    height: 11.99,
+    rotate: 167.31,
+    imgLeft: -68.39,
+    imgTop: -32.83,
+    imgW: 236.78,
+    imgH: 171.37,
+  },
+  {
+    src: titleStar3,
     left: 33.73,
     top: 89.11,
     width: 21.49,
     height: 7.51,
-    rotate: 77.31,
+    rotate: 167.31,
     imgLeft: -106.65,
     imgTop: -55.51,
     imgW: 313.3,
@@ -78,7 +94,11 @@ function TitleStars() {
         >
           <div
             className="relative size-full"
-            style={{ transform: `rotate(${star.rotate}deg)` }}
+            style={{
+              transform: `rotate(${star.rotate}deg)`,
+              filter:
+                'drop-shadow(0 0 20px rgba(255,255,255,0.5)) drop-shadow(0 4px 40px rgba(255,255,255,0.5)) drop-shadow(0 4px 50px rgba(255,255,255,0.5))',
+            }}
           >
             <img
               src={star.src}
@@ -98,35 +118,135 @@ function TitleStars() {
   )
 }
 
+const MOBILE_BACKGROUND_STARS = [
+  {
+    src: figmaStar1,
+    left: 3.86,
+    top: 0,
+    width: 13.7,
+    height: 4.44,
+    imgLeft: -25.64,
+    imgTop: -25.27,
+    imgWidth: 151.28,
+    imgHeight: 154.94,
+    delay: 0,
+  },
+  {
+    src: figmaStar2,
+    left: 83.74,
+    top: 6.96,
+    width: 13.26,
+    height: 4.52,
+    imgLeft: -38.76,
+    imgTop: -32.62,
+    imgWidth: 177.52,
+    imgHeight: 170.92,
+    rotate: 56.62,
+    delay: 1.2,
+  },
+  {
+    src: figmaStar3,
+    left: 74.54,
+    top: 80.07,
+    width: 25.43,
+    height: 5.08,
+    imgLeft: -28.6,
+    imgTop: -18.67,
+    imgWidth: 157.2,
+    imgHeight: 140.58,
+    rotate: 140.87,
+    skew: 27.55,
+    delay: 2.1,
+  },
+  {
+    src: figmaStar4,
+    left: 6.18,
+    top: 59.88,
+    width: 12.51,
+    height: 5.94,
+    imgLeft: -25.03,
+    imgTop: -30.35,
+    imgWidth: 150.06,
+    imgHeight: 165.98,
+    rotate: -152.68,
+    skew: 27.55,
+    delay: 0.6,
+  },
+  {
+    src: figmaStar5,
+    left: 18.61,
+    top: 4.27,
+    width: 7.04,
+    height: 2.1,
+    imgLeft: -56.82,
+    imgTop: -65.71,
+    imgWidth: 213.64,
+    imgHeight: 242.85,
+    rotate: -11.44,
+    delay: 1.8,
+  },
+  {
+    src: figmaStar6,
+    left: 0,
+    top: 95.6,
+    width: 21.4,
+    height: 4.4,
+    imgLeft: -35.99,
+    imgTop: -20.53,
+    imgWidth: 171.98,
+    imgHeight: 144.63,
+    rotate: 14.24,
+    skew: -35.07,
+    delay: 2.7,
+  },
+  {
+    src: figmaStar7,
+    left: 94.07,
+    top: 83.13,
+    width: 5.93,
+    height: 3.76,
+    imgLeft: -51.58,
+    imgTop: -52.29,
+    imgWidth: 203.16,
+    imgHeight: 213.9,
+    rotate: -78.77,
+    skew: -30.65,
+    delay: 3.3,
+  },
+]
+
 function MobileStars() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-0 overflow-hidden"
+      className="pointer-events-none absolute top-[280px] left-0 h-[1146.491px] w-full overflow-hidden"
     >
-      <img
-        src={star1}
-        alt=""
-        className="animate-star-twinkle absolute -top-[1%] -right-[16%] w-[44%]"
-      />
-      <img
-        src={star3}
-        alt=""
-        className="animate-star-twinkle absolute top-[13%] left-[7%] w-[18%]"
-        style={{ animationDelay: '1.2s' }}
-      />
-      <img
-        src={star4}
-        alt=""
-        className="animate-star-twinkle absolute top-[29%] right-[1%] w-[24%]"
-        style={{ animationDelay: '2.1s' }}
-      />
-      <img
-        src={star2}
-        alt=""
-        className="animate-star-twinkle absolute top-[77%] right-[-14%] w-[52%]"
-        style={{ animationDelay: '0.6s' }}
-      />
+      {MOBILE_BACKGROUND_STARS.map((star) => (
+        <div
+          key={star.src}
+          className="absolute"
+          style={{
+            left: `${star.left}%`,
+            top: `${star.top}%`,
+            width: `${star.width}%`,
+            height: `${star.height}%`,
+            transform: `rotate(${star.rotate ?? 0}deg) skewX(${star.skew ?? 0}deg)`,
+          }}
+        >
+          <img
+            src={star.src}
+            alt=""
+            className="animate-star-twinkle absolute max-w-none"
+            style={{
+              left: `${star.imgLeft}%`,
+              top: `${star.imgTop}%`,
+              width: `${star.imgWidth}%`,
+              height: `${star.imgHeight}%`,
+              animationDelay: `${star.delay}s`,
+            }}
+          />
+        </div>
+      ))}
     </div>
   )
 }
@@ -173,8 +293,12 @@ export default function MobileProblemsView({
           <MobileStars />
           <TitleStars />
 
+          {/* 「説」必須用日文新字體 U+8AAC，不能用繁體的「說」U+8AAA —— Zen Antique
+              是日文字型、沒有 U+8AAA 的字面，瀏覽器會退回備援 serif，那個字就會跟
+              旁邊的字不同體、看起來像缺字。設計稿放的也是已轉換好的日文漢字。
+              電腦版（ProblemsView）本來就是這樣寫，這裡先前漏掉了。 */}
           <h1 className="glow-text font-zen text-ink absolute top-[7.76%] left-1/2 -translate-x-1/2 text-[32px] leading-[54px] whitespace-nowrap">
-            題目說明
+            題目説明
           </h1>
 
           <div className="absolute top-[23%] left-0 h-[250px] w-full">

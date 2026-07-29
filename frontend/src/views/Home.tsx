@@ -3,7 +3,7 @@ import { useMotionValueEvent, useScroll } from 'motion/react'
 import bg1 from '../assets/home/bg-01.webp'
 import bg2 from '../assets/home/bg-02.webp'
 import bg3 from '../assets/home/bg-03.webp'
-import bgTransition from '../assets/home/bg-transition-figma.png'
+import bg5 from '../assets/home/bg-05.webp'
 import heroTitle from '../assets/home/hero-title-overlay.webp'
 import heroCta from '../assets/home/hero-cta-overlay.webp'
 import EventVision from '../components/home/EventVision'
@@ -40,6 +40,16 @@ export default function Home() {
   const { scrollY } = useScroll()
 
   useEffect(() => {
+    // Mobile browsers resize the visual viewport whenever their address bar
+    // expands or collapses during a scroll. Treating that as a desktop window
+    // resize makes the anchor-restoration logic call scrollTo and visibly jump
+    // to another section. This preservation behavior is only needed for
+    // desktop resizing and browser zoom.
+    const desktopResizeMedia = window.matchMedia(
+      '(min-width: 768px) and (pointer: fine)',
+    )
+    if (!desktopResizeMedia.matches) return
+
     let resizeFrame = 0
     let scrollTimer = 0
     let settleFrame = 0
@@ -170,6 +180,11 @@ export default function Home() {
     function handleResize() {
       window.clearTimeout(scrollTimer)
       window.clearTimeout(resizeTimer)
+
+      if (!desktopResizeMedia.matches) {
+        activeResizeAnchor = null
+        return
+      }
 
       // Keep the first anchor for the entire zoom gesture. Using each
       // intermediate correction as the next baseline would accumulate a small
@@ -312,34 +327,6 @@ export default function Home() {
         </div>
       </div>
 
-      {lightTransitionRange !== null && (
-        <div
-          className="home-light-background pointer-events-none absolute inset-x-0 z-0 overflow-hidden"
-          style={{
-            top: `${lightTransitionRange.start}px`,
-            height: `${lightTransitionRange.end - lightTransitionRange.start}px`,
-          }}
-          aria-hidden="true"
-        >
-          <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(8,5,6,0.88)_18%,#17203a_46%,#5d7ec0_68%,#e9eef7_87%,#fdfdfd_100%)]" />
-          <img
-            src={bgTransition}
-            alt=""
-            loading="lazy"
-            decoding="async"
-            fetchPriority="low"
-            className="absolute top-1/2 left-0 h-[86%] w-full -translate-y-1/2 object-fill opacity-90"
-            style={{
-              maskImage:
-                'linear-gradient(to bottom, transparent 0%, black 16%, black 82%, transparent 100%)',
-              WebkitMaskImage:
-                'linear-gradient(to bottom, transparent 0%, black 16%, black 82%, transparent 100%)',
-            }}
-          />
-          <div className="absolute inset-x-0 bottom-0 h-[14%] bg-gradient-to-b from-transparent to-[#fdfdfd]" />
-        </div>
-      )}
-
       <FloatingNav />
 
       <section
@@ -376,22 +363,44 @@ export default function Home() {
         <Rules />
       </section>
 
-      <section
-        id="awards"
-        className="relative z-10 flow-root"
-        data-resize-scroll-section="awards"
-      >
-        <AwardsSparkleField />
-        <Awards lightTransitionRange={lightTransitionRange} />
-      </section>
+      <section id="awards" className="relative bg-[#fdfdfd]">
+        <div className="relative bg-black" data-resize-scroll-section="awards">
+          <div
+            className="pointer-events-none absolute inset-x-0 top-0 z-0 overflow-hidden"
+            style={{
+              bottom: 'clamp(-250px, -22vw, -100px)',
+              maskImage:
+                'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.25) 6%, black 18%, black 100%)',
+              WebkitMaskImage:
+                'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.25) 6%, black 18%, black 100%)',
+            }}
+            aria-hidden="true"
+          >
+            <img
+              src={bg5}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              fetchPriority="low"
+              className="absolute inset-x-0 bottom-0 block h-[min(157.5122vw,2254px)] w-full max-w-none object-fill select-none"
+            />
+            <div className="absolute inset-x-0 bottom-0 h-[clamp(160px,20vw,300px)] bg-[linear-gradient(to_bottom,transparent_0%,rgba(253,253,253,0.72)_58%,#fdfdfd_100%)]" />
+          </div>
 
-      <section
-        className="home-light-section relative z-0 bg-[#fdfdfd] md:pb-[172px]"
-        data-nav-theme="light"
-        data-resize-scroll-section="partners-and-staff"
-      >
-        <PartnerLogos />
-        <StaffAndThanks />
+          <div className="relative z-10 flow-root">
+            <AwardsSparkleField />
+            <Awards lightTransitionRange={lightTransitionRange} />
+          </div>
+        </div>
+
+        <div
+          className="home-light-section relative z-10 md:pb-[172px]"
+          data-nav-theme="light"
+          data-resize-scroll-section="partners-and-staff"
+        >
+          <PartnerLogos />
+          <StaffAndThanks />
+        </div>
       </section>
     </div>
   )

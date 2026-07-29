@@ -1,13 +1,17 @@
 import { useEffect, useRef, type ReactNode } from 'react'
 import NextStepButton from './NextStepButton'
 
+export type ScrollMode = 'smooth' | 'snap' | 'none'
+
 interface FormStepProps {
   stepOrder: number
   totalSteps: number
   stepName: string
   currentStep: number
   requiredOk: boolean
+  disabledHint?: string
   isSubmitting: boolean
+  scrollMode: ScrollMode
   onStepChange: (step: number) => void
   onSubmit: () => void
   children: ReactNode
@@ -26,7 +30,9 @@ export default function FormStep({
   stepName,
   currentStep,
   requiredOk,
+  disabledHint,
   isSubmitting,
+  scrollMode,
   onStepChange,
   onSubmit,
   children,
@@ -36,13 +42,13 @@ export default function FormStep({
   const isLastStep = stepOrder === totalSteps
 
   useEffect(() => {
-    if (isActive && stepOrder > 1) {
-      containerRef.current?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      })
-    }
-  }, [isActive, stepOrder])
+    const el = containerRef.current
+    if (!el || !isActive || stepOrder === 1 || scrollMode === 'none') return
+    el.scrollIntoView({
+      behavior: scrollMode === 'smooth' ? 'smooth' : 'instant',
+      block: 'start',
+    })
+  }, [scrollMode, isActive, stepOrder])
 
   const handleNext = () => {
     if (isLastStep) {
@@ -79,6 +85,7 @@ export default function FormStep({
           <NextStepButton
             onClick={handleNext}
             disabled={!requiredOk || isSubmitting}
+            disabledHint={disabledHint}
             isLastStep={isLastStep}
             isSubmitting={isSubmitting}
           />
