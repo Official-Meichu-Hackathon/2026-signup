@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import {
+  animate,
   motion,
   useMotionValue,
   useMotionValueEvent,
@@ -347,7 +348,7 @@ export default function ScheduleTimeline({
   // its own page.
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ['start end', 'end end'],
+    offset: ['start center', 'end end'],
   })
   // Ratchets up with scrollYProgress but never back down, so scrolling back
   // up doesn't retract the line once it's been drawn — once connected, a
@@ -358,26 +359,28 @@ export default function ScheduleTimeline({
   const maxProgress19 = useMotionValue(0)
   const maxProgress20 = useMotionValue(0)
 
-  const maskFor = (p: number) => {
-    const pct = p * 100
-    if (device === 'mobile') {
-      return `linear-gradient(to bottom, black ${pct}%, transparent ${pct}%)`
-    }
-
-    // 桌面版維持原樣
-    return `linear-gradient(to bottom, black ${Math.max(0, pct - 6)}%, transparent ${pct}%)`
-  }
-  // Soft-edged reveal (not a hard cut): fully visible above the furthest
-  // scroll position reached, fading out over the last 6% before it — reads
-  // as a comet trail drawing the constellation rather than a wipe.
-  const lineMask19 = useTransform(maxProgress19, maskFor)
-  const lineMask20 = useTransform(maxProgress20, maskFor)
-
+  // Whichever day is selected always needs to reflect the page's current
+  // scroll position — not just future scrolling — so that a day the user
+  // hasn't scrolled through yet on its own (e.g. right after switching tabs,
+  // or loading the page already scrolled partway down) still shows the
+  // correct amount of line instead of sitting stuck at 0 with no way to
+  // reach 100% if the user is already at the bottom of the page. Animated
+  // (not `.set()`) specifically for that resync: switching tabs while
+  // already scrolled far down (typically true — you scroll through one
+  // day's whole timeline, then flip to the other) computes a large jump for
+  // the newly selected day, and setting that instantly reads as "the line
+  // never animates, it's just already done." Animating it draws the line in
+  // regardless of how big the jump is, matching mobile's always-animated
+  // reveal. Genuine scroll-driven increases, from useMotionValueEvent below,
+  // stay an instant `.set()` — animating those would make the line lag
+  // behind the user's own scrolling.
   useEffect(() => {
     if (device === 'mobile') return
     const target = selectedDay === '19' ? maxProgress19 : maxProgress20
     const v = scrollYProgress.get()
-    if (v > target.get()) target.set(v)
+    if (v <= target.get()) return
+    const controls = animate(target, v, { duration: 0.6, ease: 'easeOut' })
+    return () => controls.stop()
   }, [device, selectedDay, scrollYProgress, maxProgress19, maxProgress20])
 
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
@@ -389,35 +392,44 @@ export default function ScheduleTimeline({
   // Mobile screens run proportionally much taller relative to the timeline
   // than desktop's, so tying the reveal to scroll position (like desktop)
   // left too much of the page still scrollable with the line only partly
-  // drawn — auto-connect instead, independent of scroll. This is plain
-  // React state, not maxProgress19/20: useTransform's derived output never
-  // recomputed when maxProgress was set outside of useScroll's own update
-  // pump (confirmed by logging maxProgress's 'change' event firing while
-  // lineMask19/20's own 'change' event never did) — apparently that scroll-
-  // linked pipeline only re-evaluates chained transforms inside its own
-  // scroll-driven tick, not on an arbitrary manual `.set()`. Plain state
-  // sidesteps that entirely and re-renders through React as normal.
-  // Tracked per day, and only ever set to true (never back to false), so —
-  // matching desktop's ratchet — flipping between tabs doesn't replay the
-  // connect animation for a day that's already been shown once.
-  const [mobileConnected19, setMobileConnected19] = useState(false)
-  const [mobileConnected20, setMobileConnected20] = useState(false)
+  // drawn — auto-connect instead, independent of scroll. Driven by a motion
+  // value animated with `animate()` rather than CSS's `transition:
+  // mask-image`, since browsers don't animate a `linear-gradient()`'s own
+  // percentage arguments — the previous CSS-transition attempt just snapped
+  // instantly instead of easing. Tracked per day (not one shared value), so
+  // switching tabs doesn't replay the connect animation for a day whose
+  // value has already reached 1.
+  const mobileProgress19 = useMotionValue(0)
+  const mobileProgress20 = useMotionValue(0)
+
   useEffect(() => {
     if (device !== 'mobile') return
-    const setConnected =
-      selectedDay === '19' ? setMobileConnected19 : setMobileConnected20
-    const id = requestAnimationFrame(() => setConnected(true))
-    return () => cancelAnimationFrame(id)
-  }, [device, selectedDay])
+    const target = selectedDay === '19' ? mobileProgress19 : mobileProgress20
+    const controls = animate(target, 1, { duration: 2.5, ease: 'easeOut' })
+    return () => controls.stop()
+  }, [device, selectedDay, mobileProgress19, mobileProgress20])
 
-  const mobileConnected =
-    selectedDay === '19' ? mobileConnected19 : mobileConnected20
-  const lineMask =
-    device === 'mobile'
-      ? maskFor(mobileConnected ? 1 : 0)
-      : selectedDay === '19'
-        ? lineMask19
-        : lineMask20
+  // Unified progress source: desktop reads the scroll-ratcheted value,
+  // mobile reads the auto-animated one — each day still tracked separately
+  // so switching tabs doesn't mix 09/19's progress with 09/20's.
+  const progress19 = device === 'mobile' ? mobileProgress19 : maxProgress19
+  const progress20 = device === 'mobile' ? mobileProgress20 : maxProgress20
+
+  const maskFor = (p: number) => {
+    const pct = p * 100
+    if (device === 'mobile') {
+      return `linear-gradient(to bottom, black ${pct}%, transparent ${pct}%)`
+    }
+
+    // Soft-edged reveal (not a hard cut): fully visible above the furthest
+    // scroll position reached, fading out over the last 6% before it —
+    // reads as a comet trail drawing the constellation rather than a wipe.
+    return `linear-gradient(to bottom, black ${Math.max(0, pct - 6)}%, transparent ${pct}%)`
+  }
+  const lineMask19 = useTransform(progress19, maskFor)
+  const lineMask20 = useTransform(progress20, maskFor)
+
+  const lineMask = selectedDay === '19' ? lineMask19 : lineMask20
 
   return (
     <div
@@ -477,14 +489,6 @@ export default function ScheduleTimeline({
             maskImage: lineMask,
             willChange: 'transform', // 提示瀏覽器這個元素會變動，優化 GPU 處理
             imageRendering: 'crisp-edges', // 某些瀏覽器有效
-            // Only mobile's mask is a plain (non-motion) string that flips
-            // once per day via React state — this transition is what makes
-            // that read as a smooth auto-connect instead of an instant pop.
-            // Desktop's is still a motion value driven frame-by-frame by
-            // scroll position, so it must stay untransitioned there or
-            // every scroll tick would lag behind the actual scroll.
-            transition:
-              device === 'mobile' ? 'mask-image 1.2s ease-out' : undefined,
           }}
         >
           <div className="absolute" style={{ inset: line.bleed }}>
