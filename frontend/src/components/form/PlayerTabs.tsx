@@ -8,6 +8,7 @@ interface PlayerTabsProps {
 
 // Participant tab strip on top of the card during the 基本資料 stage. Active tab
 // is taller; navigation is backward-only.
+
 export default function PlayerTabs({
   playerCount,
   activeIndex,
@@ -17,8 +18,10 @@ export default function PlayerTabs({
     <nav
       aria-label="參賽者"
       // Pulled up by the active tab's height so its bottom edge meets the card
-      // top; the tabs protrude above the card body.
-      className="relative z-20 -mt-12 flex items-end gap-0 md:-mt-[6.5rem]"
+      // top; the tabs protrude above the card body. Tabs keep their natural
+      // width and the strip is budgeted to 75% of the card — the fluid label
+      // size below is derived from that share.
+      className="relative z-20 -mt-9 flex max-w-[75%] items-end gap-0 md:-mt-[4.875rem]"
     >
       {Array.from({ length: playerCount }, (_, index) => {
         const isActive = index === activeIndex
@@ -33,13 +36,14 @@ export default function PlayerTabs({
             disabled={!isReachable}
             onClick={() => isReachable && onSelect(index)}
             // Glass tab, rounded top only so it merges into the card. Flush
-            // stacking; active is taller with a brighter fill.
-            className={`relative flex items-center justify-center overflow-hidden rounded-t-2xl border border-b-0 backdrop-blur-2xl backdrop-saturate-150 transition-all duration-200 md:rounded-t-[3.4375rem] ${
+            // stacking; active is taller with a brighter fill. Padding is on
+            // the base class so both states stay the same width.
+            className={`relative flex items-center justify-center overflow-hidden rounded-t-xl border border-b-0 px-1.5 backdrop-blur-2xl backdrop-saturate-150 transition-all duration-200 md:rounded-t-[2.5rem] md:px-4 ${
               index > 0 ? '-ml-px' : ''
             } ${
               isActive
-                ? 'z-20 h-12 border-b-0 border-white/25 bg-black/30 px-3 shadow-[inset_0_1px_8px_rgba(255,255,255,0.3),0_0_28px_rgba(120,150,255,0.2)] md:h-[6.5rem] md:px-9'
-                : `z-10 h-9 border-white/15 bg-black/45 px-2.5 shadow-[inset_0_1px_8px_rgba(255,255,255,0.18)] md:h-[4.5rem] md:px-8 ${
+                ? 'z-20 h-9 border-white/25 bg-black/30 shadow-[inset_0_1px_8px_rgba(255,255,255,0.3),0_0_28px_rgba(120,150,255,0.2)] md:h-[4.875rem]'
+                : `z-10 h-7 border-white/15 bg-black/45 shadow-[inset_0_1px_8px_rgba(255,255,255,0.18)] md:h-[3.5rem] ${
                     isReachable ? 'cursor-pointer' : 'cursor-default'
                   }`
             }`}
@@ -47,11 +51,14 @@ export default function PlayerTabs({
             {/* Sheen overlay (pointer-events-none). */}
             <span
               aria-hidden
-              className="pointer-events-none absolute inset-0 rounded-t-2xl bg-gradient-to-b from-white/15 to-transparent md:rounded-t-[3.4375rem]"
+              className="pointer-events-none absolute inset-0 rounded-t-xl bg-gradient-to-b from-white/15 to-transparent md:rounded-t-[2.5rem]"
             />
+            {/* Fluid rather than truncated, so all 5 labels stay whole: at 15%
+                of the card per tab, 4 characters plus padding leave
+                3.75vw - 5.625px each. */}
             <span
-              className={`relative z-10 font-bold whitespace-nowrap text-white md:text-2xl ${
-                isActive ? 'text-xs' : 'text-xs text-white/85'
+              className={`relative z-10 text-[clamp(6px,calc(3.75vw_-_5.625px),10px)] font-bold whitespace-nowrap text-white md:text-xl ${
+                isActive ? '' : 'text-white/85'
               }`}
             >
               {label}
