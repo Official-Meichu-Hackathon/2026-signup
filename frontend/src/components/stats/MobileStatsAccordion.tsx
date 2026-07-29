@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useGlassSuspend } from './useGlassSuspend'
 import barStats from '../../assets/Stats/m-bar-stats.svg'
 import barQuotes from '../../assets/Stats/m-bar-quotes.svg'
 import cardLink from '../../assets/Stats/m-card-link.svg'
@@ -218,6 +219,9 @@ function AccordionBar({
   )
 }
 
+// 與電腦版同一套收合動畫：用 grid-template-rows 1fr↔0fr 撐開／收起（純 CSS 就能
+// 對未知高度做動畫），並在動畫期間暫停玻璃材質的 backdrop-filter，否則每一幀都要
+// 重算模糊，收合會卡頓。useGlassSuspend 與電腦版共用同一份，見該檔註解。
 function Collapsible({
   isOpen,
   children,
@@ -225,9 +229,15 @@ function Collapsible({
   isOpen: boolean
   children: React.ReactNode
 }) {
+  useGlassSuspend(isOpen)
   return (
-    <div className={isOpen ? 'block' : 'hidden'}>
-      <div className="overflow-hidden">{children}</div>
+    <div
+      className="grid transition-[grid-template-rows] duration-500"
+      style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}
+    >
+      <div className="overflow-hidden">
+        <div className="stats-layer">{children}</div>
+      </div>
     </div>
   )
 }
@@ -378,6 +388,11 @@ export default function MobileStatsAccordion() {
 
   // 收合時面板要互相重疊（見 STACK_STEP）；展開時讓出完整高度，內容才不會被
   // 下一塊面板蓋住。
+  //
+  // 這個負 margin 必須跟 Collapsible 的高度動畫「同時、同曲線」漸變。若讓它瞬間
+  // 切換，一按收合 marginBottom 會立刻從 0 跳到負值、下面的內容瞬移上去，接著高度
+  // 才慢慢收 —— 電腦版先前就是這個抖動。故下面兩塊都加上
+  // transition-[margin-bottom] duration-500，與 Collapsible 用同一組緩動。
   const overlap = (height: number, isOpen: boolean) =>
     isOpen ? '0px' : mq(STACK_STEP - height)
 
@@ -385,7 +400,7 @@ export default function MobileStatsAccordion() {
     <div className="@container w-full">
       {/* 後面的面板要疊在前一塊之上，故 z-index 遞增 */}
       <div
-        className="relative z-[1]"
+        className="stats-layer relative z-[1] transition-[margin-bottom] duration-500"
         style={{ marginBottom: overlap(H_BAR_STATS, openStats) }}
       >
         <AccordionBar
@@ -411,7 +426,7 @@ export default function MobileStatsAccordion() {
       </Collapsible>
 
       <div
-        className="relative z-[2]"
+        className="stats-layer relative z-[2] transition-[margin-bottom] duration-500"
         style={{ marginBottom: overlap(H_BAR_QUOTES, openQuotes) }}
       >
         <AccordionBar

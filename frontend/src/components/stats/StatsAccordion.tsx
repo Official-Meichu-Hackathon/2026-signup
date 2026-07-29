@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
+import { useGlassSuspend } from './useGlassSuspend'
 import barStats from '../../assets/Stats/bar-collapsed-1.svg'
 import barQuotes from '../../assets/Stats/bar-collapsed-2.svg'
 import cardLink from '../../assets/Stats/card-link.svg'
@@ -210,37 +211,6 @@ function AccordionBar({
       />
     </button>
   )
-}
-
-// While the row height animates, every glass surface on the page either
-// resizes (the panel being revealed) or moves (the bars and footer sliding
-// down), so its backdrop-filter blur would be recomputed on every frame —
-// that, not the height animation itself, is what makes the toggle stutter.
-// Same Safari/Chrome behaviour Charlie worked around in stats-panel-glass;
-// here the blur is suspended for the transition and restored at rest.
-const GLASS_SUSPEND_CLASS = 'glass-suspend'
-const COLLAPSE_MS = 500
-let glassSuspendCount = 0
-
-function useGlassSuspend(isOpen: boolean) {
-  const mounted = useRef(false)
-  useEffect(() => {
-    if (!mounted.current) {
-      mounted.current = true
-      return
-    }
-    const root = document.documentElement
-    glassSuspendCount++
-    root.classList.add(GLASS_SUSPEND_CLASS)
-    const release = () => {
-      if (--glassSuspendCount === 0) root.classList.remove(GLASS_SUSPEND_CLASS)
-    }
-    const timer = window.setTimeout(release, COLLAPSE_MS + 50)
-    return () => {
-      window.clearTimeout(timer)
-      release()
-    }
-  }, [isOpen])
 }
 
 function Collapsible({
