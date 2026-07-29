@@ -293,8 +293,12 @@ export default function MobileProblemsView({
           <MobileStars />
           <TitleStars />
 
+          {/* 「説」必須用日文新字體 U+8AAC，不能用繁體的「說」U+8AAA —— Zen Antique
+              是日文字型、沒有 U+8AAA 的字面，瀏覽器會退回備援 serif，那個字就會跟
+              旁邊的字不同體、看起來像缺字。設計稿放的也是已轉換好的日文漢字。
+              電腦版（ProblemsView）本來就是這樣寫，這裡先前漏掉了。 */}
           <h1 className="glow-text font-zen text-ink absolute top-[7.76%] left-1/2 -translate-x-1/2 text-[32px] leading-[54px] whitespace-nowrap">
-            題目說明
+            題目説明
           </h1>
 
           <div className="absolute top-[23%] left-0 h-[250px] w-full">
