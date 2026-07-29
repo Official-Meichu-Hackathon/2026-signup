@@ -49,7 +49,7 @@ const EVENTS_20: EventItem[] = [
   },
   {
     time: '11:20-12:30',
-    label: 'Demo前置準備',
+    label: 'Demo 前置準備',
     dot: { top: 37.69 + DAY20_Y_SHIFT, left: 33.97 },
     text: { top: 36.91 + DAY20_Y_SHIFT, left: 38.4 },
   },

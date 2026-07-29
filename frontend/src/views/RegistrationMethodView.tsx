@@ -1,15 +1,9 @@
 import { useState, type ReactNode } from 'react'
 import Navbar from '../components/layout/Navbar'
 import Footer from '../components/layout/Footer'
-import StarField from '../components/layout/StarField'
 import CursorTrail from '../components/layout/CursorTrail'
-import bgHero from '../assets/RegistrationMethod/bg-hero.jpg'
+import bgHero from '../assets/RegistrationMethod/bg-hero.png'
 import bgContent from '../assets/RegistrationMethod/bg-content.jpg'
-import starFlareMain from '../assets/RegistrationMethod/star-flare-main.svg'
-import starFlare1 from '../assets/RegistrationMethod/star-flare-1.svg'
-import starFlare2 from '../assets/RegistrationMethod/star-flare-2.svg'
-import starFlare3 from '../assets/RegistrationMethod/star-flare-3.svg'
-import starFlare4 from '../assets/RegistrationMethod/star-flare-4.svg'
 
 // Fluid clamp(min, preferred, max) built from the mobile (390px, node
 // 1221:61439) and desktop (1460px, node 104:327) Figma frames — same
@@ -26,7 +20,7 @@ const fluid = (minPx: number, maxPx: number) => {
 const heroTitleSize = fluid(40, 100) // 主標題
 const sectionTitleSize = fluid(12, 30) // 三級標題
 const noteTextSize = fluid(11, 16) // 小標題 — used for the "20:00 前" note only
-const faqBodyTextSize = fluid(14, 20) // FAQ accordion content — no desktop
+const faqBodyTextSize = fluid(12, 20) // FAQ accordion content — no desktop
 // spec was given (only the 11px mobile 小標題 style), and that read as too
 // small once expanded on a real screen, so this reads closer to body copy.
 const dateTextSize = fluid(14, 35) // 副標題
@@ -42,100 +36,6 @@ const cardGapY = fluid(8, 24) // gap between date rows
 // breakpoints — see DateBadge's circleOffset. Purely a visual nudge for the
 // one badge whose column is heightened by the "20:00 前" note.
 const endCircleOffset = fluid(9.25, 13)
-
-// Figma's own frame draws this at 357.405x641.686, but that's the element's
-// bounding box within a much taller full-page canvas — checked against the
-// user's reference screenshot of the actual rendered hero area, the visible
-// flare reads as one accent among the other ~20-90px StarField sparkles, not
-// a page-dominating hero graphic. Sized to match that reference instead of
-// Figma's raw frame measurement.
-const starFlareWidth = fluid(45, 100)
-
-// A decorative flare (Figma node 894:10335, "星星閃爍") — built
-// from 5 individually rotated/skewed vector petals, not a single symmetric
-// sparkle like StarField's <Sparkle>. Ported close to verbatim from Figma's
-// own export (including its cqw/cqh-based sizing for the 4 rotated petals)
-// because hand-approximating this one with a single symmetric shape didn't
-// match the reference — this is a bespoke one-off illustration, not part of
-// the repeated star field.
-function StarFlare({ className = '' }: { className?: string }) {
-  return (
-    <div className={`flex items-center justify-center ${className}`}>
-      <div className="animate-twinkle flex-none -scale-y-100 rotate-[80deg]">
-        <div
-          className="relative"
-          style={{
-            width: starFlareWidth,
-            aspectRatio: '357.405/641.686',
-            containerType: 'size',
-          }}
-        >
-          <div className="absolute inset-[0_85.83%_90.99%_0]">
-            <div className="absolute inset-[-26.43%_-32.79%_-31.03%_-32.79%]">
-              <img
-                alt=""
-                className="block size-full max-w-none"
-                src={starFlareMain}
-              />
-            </div>
-          </div>
-          <div className="absolute inset-[86.19%_0.03%_3.52%_73.67%] flex items-center justify-center">
-            <div className="h-[hypot(-62.5259cqw,-46.9359cqh)] w-[hypot(-37.4741cqw,53.0641cqh)] flex-none rotate-[140.87deg] skew-x-[27.55deg]">
-              <div className="relative size-full">
-                <div className="absolute inset-[-22.99%_-33.42%_-26.99%_-33.42%]">
-                  <img
-                    alt=""
-                    className="block size-full max-w-none"
-                    src={starFlare1}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="absolute inset-[8.66%_77.47%_87.08%_15.25%] flex items-center justify-center">
-            <div className="h-[hypot(13.8662cqw,79.718cqh)] w-[hypot(86.1338cqw,-20.282cqh)] flex-none rotate-[-11.44deg]">
-              <div className="relative size-full">
-                <div className="absolute inset-[-69.17%_-71.96%_-81.2%_-71.96%]">
-                  <img
-                    alt=""
-                    className="block size-full max-w-none"
-                    src={starFlare2}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="absolute inset-[92%_10.57%_2.3%_74.69%] flex items-center justify-center">
-            <div className="h-[hypot(-48.1262cqw,21.3434cqh)] w-[hypot(51.8738cqw,78.6566cqh)] flex-none rotate-[40.77deg] skew-x-[-35.07deg]">
-              <div className="relative size-full">
-                <div className="absolute inset-[-57.59%_-41.82%_-67.6%_-41.82%]">
-                  <img
-                    alt=""
-                    className="block size-full max-w-none"
-                    src={starFlare3}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="absolute inset-[92.39%_0_0_93.87%] flex items-center justify-center">
-            <div className="h-[hypot(77.6291cqw,38.1799cqh)] w-[hypot(22.3709cqw,-61.8201cqh)] flex-none rotate-[-78.77deg] skew-x-[-30.65deg]">
-              <div className="relative size-full">
-                <div className="absolute inset-[-60.52%_-54.28%_-71.05%_-54.28%]">
-                  <img
-                    alt=""
-                    className="block size-full max-w-none"
-                    src={starFlare4}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
 
 // Toggle icon's own box — mobile stays close to its original small size,
 // desktop scales up to match the Figma reference more closely. 17.5/20 and
@@ -169,9 +69,20 @@ function ToggleIcon({ expanded }: { expanded: boolean }) {
 }
 
 // TODO: swap in the real document URLs once legal/organizers provide them.
-function LegalLink({ children }: { children: ReactNode }) {
+function LegalLink({
+  href = '#',
+  children,
+}: {
+  href?: string
+  children: ReactNode
+}) {
   return (
-    <a href="#" className="text-[#a5bde2] underline decoration-from-font">
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-[#a5bde2] underline decoration-from-font"
+    >
       {children}
     </a>
   )
@@ -195,7 +106,7 @@ const FAQ_SECTIONS: FaqSection[] = [
     title: '報名費用',
     content: (
       <div className="space-y-2">
-        <p>＄1000／人（另收取保證金 $100）</p>
+        <p>＄1000／人（另收取保證金 $ 200）</p>
         <List>
           <li>
             跨域組隊：隊伍成員每人減免＄100
@@ -284,12 +195,17 @@ const FAQ_SECTIONS: FaqSection[] = [
       <List>
         <li>
           報名之隊伍需在報名手續最末同意「
-          <LegalLink>智慧財產權聲明暨肖像授權</LegalLink>
+          <LegalLink href="https://drive.google.com/file/d/1QQjxcHVbZXQNqMOD6qqtrjNG3nGVG6Sj/view?pli=1">
+            智慧財產權聲明暨肖像授權
+          </LegalLink>
           」相關條款。
         </li>
         <li>
           報名錄取的隊伍在繳費成功後請務必仔細閱讀正取信內容，依照信件內容完成所有報名流程；同時，一併於信件提供之表單內回傳隊伍中「每一位」參賽者簽署之「
-          <LegalLink>個人資料蒐集聲明同意書</LegalLink>」。
+          <LegalLink href="https://drive.google.com/file/d/1QQjxcHVbZXQNqMOD6qqtrjNG3nGVG6Sj/view?pli=1">
+            個人資料蒐集聲明同意書
+          </LegalLink>
+          」。
         </li>
         <li>
           2026
@@ -311,19 +227,22 @@ function FaqAccordion() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
-    <div className="animate-fade-in divide-y divide-white/20 border-b border-white/20">
+    <div className="animate-fade-in">
       {FAQ_SECTIONS.map((section, i) => {
         const expanded = openIndex === i
         return (
-          <div key={section.title}>
+          <div
+            key={section.title}
+            className={`border-white/70 ${expanded ? '' : 'border-b'}`}
+          >
             <button
               type="button"
               onClick={() => setOpenIndex(expanded ? null : i)}
               aria-expanded={expanded}
-              className="flex w-full items-center justify-between py-4 text-left transition-opacity hover:opacity-70 md:py-6"
+              className="flex w-full items-center justify-between border-b border-white/70 px-3 py-2 text-left transition-opacity hover:opacity-70 md:py-5"
             >
               <span
-                className="font-noto font-semibold text-white"
+                className="font-noto font-normal text-white"
                 style={{ fontSize: sectionTitleSize }}
               >
                 {section.title}
@@ -339,7 +258,7 @@ function FaqAccordion() {
             >
               <div className="overflow-hidden">
                 <div
-                  className="font-noto pb-5 leading-relaxed text-[#f6f6f6] md:pb-8"
+                  className="font-noto px-3 pt-5 pb-5 leading-relaxed text-[#f6f6f6] md:pb-8"
                   style={{ fontSize: faqBodyTextSize }}
                 >
                   {section.content}
@@ -411,7 +330,7 @@ const DATE_ITEMS: DateItem[] = [
     note: '20:00 前',
     label: '開始報名',
   },
-  { date: '08.24', day: 'Mon', label: '正備取隊伍與所屬企業公布' },
+  { date: '08.20', day: 'Mon', label: '正備取隊伍與所屬企業公布' },
   {
     date: '08.20',
     day: 'Thu',
@@ -634,8 +553,6 @@ export default function RegistrationMethodView() {
           id="報名時程"
           className="relative flex flex-col items-center px-6 pt-28 pb-16 md:pt-36 md:pb-20"
         >
-          <StarField count={20} seed={1046} />
-          <StarFlare className="pointer-events-none absolute top-[8%] left-[12%]" />
           <h1
             className="glow-text font-zen animate-fade-in relative mb-10 text-center text-[#f6f6f6] md:mb-16"
             style={{ fontSize: heroTitleSize }}
