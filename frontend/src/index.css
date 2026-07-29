@@ -820,6 +820,10 @@ body {
     gap: 0 !important;
   }
 
+  .sponsor-tier-cathay {
+    width: 144px !important;
+  }
+
   .partner-sponsors + .partner-placeholder {
     margin-top: 56px !important;
   }

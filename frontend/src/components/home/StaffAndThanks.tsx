@@ -108,7 +108,7 @@ export default function StaffAndThanks() {
     <div className="staff-and-thanks mx-auto flex w-full flex-col items-center gap-16 px-[clamp(48px,8vw,96px)] py-16 md:gap-[125px] md:py-0">
       <div className="thanks-block flex flex-col items-center gap-8 text-center md:w-[570px] md:gap-[50px]">
         <p className="font-['Zen_Antique'] text-2xl text-[#b1a2ca] md:text-[35px] md:leading-[44px]">
-          協辦單位
+          協<span className="font-['Noto_Serif_TC'] font-bold">辦</span>單位
         </p>
         <div className="flex flex-col gap-2 font-['Zen_Antique'] text-xl text-[#4664AC] md:text-[40px] md:leading-[44px]">
           <p>國立陽明交通大學資訊工程學系</p>

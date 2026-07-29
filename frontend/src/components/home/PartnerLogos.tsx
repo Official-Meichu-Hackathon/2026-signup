@@ -10,6 +10,7 @@ import logoTsmc from '../../assets/home/logo-tsmc.webp'
 import logoPhison from '../../assets/home/logo-phison.webp'
 import logoMaicoin from '../../assets/home/logo-maicoin.webp'
 import logoPixart from '../../assets/home/logo-pixart.webp'
+import logoCathay from '../../assets/home/logo-cathay.webp'
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
@@ -170,6 +171,19 @@ export default function PartnerLogos() {
                 />
               </div>
             </div>
+          </div>
+        </div>
+
+        <div className="sponsor-tier sponsor-tier-cathay flex w-[411px] flex-col items-start">
+          <SponsorTierLabel>Platinum</SponsorTierLabel>
+          <div className="relative aspect-[4096/1458] w-full">
+            <img
+              src={logoCathay}
+              alt="國泰金控 Cathay Financial Holdings"
+              loading="lazy"
+              decoding="async"
+              className="absolute inset-0 h-full w-full max-w-none object-cover"
+            />
           </div>
         </div>
       </div>
