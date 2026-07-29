@@ -5,6 +5,11 @@ import StarField from '../components/layout/StarField'
 import CursorTrail from '../components/layout/CursorTrail'
 import bgHero from '../assets/RegistrationMethod/bg-hero.jpg'
 import bgContent from '../assets/RegistrationMethod/bg-content.jpg'
+import starFlareMain from '../assets/RegistrationMethod/star-flare-main.svg'
+import starFlare1 from '../assets/RegistrationMethod/star-flare-1.svg'
+import starFlare2 from '../assets/RegistrationMethod/star-flare-2.svg'
+import starFlare3 from '../assets/RegistrationMethod/star-flare-3.svg'
+import starFlare4 from '../assets/RegistrationMethod/star-flare-4.svg'
 
 // Fluid clamp(min, preferred, max) built from the mobile (390px, node
 // 1221:61439) and desktop (1460px, node 104:327) Figma frames — same
@@ -38,6 +43,106 @@ const cardGapY = fluid(8, 24) // gap between date rows
 // one badge whose column is heightened by the "20:00 前" note.
 const endCircleOffset = fluid(9.25, 13)
 
+// Figma's own frame draws this at 357.405x641.686, but that's the element's
+// bounding box within a much taller full-page canvas — checked against the
+// user's reference screenshot of the actual rendered hero area, the visible
+// flare reads as one accent among the other ~20-90px StarField sparkles, not
+// a page-dominating hero graphic. Sized to match that reference instead of
+// Figma's raw frame measurement.
+const starFlareWidth = fluid(45, 100)
+
+// A decorative flare (Figma node 894:10335, "星星閃爍") — built
+// from 5 individually rotated/skewed vector petals, not a single symmetric
+// sparkle like StarField's <Sparkle>. Ported close to verbatim from Figma's
+// own export (including its cqw/cqh-based sizing for the 4 rotated petals)
+// because hand-approximating this one with a single symmetric shape didn't
+// match the reference — this is a bespoke one-off illustration, not part of
+// the repeated star field.
+function StarFlare({ className = '' }: { className?: string }) {
+  return (
+    <div className={`flex items-center justify-center ${className}`}>
+      <div className="animate-twinkle flex-none -scale-y-100 rotate-[80deg]">
+        <div
+          className="relative"
+          style={{
+            width: starFlareWidth,
+            aspectRatio: '357.405/641.686',
+            containerType: 'size',
+          }}
+        >
+          <div className="absolute inset-[0_85.83%_90.99%_0]">
+            <div className="absolute inset-[-26.43%_-32.79%_-31.03%_-32.79%]">
+              <img
+                alt=""
+                className="block size-full max-w-none"
+                src={starFlareMain}
+              />
+            </div>
+          </div>
+          <div className="absolute inset-[86.19%_0.03%_3.52%_73.67%] flex items-center justify-center">
+            <div className="h-[hypot(-62.5259cqw,-46.9359cqh)] w-[hypot(-37.4741cqw,53.0641cqh)] flex-none rotate-[140.87deg] skew-x-[27.55deg]">
+              <div className="relative size-full">
+                <div className="absolute inset-[-22.99%_-33.42%_-26.99%_-33.42%]">
+                  <img
+                    alt=""
+                    className="block size-full max-w-none"
+                    src={starFlare1}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="absolute inset-[8.66%_77.47%_87.08%_15.25%] flex items-center justify-center">
+            <div className="h-[hypot(13.8662cqw,79.718cqh)] w-[hypot(86.1338cqw,-20.282cqh)] flex-none rotate-[-11.44deg]">
+              <div className="relative size-full">
+                <div className="absolute inset-[-69.17%_-71.96%_-81.2%_-71.96%]">
+                  <img
+                    alt=""
+                    className="block size-full max-w-none"
+                    src={starFlare2}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="absolute inset-[92%_10.57%_2.3%_74.69%] flex items-center justify-center">
+            <div className="h-[hypot(-48.1262cqw,21.3434cqh)] w-[hypot(51.8738cqw,78.6566cqh)] flex-none rotate-[40.77deg] skew-x-[-35.07deg]">
+              <div className="relative size-full">
+                <div className="absolute inset-[-57.59%_-41.82%_-67.6%_-41.82%]">
+                  <img
+                    alt=""
+                    className="block size-full max-w-none"
+                    src={starFlare3}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="absolute inset-[92.39%_0_0_93.87%] flex items-center justify-center">
+            <div className="h-[hypot(77.6291cqw,38.1799cqh)] w-[hypot(22.3709cqw,-61.8201cqh)] flex-none rotate-[-78.77deg] skew-x-[-30.65deg]">
+              <div className="relative size-full">
+                <div className="absolute inset-[-60.52%_-54.28%_-71.05%_-54.28%]">
+                  <img
+                    alt=""
+                    className="block size-full max-w-none"
+                    src={starFlare4}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Toggle icon's own box — mobile stays close to its original small size,
+// desktop scales up to match the Figma reference more closely. 17.5/20 and
+// 24.5/28 both preserve the icon's native 31.5:36 aspect ratio.
+const toggleIconHeight = fluid(20, 28)
+const toggleIconWidth = fluid(17.5, 24.5)
+
 // Same +/− glyph as MobileNavMenu's ToggleIcon, duplicated locally rather
 // than exported/shared — this page's accordion opens by index instead of by
 // group label, so the two components don't otherwise share state shape.
@@ -45,18 +150,18 @@ const endCircleOffset = fluid(9.25, 13)
 // instead of unmounting, so + smoothly turns into − rather than popping.
 function ToggleIcon({ expanded }: { expanded: boolean }) {
   return (
-    <svg viewBox="0 0 12 12" className="size-3 shrink-0 text-white">
-      <path
-        d="M1 6h10"
+    <svg
+      viewBox="0 0 31.5 36"
+      className="shrink-0 text-white"
+      style={{ height: toggleIconHeight, width: toggleIconWidth }}
+    >
+      <line x1="0" y1="17.5" x2="31.5" y2="17.5" stroke="currentColor" />
+      <line
+        x1="16.25"
+        y1="0"
+        x2="16.25"
+        y2="36"
         stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      <path
-        d="M6 1v10"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
         className={`origin-center transition-transform duration-300 ease-out ${expanded ? 'scale-y-0' : 'scale-y-100'}`}
       />
     </svg>
@@ -206,7 +311,7 @@ function FaqAccordion() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
-    <div className="animate-fade-in divide-y divide-white/20 border-y border-white/20">
+    <div className="animate-fade-in divide-y divide-white/20 border-b border-white/20">
       {FAQ_SECTIONS.map((section, i) => {
         const expanded = openIndex === i
         return (
@@ -530,6 +635,7 @@ export default function RegistrationMethodView() {
           className="relative flex flex-col items-center px-6 pt-28 pb-16 md:pt-36 md:pb-20"
         >
           <StarField count={20} seed={1046} />
+          <StarFlare className="pointer-events-none absolute top-[8%] left-[12%]" />
           <h1
             className="glow-text font-zen animate-fade-in relative mb-10 text-center text-[#f6f6f6] md:mb-16"
             style={{ fontSize: heroTitleSize }}

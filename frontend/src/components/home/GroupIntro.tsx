@@ -1,9 +1,6 @@
 import { useState } from 'react'
 import groupHacker from '../../assets/home/group-hacker.webp'
 import groupMaker from '../../assets/home/group-maker.webp'
-import groupMobileBase from '../../assets/home/group-mobile-base.svg'
-import groupMobileHackerShell from '../../assets/home/group-mobile-hacker-shell.svg'
-import groupMobileMakerShell from '../../assets/home/group-mobile-maker-shell.svg'
 import { GroupTitleSparkles } from './HomeSparkles'
 
 type GroupKey = 'hacker' | 'maker'
@@ -20,7 +17,7 @@ const CONTENT: Record<
   hacker: {
     image: groupHacker,
     intro:
-      '致力於搭起學界與業界之間的橋樑，參賽者將運用企業資源並發揮創意回應企業命題，讓想像力與實作並存！2026 年梅竹黑客松將由以下七家企業作為引導單位：CloudMosa、恩智浦半導體、台積電、羅技、Google、AMD、聚陽實業。',
+      '致力於搭起學界與業界之間的橋樑，參賽者將運用企業資源並發揮創意回應企業命題，讓想像力與實作並存！2026 年梅竹黑客松將由以下七家企業作為引導單位：CloudMosa、羅技、AMD、聚陽實業、NXP、愛德萬測試、Google。',
     workshop:
       '每間合作企業皆會舉辦工作坊，透過工作坊，參賽者將領取到企業所提供的硬體設備或軟體資源，並且由企業之技術人員親自教學，簡易的指導參賽者如何使用相關技術或資源。舉辦地點與時間將依不同企業而定。',
   },
@@ -58,19 +55,7 @@ export default function GroupIntro() {
     <div id="group-intro">
       <div className="group-intro-mobile">
         <p className="mobile-home-title">組別介紹</p>
-        <div className={`group-mobile-panel is-${tab}`}>
-          <div className="group-mobile-art" aria-hidden="true">
-            <img src={groupMobileBase} alt="" className="group-mobile-base" />
-            <img
-              src={
-                tab === 'hacker'
-                  ? groupMobileHackerShell
-                  : groupMobileMakerShell
-              }
-              alt=""
-              className="group-mobile-shell"
-            />
-          </div>
+        <div className="group-mobile-panel">
           <div className="group-mobile-tabs">
             {TABS.map(({ key, label }) => (
               <button
@@ -105,10 +90,7 @@ export default function GroupIntro() {
         </div>
 
         <div className="flex w-full items-start gap-[clamp(48px,10.49vw,151px)] pt-[244px] pr-[clamp(24px,5vw,72px)]">
-          <div
-            className="group-edge-tabs flex w-[112px] shrink-0 flex-col items-start"
-            data-node-id="617:1329"
-          >
+          <div className="group-edge-tabs flex w-[112px] shrink-0 flex-col items-start">
             {TABS.map(({ key, label }) => (
               <button
                 key={key}

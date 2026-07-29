@@ -6,10 +6,8 @@ import bgTop from '../assets/Schedule/bg-top.png'
 import bgBottom from '../assets/Schedule/bg-bottom.png'
 import constellationLeft from '../assets/Schedule/constellation-left.svg'
 import constellationRight from '../assets/Schedule/constellation-right.svg'
-import constellationTop from '../assets/Schedule/constellation-top.svg'
 import mobileConstellationLeft from '../assets/Schedule/mobile-constellation-left.svg'
 import mobileConstellationRight from '../assets/Schedule/mobile-constellation-right.svg'
-import mobileConstellationTop from '../assets/Schedule/mobile-constellation-top.svg'
 
 // Scattered star dots around the header constellations (node 128:486–508 for
 // desktop, 136:243–267 for mobile) — plain glowing dots, so they're drawn
@@ -22,14 +20,6 @@ const HEADER_STARS = [
   { left: 16.18, top: 7.7, size: 8 },
   { left: 22.15, top: 7.04, size: 7 },
   { left: 22.15, top: 9.32, size: 8 },
-  { left: 47.01, top: 1.05, size: 11 },
-  { left: 47.78, top: 2.82, size: 8 },
-  { left: 53.54, top: 2.38, size: 8 },
-  { left: 58.26, top: 1.14, size: 6 },
-  { left: 70.97, top: 2.38, size: 8 },
-  { left: 75.21, top: 2.38, size: 6 },
-  { left: 79.86, top: 1.81, size: 8 },
-  { left: 83.26, top: 1.08, size: 8 },
   { left: 85.42, top: 6.85, size: 8 },
   { left: 89.72, top: 7.83, size: 10 },
   { left: 92.43, top: 9.06, size: 6 },
@@ -41,14 +31,10 @@ const HEADER_STARS = [
 ]
 
 const MOBILE_HEADER_STARS = [
-  { left: 40.6, top: 1.21, size: 3.6 },
   { left: 83.87, top: 1.24, size: 2.6 },
-  { left: 54.03, top: 1.31, size: 1.9 },
   { left: 79.81, top: 2.03, size: 2.6 },
-  { left: 48.4, top: 2.65, size: 2.6 },
   { left: 69.2, top: 2.65, size: 2.6 },
   { left: 74.26, top: 2.65, size: 1.9 },
-  { left: 41.52, top: 3.14, size: 2.6 },
   { left: 82.21, top: 6.61, size: 2.6 },
   { left: 27.34, top: 7.57, size: 2.4 },
   { left: 19.73, top: 8.34, size: 2.8 },
@@ -140,11 +126,6 @@ function DesktopSchedule() {
           box={{ left: 81.39, top: 6.97, width: 13.06, height: 8.11 }}
           bleed="-18.46% -27.11% -21.29% -27.05%"
         />
-        <Constellation
-          src={constellationTop}
-          box={{ left: 47.36, top: 0, width: 36.25, height: 2.98 }}
-          bleed="2.13% -9.77% -59.57% -9.77%"
-        />
 
         {/* Star dots render after (i.e. visually on top of) the
             constellation lines so they sit above the strokes, not behind. */}
@@ -161,7 +142,9 @@ function DesktopSchedule() {
           />
         ))}
 
-        <h1 className="glow-text font-zen absolute top-[12.30%] left-1/2 w-[91.25%] -translate-x-1/2 text-center text-[clamp(2.5rem,6.94vw,6.25rem)] leading-[0.64] text-[#f6f6f6]">
+        {/* z-20: above CursorTrail's z-10, so the trail visibly passes
+            behind the title instead of drawing over it. */}
+        <h1 className="glow-text font-zen absolute top-[12.30%] left-1/2 z-20 w-[91.25%] -translate-x-1/2 text-center text-[clamp(2.5rem,6.94vw,6.25rem)] leading-[0.64] text-[#f6f6f6]">
           比賽時程
         </h1>
 
@@ -239,11 +222,6 @@ function MobileSchedule() {
         box={{ left: 77.44, top: 6.75, width: 15.47, height: 8.76 }}
         bleed="-18.46% -27.10% -21.52% -27.05%"
       />
-      <Constellation
-        src={mobileConstellationTop}
-        box={{ left: 41.02, top: 0, width: 43.26, height: 3.24 }}
-        bleed="0% -9.94% -61.27% -9.77%"
-      />
 
       {MOBILE_HEADER_STARS.map((star, i) => (
         <span
@@ -258,7 +236,9 @@ function MobileSchedule() {
         />
       ))}
 
-      <h1 className="glow-text font-zen absolute top-[11.94%] left-1/2 w-[68.97%] -translate-x-1/2 text-center text-[clamp(1.75rem,10.26vw,2.5rem)] leading-[1.1] text-[#f6f6f6]">
+      {/* z-20: above CursorTrail's z-10, so the trail visibly passes
+          behind the title instead of drawing over it. */}
+      <h1 className="glow-text font-zen absolute top-[11.94%] left-1/2 z-20 w-[68.97%] -translate-x-1/2 text-center text-[clamp(1.75rem,10.26vw,2.5rem)] leading-[1.1] text-[#f6f6f6]">
         比賽時程
       </h1>
 
@@ -296,7 +276,15 @@ function MobileSchedule() {
 export default function ScheduleView() {
   return (
     <div className="relative bg-black text-white">
-      <div className="relative -z-10">
+      {/* Unlike RegistrationMethodView, the bg-top/bg-bottom images here sit
+          at z-index:auto deep inside DesktopSchedule/MobileSchedule (both
+          always mounted, one hidden per breakpoint), not under a shared
+          -z-10 wrapper — so a negative z-index here would paint behind them
+          instead of over them. A small positive z-index (well under
+          Navbar's z-50) reliably wins over that z-index:auto content
+          regardless of DOM order; pointer-events-none keeps it from
+          blocking clicks on anything it visually sits above. */}
+      <div className="relative z-10">
         <CursorTrail bgSelector="[data-trail-bg='schedule']" />
       </div>
       <Navbar />

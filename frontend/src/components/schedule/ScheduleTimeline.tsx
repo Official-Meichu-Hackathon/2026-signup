@@ -1,5 +1,6 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
+  animate,
   motion,
   useMotionValue,
   useMotionValueEvent,
@@ -23,73 +24,80 @@ interface EventItem {
 // 09/20 has no mobile-specific mock in Figma, so both devices share it — its
 // artboard aspect ratio (1604x2156) happens to be close to the real mobile
 // 09/19 one, so reusing it doesn't reflow the page much when switching days.
+// Shifted down 12 points from the raw Figma-read numbers (see DAY20_Y_SHIFT
+// below) — at the original values, the first dot/label fell inside the day
+// tabs' own vertical span (TABS_20 occupies 0~19.654%), overlapping them.
+const DAY20_Y_SHIFT = 12
 const EVENTS_20: EventItem[] = [
   {
-    time: '00:00-08:00',
-    label: '參賽者休息',
-    dot: { top: 10.81, left: 25.75 },
-    text: { top: 9.98, left: 31.36 },
-  },
-  {
     time: '08:00-09:00',
-    label: '早餐',
-    dot: { top: 16.93, left: 33.97 },
-    text: { top: 16.65, left: 38.9 },
+    label: '參賽者簽到＋早餐',
+    dot: { top: 10.81 + DAY20_Y_SHIFT, left: 25.75 },
+    text: { top: 9.98 + DAY20_Y_SHIFT, left: 31.36 },
   },
   {
     time: '09:00-11:00',
     label: 'Coding...... / 企業博覽會 / 娛樂交流活動',
-    dot: { top: 27.31, left: 22.26 },
-    text: { top: 26.48, left: 26.07 },
+    dot: { top: 16.93 + DAY20_Y_SHIFT, left: 33.97 },
+    text: { top: 16.65 + DAY20_Y_SHIFT, left: 38.9 },
   },
   {
-    time: '11:00-11:50',
-    label: '午餐 / 活動攤位',
-    dot: { top: 37.69, left: 33.97 },
-    text: { top: 36.91, left: 38.4 },
+    time: '11:00-12:00',
+    label: '午餐',
+    dot: { top: 27.31 + DAY20_Y_SHIFT, left: 22.26 },
+    text: { top: 26.48 + DAY20_Y_SHIFT, left: 26.07 },
+  },
+  {
+    time: '11:20-12:30',
+    label: 'Demo前置準備',
+    dot: { top: 37.69 + DAY20_Y_SHIFT, left: 33.97 },
+    text: { top: 36.91 + DAY20_Y_SHIFT, left: 38.4 },
+  },
+  {
+    time: '12:30-14:30',
+    label: '黑客初賽',
+    dot: { top: 51.05 + DAY20_Y_SHIFT, left: 18.02 },
+    text: { top: 50.73 + DAY20_Y_SHIFT, left: 23.26 },
   },
   {
     time: '11:50-15:10',
-    label: '創客交流組決賽',
-    dot: { top: 51.05, left: 18.02 },
-    text: { top: 50.73, left: 23.26 },
+    label: '創客決賽',
+    dot: { top: 59.57 + DAY20_Y_SHIFT, left: 25.75 },
+    text: { top: 58.69 + DAY20_Y_SHIFT, left: 32.36 },
   },
   {
-    time: '12:10-14:00',
-    label: '黑客組初賽',
-    dot: { top: 59.57, left: 25.75 },
-    text: { top: 58.69, left: 32.36 },
+    time: '15:30-17:30',
+    label: '黑客決賽',
+    dot: { top: 66.81 + DAY20_Y_SHIFT, left: 47.43 },
+    text: { top: 65.93 + DAY20_Y_SHIFT, left: 51.42 },
   },
   {
-    time: '15:20-17:30',
-    label: '黑客組決賽',
-    dot: { top: 66.81, left: 47.43 },
-    text: { top: 65.93, left: 51.42 },
+    time: '17:30-18:00',
+    label: '評審、人氣獎結算',
+    dot: { top: 80.71 + DAY20_Y_SHIFT, left: 32.23 },
+    text: { top: 80.38 + DAY20_Y_SHIFT, left: 37.53 },
   },
   {
-    time: '17:30-18:30',
-    label: '頒獎 / 抽獎',
-    dot: { top: 80.71, left: 32.23 },
-    text: { top: 80.38, left: 37.53 },
-  },
-  {
-    time: '18:30-19:30',
-    label: '閉幕式',
-    dot: { top: 98.14, left: 40.2 },
-    text: { top: 97.81, left: 44.75 },
+    time: '18:10-20:00',
+    label: '頒獎 / 抽獎 / 閉幕式',
+    dot: { top: 98.14 + DAY20_Y_SHIFT, left: 40.2 },
+    text: { top: 97.81 + DAY20_Y_SHIFT, left: 44.75 },
   },
 ]
 
 const LINE_20 = {
   src: timelineLine20,
   aspect: '1604/2156',
-  box: '10.81% 52.56% 1.81% 18.02%',
+  // Top/bottom insets shifted by the same DAY20_Y_SHIFT as the dots above
+  // (translating the box down, not resizing it) so the line stays exactly
+  // on the dots instead of the box being re-scaled to a different height.
+  box: `${10.81 + DAY20_Y_SHIFT}% 52.56% ${1.81 - DAY20_Y_SHIFT}% 18.02%`,
   bleed: '-2.48% -10.93% -2.88% -10.86%',
 }
 
 const TABS_20 = {
-  sat: { w: 9.975, h: 8.627, top: 0 },
-  sun: { w: 13.093, h: 8.627, top: 8.627 },
+  sat: { w: 9.975, h: 9.827, top: 0 },
+  sun: { w: 13.093, h: 9.827, top: 9.827 },
 }
 
 // Percentages read off the Figma frames (node 816:2013 for desktop, 136:209's
@@ -100,7 +108,7 @@ const EVENTS: Record<Device, Record<Day, EventItem[]>> = {
     '19': [
       {
         time: '08:30-09:00',
-        label: '報到',
+        label: '參賽者報到、貴賓報到',
         dot: { top: 13.19, left: 29.65 },
         text: { top: 12.17, left: 33 },
       },
@@ -124,7 +132,7 @@ const EVENTS: Record<Device, Record<Day, EventItem[]>> = {
       },
       {
         time: '13:30-18:00',
-        label: 'Coding...... / 企業博覽會（到17:00）/ 娛樂交流活動',
+        label: 'Coding...... / 企業博覽會 / 娛樂交流活動',
         dot: { top: 56.82, left: 32.94 },
         text: { top: 56.07, left: 37.68 },
       },
@@ -136,13 +144,13 @@ const EVENTS: Record<Device, Record<Day, EventItem[]>> = {
       },
       {
         time: '19:30-21:00',
-        label: 'Coding...... / 娛樂交流活動',
+        label: 'Coding......',
         dot: { top: 83.27, left: 50.9 },
         text: { top: 82.3, left: 54.19 },
       },
       {
         time: '21:00-21:30',
-        label: '發宵夜、散場',
+        label: '參賽者領宵夜散場',
         dot: { top: 97.81, left: 35.72 },
         text: { top: 97.28, left: 40.02 },
       },
@@ -165,7 +173,7 @@ const EVENTS: Record<Device, Record<Day, EventItem[]>> = {
       },
       {
         time: '10:30-12:00',
-        label: 'Coding...... / 企業博覽會 / 娛樂交流活動',
+        label: 'Coding...... / 企業博覽會 / \n             娛樂交流活動',
         dot: { top: 46.58, left: 28.38 },
         text: { top: 45.32, left: 32.09 },
       },
@@ -189,7 +197,7 @@ const EVENTS: Record<Device, Record<Day, EventItem[]>> = {
       },
       {
         time: '19:30-21:00',
-        label: 'Coding...... / 娛樂交流活動',
+        label: `Coding...... / \n${' '.repeat(13)}娛樂交流活動`,
         dot: { top: 91.59, left: 56.41 },
         text: { top: 90.62, left: 60.06 },
       },
@@ -247,15 +255,15 @@ const TABS: Record<
 > = {
   desktop: {
     '19': {
-      sat: { w: 13.283, h: 10.016, top: 0 },
-      sun: { w: 10.121, h: 10.016, top: 10.016 },
+      sat: { w: 13.283, h: 11.216, top: 0 },
+      sun: { w: 10.121, h: 11.216, top: 11.216 },
     },
     '20': TABS_20,
   },
   mobile: {
     '19': {
-      sat: { w: 14.72, h: 10.03, top: 0 },
-      sun: { w: 11.21, h: 10.03, top: 10.06 },
+      sat: { w: 14.72, h: 11.23, top: 0 },
+      sun: { w: 11.21, h: 11.23, top: 11.26 },
     },
     '20': TABS_20,
   },
@@ -279,17 +287,33 @@ function DayTab({
       type="button"
       onClick={onClick}
       style={style}
-      className={`absolute overflow-clip rounded-tr-[65px] rounded-br-[65px] border shadow-[0_10px_30px_rgba(0,0,0,0.25)] backdrop-blur-[35px] transition-all duration-300 ease-out ${active ? 'border-white/30 bg-white/15' : 'border-white/20 bg-white/10'}`}
+      className={`absolute overflow-clip rounded-tr-[60px] rounded-br-[60px] border shadow-[0_10px_30px_rgba(0,0,0,0.25)] backdrop-blur-[14px] transition-all duration-300 ease-out ${active ? 'border-white/35 bg-white/20' : 'border-white/25 bg-white/12'}`}
     >
-      <div className="absolute inset-0 rounded-[inherit] shadow-[inset_0_1px_8px_rgba(255,255,255,0.5)]" />
+      <div className="absolute inset-0 rounded-[inherit] bg-gradient-to-br from-white/25 via-white/5 to-transparent shadow-[inset_0_1px_8px_rgba(255,255,255,0.5)]" />
       <p className="font-noto absolute top-[22.6%] left-1/2 -translate-x-1/2 text-center text-[clamp(0.75rem,2.08vw,1.875rem)] leading-[1.47] font-semibold whitespace-nowrap text-white">
         {date}
       </p>
       {/* Sized off the viewport (like the text), not the pill's own width —
           the pill's width differs between active/inactive states, but the
-          circle+label shouldn't shrink with it or the label overflows it. */}
-      <div className="absolute top-[52.2%] left-1/2 aspect-square w-[clamp(0.875rem,3.75vw,3.375rem)] -translate-x-1/2 rounded-full border border-white" />
-      <p className="font-zen absolute inset-x-0 top-[53.8%] text-center text-[clamp(0.328rem,1.39vw,1.25rem)] leading-[2.2] text-white">
+          circle+label shouldn't shrink with it or the label overflows it.
+          Anchored the same way as the date above (from the pill's own
+          center via left-1/2) plus a fixed rightward nudge, rather than a
+          fixed distance from the pill's right edge — the active/inactive
+          pill widths differ, so anchoring from the edge instead would slide
+          the circle relative to the (fixed-width, always-centered) date
+          text above it depending on which state is active. */}
+      <div
+        className="absolute top-[52.2%] left-1/2 aspect-square w-[clamp(0.875rem,3.75vw,3.375rem)] rounded-full border border-white"
+        style={{
+          transform: 'translateX(calc(-50% + clamp(0.5rem, 1.6vw, 1.1rem)))',
+        }}
+      />
+      <p
+        className="font-zen absolute top-[53.8%] left-1/2 w-[clamp(0.875rem,3.75vw,3.375rem)] text-center text-[clamp(0.328rem,1.39vw,1.25rem)] leading-[2.2] text-white"
+        style={{
+          transform: 'translateX(calc(-50% + clamp(0.5rem, 1.6vw, 1.1rem)))',
+        }}
+      >
         {day}
       </p>
     </button>
@@ -324,7 +348,7 @@ export default function ScheduleTimeline({
   // its own page.
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ['start end', 'end end'],
+    offset: ['start center', 'end end'],
   })
   // Ratchets up with scrollYProgress but never back down, so scrolling back
   // up doesn't retract the line once it's been drawn — once connected, a
@@ -334,19 +358,77 @@ export default function ScheduleTimeline({
   // through.
   const maxProgress19 = useMotionValue(0)
   const maxProgress20 = useMotionValue(0)
+
+  // Whichever day is selected always needs to reflect the page's current
+  // scroll position — not just future scrolling — so that a day the user
+  // hasn't scrolled through yet on its own (e.g. right after switching tabs,
+  // or loading the page already scrolled partway down) still shows the
+  // correct amount of line instead of sitting stuck at 0 with no way to
+  // reach 100% if the user is already at the bottom of the page. Animated
+  // (not `.set()`) specifically for that resync: switching tabs while
+  // already scrolled far down (typically true — you scroll through one
+  // day's whole timeline, then flip to the other) computes a large jump for
+  // the newly selected day, and setting that instantly reads as "the line
+  // never animates, it's just already done." Animating it draws the line in
+  // regardless of how big the jump is, matching mobile's always-animated
+  // reveal. Genuine scroll-driven increases, from useMotionValueEvent below,
+  // stay an instant `.set()` — animating those would make the line lag
+  // behind the user's own scrolling.
+  useEffect(() => {
+    if (device === 'mobile') return
+    const target = selectedDay === '19' ? maxProgress19 : maxProgress20
+    const v = scrollYProgress.get()
+    if (v <= target.get()) return
+    const controls = animate(target, v, { duration: 0.6, ease: 'easeOut' })
+    return () => controls.stop()
+  }, [device, selectedDay, scrollYProgress, maxProgress19, maxProgress20])
+
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
+    if (device === 'mobile') return
     const target = selectedDay === '19' ? maxProgress19 : maxProgress20
     if (v > target.get()) target.set(v)
   })
+
+  // Mobile screens run proportionally much taller relative to the timeline
+  // than desktop's, so tying the reveal to scroll position (like desktop)
+  // left too much of the page still scrollable with the line only partly
+  // drawn — auto-connect instead, independent of scroll. Driven by a motion
+  // value animated with `animate()` rather than CSS's `transition:
+  // mask-image`, since browsers don't animate a `linear-gradient()`'s own
+  // percentage arguments — the previous CSS-transition attempt just snapped
+  // instantly instead of easing. Tracked per day (not one shared value), so
+  // switching tabs doesn't replay the connect animation for a day whose
+  // value has already reached 1.
+  const mobileProgress19 = useMotionValue(0)
+  const mobileProgress20 = useMotionValue(0)
+
+  useEffect(() => {
+    if (device !== 'mobile') return
+    const target = selectedDay === '19' ? mobileProgress19 : mobileProgress20
+    const controls = animate(target, 1, { duration: 2.5, ease: 'easeOut' })
+    return () => controls.stop()
+  }, [device, selectedDay, mobileProgress19, mobileProgress20])
+
+  // Unified progress source: desktop reads the scroll-ratcheted value,
+  // mobile reads the auto-animated one — each day still tracked separately
+  // so switching tabs doesn't mix 09/19's progress with 09/20's.
+  const progress19 = device === 'mobile' ? mobileProgress19 : maxProgress19
+  const progress20 = device === 'mobile' ? mobileProgress20 : maxProgress20
+
   const maskFor = (p: number) => {
     const pct = p * 100
+    if (device === 'mobile') {
+      return `linear-gradient(to bottom, black ${pct}%, transparent ${pct}%)`
+    }
+
+    // Soft-edged reveal (not a hard cut): fully visible above the furthest
+    // scroll position reached, fading out over the last 6% before it —
+    // reads as a comet trail drawing the constellation rather than a wipe.
     return `linear-gradient(to bottom, black ${Math.max(0, pct - 6)}%, transparent ${pct}%)`
   }
-  // Soft-edged reveal (not a hard cut): fully visible above the furthest
-  // scroll position reached, fading out over the last 6% before it — reads
-  // as a comet trail drawing the constellation rather than a wipe.
-  const lineMask19 = useTransform(maxProgress19, maskFor)
-  const lineMask20 = useTransform(maxProgress20, maskFor)
+  const lineMask19 = useTransform(progress19, maskFor)
+  const lineMask20 = useTransform(progress20, maskFor)
+
   const lineMask = selectedDay === '19' ? lineMask19 : lineMask20
 
   return (
@@ -386,44 +468,263 @@ export default function ScheduleTimeline({
         key={selectedDay}
         className="animate-fade-in pointer-events-none absolute inset-0"
       >
-        {/* Masked at the full-container scale (same 0~100% space as each
-            dot's `top`), wrapping the box+bleed-inset nesting the line art
-            itself needs for its drop-shadow bleed — keeps the mask's percent
-            values directly comparable to dot.top instead of needing a
-            conversion between the two coordinate spaces. */}
+        {/* The mask is applied directly on the box-inset div, not on an
+            inset-0 wrapper around it: line.box's own insets already expand
+            past the container's 0~100% where a variant's line art (and its
+            last dot) needs it — e.g. mobile 09/19's box bottom inset is
+            -6.15%, since its last dot sits at top:106.15%. Masking an
+            inset-0 ancestor instead clips that overflow away (the last
+            segment never got revealed), and *resizing* that ancestor to
+            compensate (an earlier attempt) re-based line.box's own
+            percentages on the resized ancestor instead of the container,
+            shifting the whole line out of alignment with the dots. Masking
+            the box div itself sidesteps both: its rendered box already
+            equals the true art bounds, so 0~100% of the mask always matches
+            0~100% of the actual content, however far it overflows. */}
         <motion.div
-          className="absolute inset-0"
-          style={{ WebkitMaskImage: lineMask, maskImage: lineMask }}
+          className="absolute"
+          style={{
+            inset: line.box,
+            WebkitMaskImage: lineMask,
+            maskImage: lineMask,
+            willChange: 'transform', // 提示瀏覽器這個元素會變動，優化 GPU 處理
+            imageRendering: 'crisp-edges', // 某些瀏覽器有效
+          }}
         >
-          <div className="absolute" style={{ inset: line.box }}>
-            <div className="absolute" style={{ inset: line.bleed }}>
-              <img src={line.src} alt="" className="h-full w-full" />
-            </div>
+          <div className="absolute" style={{ inset: line.bleed }}>
+            {/* 👇 1. 如果是手機版 09/19 */}
+            {device === 'mobile' && selectedDay === '19' && (
+              <svg
+                viewBox="0 0 181 440"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-full w-full"
+              >
+                <g id="mobile-line-19">
+                  <g filter="url(#filter-shadow-19)">
+                    <path
+                      d="M78.7523 12.2231L35.7036 75.0859L61.9528 134.725L111.301 173.41L92.4019 224.989L13.6543 273.345L166.95 353.939L103.952 424.861"
+                      stroke="#D9D9D9"
+                      vectorEffect="non-scaling-stroke"
+                      strokeWidth="1.2" // 🌟 09/19 的粗細
+                    />
+                  </g>
+                </g>
+                <defs>
+                  <filter
+                    id="filter-shadow-19"
+                    x="-0.00155735"
+                    y="7.11679e-05"
+                    width="180.495"
+                    height="439.21"
+                    filterUnits="userSpaceOnUse"
+                    colorInterpolationFilters="sRGB"
+                  >
+                    <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                    <feColorMatrix
+                      in="SourceAlpha"
+                      type="matrix"
+                      values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                      result="hardAlpha"
+                    />
+                    <feOffset />
+                    <feGaussianBlur stdDeviation="0.5" />
+                    <feComposite in2="hardAlpha" operator="out" />
+                    <feColorMatrix
+                      type="matrix"
+                      values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.01 0"
+                    />
+                    <feBlend
+                      mode="normal"
+                      in2="BackgroundImageFix"
+                      result="effect1_dropShadow_0_1"
+                    />
+                    <feColorMatrix
+                      in="SourceAlpha"
+                      type="matrix"
+                      values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                      result="hardAlpha"
+                    />
+                    <feOffset dy="1.04997" />
+                    <feGaussianBlur stdDeviation="1.1" />
+                    <feComposite in2="hardAlpha" operator="out" />
+                    <feColorMatrix
+                      type="matrix"
+                      values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.01 0"
+                    />
+                    <feBlend
+                      mode="normal"
+                      in2="effect1_dropShadow_0_1"
+                      result="effect2_dropShadow_0_1"
+                    />
+                    <feColorMatrix
+                      in="SourceAlpha"
+                      type="matrix"
+                      values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                      result="hardAlpha"
+                    />
+                    <feOffset dy="1.04997" />
+                    <feGaussianBlur stdDeviation="2.6" />
+                    <feComposite in2="hardAlpha" operator="out" />
+                    <feColorMatrix
+                      type="matrix"
+                      values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                    />
+                    <feBlend
+                      mode="normal"
+                      in2="effect2_dropShadow_0_1"
+                      result="effect3_dropShadow_0_1"
+                    />
+                    <feBlend
+                      mode="normal"
+                      in="SourceGraphic"
+                      in2="effect3_dropShadow_0_1"
+                      result="shape"
+                    />
+                  </filter>
+                </defs>
+              </svg>
+            )}
+
+            {/* 👇 2. 如果是手機版 09/20 */}
+            {device === 'mobile' && selectedDay === '20' && (
+              <svg
+                viewBox="0 0 575 1986"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-full w-full"
+              >
+                <g id="mobile-line-20">
+                  <g filter="url(#filter-shadow-20)">
+                    <path
+                      d="M175.262 46.707L307.262 178.707L119.262 402.707L307.262 626.707L51.2617 914.707L175.262 1098.71L523.262 1254.71L279.262 1554.71L407.262 1930.71"
+                      stroke="#D9D9D9"
+                      vectorEffect="non-scaling-stroke"
+                      strokeWidth="1.5" // 🌟 09/20 的粗細 (可自行調整，例如 1.2 或 2)
+                    />
+                  </g>
+                </g>
+                <defs>
+                  <filter
+                    id="filter-shadow-20"
+                    x="0"
+                    y="0"
+                    width="574.859"
+                    height="1985.03"
+                    filterUnits="userSpaceOnUse"
+                    colorInterpolationFilters="sRGB"
+                  >
+                    <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                    <feColorMatrix
+                      in="SourceAlpha"
+                      type="matrix"
+                      values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                      result="hardAlpha"
+                    />
+                    <feOffset />
+                    <feGaussianBlur stdDeviation="0.5" />
+                    <feComposite in2="hardAlpha" operator="out" />
+                    <feColorMatrix
+                      type="matrix"
+                      values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.2 0"
+                    />
+                    <feBlend
+                      mode="normal"
+                      in2="BackgroundImageFix"
+                      result="effect1_dropShadow_0_1"
+                    />
+                    <feColorMatrix
+                      in="SourceAlpha"
+                      type="matrix"
+                      values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                      result="hardAlpha"
+                    />
+                    <feOffset dy="4" />
+                    <feGaussianBlur stdDeviation="10" />
+                    <feComposite in2="hardAlpha" operator="out" />
+                    <feColorMatrix
+                      type="matrix"
+                      values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                    />
+                    <feBlend
+                      mode="normal"
+                      in2="effect1_dropShadow_0_1"
+                      result="effect2_dropShadow_0_1"
+                    />
+                    <feColorMatrix
+                      in="SourceAlpha"
+                      type="matrix"
+                      values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                      result="hardAlpha"
+                    />
+                    <feOffset dy="4" />
+                    <feGaussianBlur stdDeviation="25" />
+                    <feComposite in2="hardAlpha" operator="out" />
+                    <feColorMatrix
+                      type="matrix"
+                      values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                    />
+                    <feBlend
+                      mode="normal"
+                      in2="effect2_dropShadow_0_1"
+                      result="effect3_dropShadow_0_1"
+                    />
+                    <feBlend
+                      mode="normal"
+                      in="SourceGraphic"
+                      in2="effect3_dropShadow_0_1"
+                      result="shape"
+                    />
+                  </filter>
+                </defs>
+              </svg>
+            )}
+
+            {/* 👇 3. 剩下的電腦版維持用 img 載入 */}
+            {device === 'desktop' && (
+              <img
+                src={line.src}
+                alt=""
+                className="h-full w-full"
+                style={{ imageRendering: 'crisp-edges' }}
+              />
+            )}
           </div>
         </motion.div>
 
-        {EVENTS[device][selectedDay].map(({ time, label, dot, text }) => (
-          <div key={time}>
-            <span
-              className="absolute size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[0_0_10px_3px_rgba(255,255,255,0.65)]"
-              style={{ top: `${dot.top}%`, left: `${dot.left}%` }}
-            />
-            {/* Desktop: no wrap — there's always enough room past the
-                text's start position for even the longest label. Mobile
-                keeps the max-w-[40%] cap (and wraps): the two longest
-                labels genuinely need more width than mobile has left of
-                their start position, and the font is already at this
-                clamp's floor, so nowrap would just overflow invisibly
-                past the canvas's own overflow-hidden edge instead of
-                wrapping — worse than the wrap it's replacing. */}
-            <p
-              className={`font-noto absolute w-max text-[clamp(0.6875rem,1.74vw,1.5625rem)] leading-[1.6] font-semibold text-white ${device === 'desktop' ? 'whitespace-nowrap' : 'max-w-[40%]'}`}
-              style={{ top: `${text.top}%`, left: `${text.left}%` }}
-            >
-              {time}&nbsp;&nbsp;{label}
-            </p>
-          </div>
-        ))}
+        {/* 注意這裡多抓了一個 index 變數出來 */}
+        {EVENTS[device][selectedDay].map(
+          ({ time, label, dot, text }, index) => {
+            const isBigStar = !(index === 2 || index === 3 || index === 6)
+
+            return (
+              <div key={time}>
+                <span
+                  className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-white ${
+                    device === 'mobile'
+                      ? // 手機版的 大星星 vs 小星星
+                        isBigStar
+                        ? 'size-2 shadow-[0_0_8px_2px_rgba(255,255,255,0.65)]'
+                        : 'size-1 shadow-[0_0_4px_1px_rgba(255,255,255,0.4)]'
+                      : // 電腦版的 大星星 vs 小星星
+                        isBigStar
+                        ? 'size-3 shadow-[0_0_12px_4px_rgba(255,255,255,0.65)]'
+                        : 'size-1.5 shadow-[0_0_6px_2px_rgba(255,255,255,0.4)]'
+                  }`}
+                  style={{ top: `${dot.top}%`, left: `${dot.left}%` }}
+                />
+
+                {/* 原本的文字區塊維持不變 */}
+                <p
+                  className={`font-noto absolute w-max -translate-y-[0.8em] text-[clamp(0.6875rem,1.74vw,1.5625rem)] leading-[1.6] font-semibold text-white ${device === 'desktop' ? 'whitespace-nowrap' : 'max-w-[58%] whitespace-pre-line'}`}
+                  style={{ top: `${dot.top}%`, left: `${text.left}%` }}
+                >
+                  {time}&nbsp;&nbsp;{label}
+                </p>
+              </div>
+            )
+          },
+        )}
       </div>
     </div>
   )

@@ -1,5 +1,9 @@
 import { memo, useEffect, useRef, useState, type CSSProperties } from 'react'
-import { SPARKLE_PATH } from './StarField'
+
+// 4-point sparkle matching the classic cursor trail from the previous version
+const SPARKLE_PATH =
+  'M12 0c.6 6.4 5.6 11.4 12 12-6.4.6-11.4 5.6-12 12-.6-6.4-5.6-11.4-12-12C6.4 11.4 11.4 6.4 12 0Z'
+const SPARKLE_VIEWBOX = '0 0 24 24'
 
 // White sparkles falling from the cursor. Mounted inside the page's background
 // wrapper and layered under content, like 2025-signup's #light-cursor, so it
@@ -42,7 +46,7 @@ const IDLE_FALLBACK_MS = 200
 // Background image, not inline <svg>: decoded once for all nodes, and a div's
 // transform gets composited where an animated <svg>'s does not.
 const SPARKLE_URL = `url("data:image/svg+xml,${encodeURIComponent(
-  `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='#fff' d='${SPARKLE_PATH}'/></svg>`,
+  `<svg xmlns='http://www.w3.org/2000/svg' viewBox='${SPARKLE_VIEWBOX}'><path fill='#fff' d='${SPARKLE_PATH}'/></svg>`,
 )}")`
 
 const NODE_STYLE: CSSProperties = {
