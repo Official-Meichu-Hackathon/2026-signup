@@ -156,6 +156,12 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
     validateMaxLength(EXPERIENCE_MAX)(player.project) &&
     validateMaxLength(EXPERIENCE_MAX)(player.competitionExp)
 
+  // Tabs switch freely, so leaving 基本資料 needs every player filled in.
+  const incompletePlayers = players
+    .slice(0, playerCount)
+    .flatMap((player, i) => (playerOk(player) ? [] : PLAYER_ORDER_LABELS[i]))
+  const allPlayersOk = incompletePlayers.length === 0
+
   const assentOk = assent === '是'
   // 清寒證明 upload is optional despite the design's ★.
   const otherOk = workshopAttendance !== '' && ceremonyAttendance !== ''
@@ -278,7 +284,14 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
           {...stepProps}
           stepOrder={index + 2}
           stepName={`基本資料 ( 參賽者${PLAYER_ORDER_LABELS[index]} )`}
-          requiredOk={playerOk(players[index])}
+          requiredOk={
+            index === playerCount - 1 ? allPlayersOk : playerOk(players[index])
+          }
+          disabledHint={
+            index === playerCount - 1 && incompletePlayers.length > 0
+              ? `請先完成參賽者${incompletePlayers.join('、')}的必填欄位`
+              : undefined
+          }
         >
           <TextQuestion
             title="★姓名"

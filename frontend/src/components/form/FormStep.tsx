@@ -10,6 +10,7 @@ interface FormStepProps {
   stepName: string
   currentStep: number
   requiredOk: boolean
+  disabledHint?: string
   isSubmitting: boolean
   scrollMode: ScrollMode
   onStepChange: (step: number) => void
@@ -30,6 +31,7 @@ export default function FormStep({
   stepName,
   currentStep,
   requiredOk,
+  disabledHint,
   isSubmitting,
   scrollMode,
   onStepChange,
@@ -84,6 +86,7 @@ export default function FormStep({
           <NextStepButton
             onClick={handleNext}
             disabled={!requiredOk || isSubmitting}
+            disabledHint={disabledHint}
             isLastStep={isLastStep}
             isSubmitting={isSubmitting}
           />
