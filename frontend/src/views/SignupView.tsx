@@ -156,7 +156,7 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
     validateMaxLength(EXPERIENCE_MAX)(player.project) &&
     validateMaxLength(EXPERIENCE_MAX)(player.competitionExp)
 
-  // Tabs switch freely, so leaving 基本資料 needs every player filled in.
+  // Tabs switch freely, so leaving 基本資料 needs every player.
   const incompletePlayers = players
     .slice(0, playerCount)
     .flatMap((player, i) => (playerOk(player) ? [] : PLAYER_ORDER_LABELS[i]))
@@ -193,9 +193,7 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
     }
   }
 
-  // 下一步 animates to the next card, rail jumps land on it without animating
-  // (the rail offset moves the card, so staying put isn't possible), and tab
-  // switches within 基本資料 keep the card where it is.
+  // 下一步 animates, rail jumps land instantly, tab switches stay put.
   const goToStep = (step: number, mode: ScrollMode = 'smooth') => {
     setScrollMode(mode)
     setCurrentStep(step)

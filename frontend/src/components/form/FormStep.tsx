@@ -1,7 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react'
 import NextStepButton from './NextStepButton'
 
-// How the card reacts to becoming active: animate to it, jump to it, or stay put.
 export type ScrollMode = 'smooth' | 'snap' | 'none'
 
 interface FormStepProps {

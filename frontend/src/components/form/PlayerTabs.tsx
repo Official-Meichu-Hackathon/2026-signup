@@ -7,7 +7,7 @@ interface PlayerTabsProps {
 }
 
 // Participant tab strip on top of the card during the 基本資料 stage. Active tab
-// is taller; any tab is selectable in either direction.
+// is taller; any tab is selectable.
 
 export default function PlayerTabs({
   playerCount,
@@ -17,11 +17,8 @@ export default function PlayerTabs({
   return (
     <nav
       aria-label="參賽者"
-      // Pulled up by the active tab's height so its bottom edge meets the card
-      // top; the tabs protrude above the card body. Tabs keep their natural
-      // width and the strip is budgeted to 75% of the card — the fluid label
-      // size below is derived from that share.
-      // Height pinned to the active tab's so tab transitions don't shift the card.
+      // Pulled up and height-pinned to the active tab, so its bottom edge meets
+      // the card top and tab transitions don't shift the card.
       className="relative z-20 -mt-9 flex h-9 max-w-[75%] items-end gap-0 md:-mt-[4.875rem] md:h-[4.875rem]"
     >
       {Array.from({ length: playerCount }, (_, index) => {

@@ -49,7 +49,7 @@ export default function StepRail({
     <nav
       ref={navRef}
       aria-label="報名區段"
-      // Width pinned to the active tab's so tab transitions don't shift the card.
+      // Width pinned to the active tab, so transitions don't shift the card.
       className="relative z-20 flex w-16 shrink-0 flex-col gap-0 md:w-52"
     >
       {RAIL_SECTIONS.map(({ section, label }, index) => {
