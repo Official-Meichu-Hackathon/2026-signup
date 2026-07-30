@@ -12,6 +12,8 @@ import logoMaicoin from '../../assets/home/logo-maicoin.webp'
 import logoPixart from '../../assets/home/logo-pixart.webp'
 import logoCathay from '../../assets/home/logo-cathay.webp'
 import logoNchc from '../../assets/home/logo-nchc.webp'
+import logoHsinchuCity from '../../assets/home/logo-hsinchu-city.webp'
+import logoHsinchuYouth from '../../assets/home/logo-hsinchu-youth.webp'
 
 const partnerUrls = {
   logitech: 'https://www.logitech.com/zh-tw',
@@ -42,7 +44,25 @@ function SponsorTierLabel({ children }: { children: React.ReactNode }) {
 
 function MainPartnerGrid() {
   return (
-    <div className="partner-main-grid grid w-full max-w-[812px] grid-cols-2 grid-rows-[183px_184px_171px_101px] items-center justify-items-center gap-x-10 gap-y-10">
+    <div className="partner-main-grid grid w-full max-w-[800px] grid-cols-[321px_362px] grid-rows-[79px_153px_99px_95px_101px] items-center justify-between justify-items-center gap-y-28">
+      <div className="partner-logo-hsinchu-city relative h-[79px] w-[308px] overflow-hidden">
+        <img
+          src={logoHsinchuCity}
+          alt="新竹市政府 Hsinchu City Government"
+          loading="lazy"
+          decoding="async"
+          className="absolute top-[-266.67%] left-[-9.74%] h-[673.84%] w-[122.08%] max-w-none"
+        />
+      </div>
+      <div className="partner-logo-hsinchu-youth relative h-[66px] w-[362px] overflow-hidden">
+        <img
+          src={logoHsinchuYouth}
+          alt="新竹市青年發展中心 Youth Development Center of Hsinchu City"
+          loading="lazy"
+          decoding="async"
+          className="absolute top-[-168.61%] left-[-14.92%] h-[511.08%] w-[129.83%] max-w-none"
+        />
+      </div>
       <a
         href={partnerUrls.cloudmosa}
         target="_blank"
@@ -63,7 +83,7 @@ function MainPartnerGrid() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="前往聚陽實業 LinkedIn 專頁"
-        className="partner-logo-eclat h-[183px] w-[219px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
+        className="partner-logo-eclat h-[153px] w-[183.51px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
       >
         <img
           src={logoEclat}
@@ -78,14 +98,14 @@ function MainPartnerGrid() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="前往 Logitech 羅技網站"
-        className="partner-logo-logitech h-[182px] w-[386px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
+        className="partner-logo-logitech relative h-[92px] w-[305px] overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
       >
         <img
           src={logoLogitech}
           alt="Logitech"
           loading="lazy"
           decoding="async"
-          className="h-full w-full object-cover"
+          className="absolute top-[-62.22%] left-[-15.08%] h-[198.35%] w-[126.56%] max-w-none"
         />
       </a>
       <a
@@ -93,14 +113,14 @@ function MainPartnerGrid() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="前往 NXP Taiwan Facebook 專頁"
-        className="partner-logo-nxp h-[184px] w-[377px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
+        className="partner-logo-nxp relative h-[99px] w-[281px] overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
       >
         <img
           src={logoNxp}
           alt="NXP"
           loading="lazy"
           decoding="async"
-          className="h-full w-full object-cover"
+          className="absolute top-[-43.43%] left-[-17.09%] h-[185.86%] w-[134.17%] max-w-none"
         />
       </a>
       <a
@@ -123,14 +143,14 @@ function MainPartnerGrid() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="前往 Advantest 愛德萬測試網站"
-        className="partner-logo-advantest relative h-[171px] w-[385px] overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
+        className="partner-logo-advantest relative h-[95px] w-[308px] overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
       >
         <img
           src={logoAdvantest}
           alt="Advantest 愛德萬測試"
           loading="lazy"
           decoding="async"
-          className="absolute top-[-195.29%] left-[-93.01%] h-[459.7%] w-[286.21%] max-w-none"
+          className="absolute top-[-390.47%] left-[-129.24%] h-[827.45%] w-[357.77%] max-w-none"
         />
       </a>
       <a
