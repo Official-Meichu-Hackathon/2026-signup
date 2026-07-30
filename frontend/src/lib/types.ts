@@ -78,6 +78,22 @@ export const GENDER_OPTIONS = ['男', '女']
 
 export const IDENTITY_OPTIONS = ['學生', '社會人士']
 
-export const SHIRT_SIZE_OPTIONS = ['XS', 'S', 'M', 'L', 'XL', '2XL']
+export const SHIRT_SIZE_OPTIONS = [
+  'XS',
+  'S',
+  'M',
+  'L',
+  'XL',
+  '2XL',
+  '3XL',
+  '4XL',
+  '5XL',
+  '6XL',
+]
+
+// Sentinel: 其他 selected but its free-text box still empty.
+export const GRADE_OTHER = '其他'
+
+export const GRADE_OPTIONS = ['大一', '大二', '大三', '大四', GRADE_OTHER]
 
 export const PLAYER_ORDER_LABELS = ['一', '二', '三', '四', '五']

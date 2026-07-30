@@ -13,6 +13,8 @@ import {
   createPlayerData,
   EXPERIENCE_MAX,
   GENDER_OPTIONS,
+  GRADE_OPTIONS,
+  GRADE_OTHER,
   IDENTITY_OPTIONS,
   MAKER_PRIORITY_OPTIONS,
   MAX_PLAYERS,
@@ -32,6 +34,7 @@ import {
 } from '../lib/validators'
 import { submitRegistration } from '../lib/submit'
 import { trackSignUp } from '../lib/analytics'
+import shirtSizeChart from '../assets/signup/shirt-size-chart.png'
 
 const CONTACT_EMAIL = '2026mchackathon@gmail.com'
 
@@ -43,6 +46,10 @@ const CONSENT_PDF = '/consent/consent.pdf'
 interface SignupViewProps {
   onSuccess: () => void
 }
+
+// Anything outside 大一–大四 (including the sentinel) means 其他 is picked.
+const isOtherGrade = (grade: string) =>
+  grade !== '' && !GRADE_OPTIONS.slice(0, -1).includes(grade)
 
 function sectionForStep(currentStep: number, playerCount: number): Section {
   if (currentStep === 1) return 'option'
@@ -142,6 +149,7 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
     player.school.trim() !== '' &&
     player.department.trim() !== '' &&
     player.grade.trim() !== '' &&
+    player.grade !== GRADE_OTHER &&
     player.occupation.trim() !== '' &&
     validateEmail(player.email) &&
     validatePhoneNumber(player.phone) &&
@@ -332,11 +340,25 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
             value={players[index].department}
             onChange={(v) => updatePlayer(index, 'department', v)}
           />
-          <TextQuestion
-            title="★年級（格式：XXX年級 e.g. 大學三年級、碩士二年級、已畢業）"
-            value={players[index].grade}
+          <ChoiceQuestion
+            title="★年級"
+            options={GRADE_OPTIONS}
+            value={
+              isOtherGrade(players[index].grade)
+                ? GRADE_OTHER
+                : players[index].grade
+            }
             onChange={(v) => updatePlayer(index, 'grade', v)}
           />
+          {isOtherGrade(players[index].grade) && (
+            <TextQuestion
+              title="其他（e.g. 碩士二年級、高中三年級、已畢業）"
+              value={
+                players[index].grade === GRADE_OTHER ? '' : players[index].grade
+              }
+              onChange={(v) => updatePlayer(index, 'grade', v || GRADE_OTHER)}
+            />
+          )}
           <TextQuestion
             title="★職業"
             value={players[index].occupation}
@@ -363,6 +385,8 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
           />
           <ChoiceQuestion
             title="★衣服尺寸"
+            image={shirtSizeChart}
+            imageAlt="AG18000 系列尺寸表"
             options={SHIRT_SIZE_OPTIONS}
             value={players[index].shirtSize}
             onChange={(v) => updatePlayer(index, 'shirtSize', v)}
