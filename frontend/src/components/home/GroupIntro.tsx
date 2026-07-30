@@ -74,8 +74,11 @@ function WorkshopDetailModal({
   const closeButtonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
-    const scrollX = window.scrollX
-    const scrollY = window.scrollY
+    const originalBodyOverflow = document.body.style.overflow
+    const originalRootOverflow = document.documentElement.style.overflow
+
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
     closeButtonRef.current?.focus()
 
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -99,31 +102,19 @@ function WorkshopDetailModal({
       }
     }
 
-    const preventScrollInput = (event: Event) => event.preventDefault()
-    const holdScrollPosition = () => {
-      if (window.scrollX !== scrollX || window.scrollY !== scrollY) {
-        window.scrollTo(scrollX, scrollY)
-      }
-    }
-
-    document.addEventListener('wheel', preventScrollInput, { passive: false })
-    document.addEventListener('touchmove', preventScrollInput, {
-      passive: false,
-    })
     window.addEventListener('keydown', handleKeyDown)
-    window.addEventListener('scroll', holdScrollPosition, { passive: true })
 
     return () => {
-      document.removeEventListener('wheel', preventScrollInput)
-      document.removeEventListener('touchmove', preventScrollInput)
+      document.body.style.overflow = originalBodyOverflow
+      document.documentElement.style.overflow = originalRootOverflow
       window.removeEventListener('keydown', handleKeyDown)
-      window.removeEventListener('scroll', holdScrollPosition)
     }
   }, [onClose])
 
   return createPortal(
     <div
-      className="animate-fade-in fixed inset-0 z-[100] flex touch-none items-center justify-center overflow-hidden bg-black/65 p-4 backdrop-blur-sm md:p-8"
+      className="animate-fade-in fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-black/65 p-4 backdrop-blur-sm md:p-8"
+      style={{ touchAction: 'pinch-zoom' }}
       role="presentation"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose()

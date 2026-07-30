@@ -719,7 +719,7 @@ body {
   .partner-main {
     position: relative;
     width: 249px !important;
-    min-height: 299.22px;
+    min-height: 292px;
   }
 
   .partner-main > div {
@@ -728,60 +728,53 @@ body {
 
   .partner-main-grid {
     width: 249px !important;
-    height: 259.22px !important;
+    height: 224px !important;
     max-width: none !important;
     aspect-ratio: auto !important;
+    grid-template-rows: 46px 52px 49px 29px !important;
+    column-gap: 12px !important;
+    row-gap: 16px !important;
   }
 
   .partner-logo-logitech {
-    top: 0 !important;
-    left: 1px !important;
     width: 109px !important;
     height: 52px !important;
   }
 
   .partner-logo-amd {
-    top: 16px !important;
-    left: 150.5px !important;
     width: 83px !important;
     height: 20px !important;
   }
 
   .partner-logo-cloudmosa {
-    top: 76px !important;
-    left: 10px !important;
     width: 91px !important;
     height: 22px !important;
   }
 
   .partner-logo-google {
-    top: 72.5px !important;
-    left: 147.5px !important;
     width: 89px !important;
     height: 29px !important;
   }
 
+  .partner-logo-google img {
+    object-fit: contain !important;
+    transform: scale(0.98);
+    transform-origin: center;
+  }
+
   .partner-logo-nxp {
-    top: 122px !important;
-    left: 2px !important;
     width: 107px !important;
     height: 52.22px !important;
   }
 
   .partner-logo-advantest {
-    top: 123.5px !important;
-    left: 137.5px !important;
     width: 109px !important;
     height: 49px !important;
   }
 
   .partner-logo-eclat {
-    position: absolute;
-    top: 247.6px;
-    left: 97.5px;
     width: 55px !important;
     height: 45.86px !important;
-    margin: 0 !important;
   }
 
   .partner-special {
