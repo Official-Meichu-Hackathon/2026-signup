@@ -106,10 +106,10 @@ const FAQ_SECTIONS: FaqSection[] = [
     title: '報名費用',
     content: (
       <div className="space-y-2">
-        <p>＄1000／人（另收取保證金 $ 200）</p>
+        <p>$ 1000／人（另收取保證金 $ 200）</p>
         <List>
           <li>
-            跨域組隊：隊伍成員每人減免＄100
+            跨域組隊：隊伍成員每人減免 $ 100
             <List>
               <li>報名隊伍內有三個（含）以上不同科系</li>
               <li>
@@ -316,6 +316,7 @@ function DateBadge({
 interface DateItem {
   date: string
   day: string
+  startNote?: string
   endDate?: string
   endDay?: string
   note?: string
@@ -329,6 +330,7 @@ const DATE_ITEMS: DateItem[] = [
   {
     date: '08.06',
     day: 'Thu',
+    startNote: '12:00 起',
     endDate: '08.19',
     endDay: 'Wed',
     note: '20:00 前',
@@ -369,13 +371,31 @@ function DateRange({ item }: { item: DateItem }) {
     <div className="flex flex-nowrap items-center gap-2">
       {hasRange ? (
         <>
-          <DateBadge date={item.date} day={item.day} />
+          <div className="flex flex-col gap-0.5">
+            <DateBadge
+              date={item.date}
+              day={item.day}
+              circleOffset={
+                item.startNote && !item.note ? endCircleOffset : undefined
+              }
+            />
+            {item.startNote && (
+              <span
+                className="text-white/80"
+                style={{ fontSize: noteTextSize }}
+              >
+                {item.startNote}
+              </span>
+            )}
+          </div>
           <span className="h-px w-6 shrink-0 bg-white/50 md:w-9" />
           <div className="flex flex-col gap-0.5">
             <DateBadge
               date={item.endDate!}
               day={item.endDay!}
-              circleOffset={item.note ? endCircleOffset : undefined}
+              circleOffset={
+                item.note && !item.startNote ? endCircleOffset : undefined
+              }
             />
             {item.note && (
               <span
@@ -508,7 +528,7 @@ export default function RegistrationMethodView() {
           Figma's own layering does the same: 背景 covers y 0–1024 and 背景2
           covers y 725–3027, a 300px overlap that blends the two together.
           Mask fades reproduce that cross-fade instead of a hard seam. */}
-      <div className="relative isolate overflow-hidden">
+      <div className="relative isolate overflow-clip">
         <img
           data-trail-bg="registration"
           src={bgHero}
@@ -533,19 +553,20 @@ export default function RegistrationMethodView() {
             `bottom`. Wrapping it in a <div> (not replaced, so it does
             stretch) and sizing the <img> to h-full/w-full inside fixes it. */}
         <div
-          className="absolute inset-x-0 bottom-0 -z-10 overflow-hidden"
+          className="absolute inset-x-0 bottom-0 -z-10"
           style={{
             top: '45vh',
-            maskImage: 'linear-gradient(to bottom, transparent 0%, black 20%)',
+            maskImage:
+              'linear-gradient(to bottom, transparent 0%, black 300px)',
             WebkitMaskImage:
-              'linear-gradient(to bottom, transparent 0%, black 20%)',
+              'linear-gradient(to bottom, transparent 0%, black 300px)',
           }}
         >
           <img
             data-trail-bg="registration"
             src={bgContent}
             alt=""
-            className="h-full w-full object-cover"
+            className="sticky top-0 h-[100dvh] w-full object-cover"
           />
         </div>
 
