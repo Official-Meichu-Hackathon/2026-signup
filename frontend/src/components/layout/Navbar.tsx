@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import logo from '../../assets/meichuhackathon.svg'
 import MobileNavMenu from './MobileNavMenu'
+import { SIGNUP_OPEN } from '../../lib/signupOpen'
 
 // Header height it's checking against (py-4 + h-12 logo) — keep in sync with
 // the header's own padding/logo size below.
@@ -62,16 +63,30 @@ export default function Navbar() {
               genuinely underneath the glass panel once open (not just faked
               via opacity) — hidden outright instead of left to bleed through
               the panel's translucency as a ghost. */}
-          <Link
-            to="/signup"
-            className={`site-signup font-chiron flex h-[34px] w-[95px] items-center justify-center rounded-[30px] border text-[13px] leading-[40px] font-bold backdrop-blur transition duration-300 sm:h-[40px] sm:w-[120px] sm:text-[16px] md:h-[46px] md:w-[140px] md:text-[20px] ${
-              onLightBg
-                ? 'border-black/20 bg-black/5 text-neutral-900 hover:bg-black/10'
-                : 'border-white/20 bg-white/10 text-white hover:bg-white/20'
-            } ${menuOpen ? 'pointer-events-none opacity-0' : ''}`}
-          >
-            點我報名
-          </Link>
+          {SIGNUP_OPEN ? (
+            <Link
+              to="/signup"
+              className={`site-signup font-chiron flex h-[34px] w-[95px] items-center justify-center rounded-[30px] border text-[13px] leading-[40px] font-bold backdrop-blur transition duration-300 sm:h-[40px] sm:w-[120px] sm:text-[16px] md:h-[46px] md:w-[140px] md:text-[20px] ${
+                onLightBg
+                  ? 'border-black/20 bg-black/5 text-neutral-900 hover:bg-black/10'
+                  : 'border-white/20 bg-white/10 text-white hover:bg-white/20'
+              } ${menuOpen ? 'pointer-events-none opacity-0' : ''}`}
+            >
+              點我報名
+            </Link>
+          ) : (
+            <button
+              type="button"
+              disabled
+              className={`site-signup font-chiron flex h-[34px] w-[95px] cursor-not-allowed items-center justify-center rounded-[30px] border text-[13px] leading-[40px] font-bold opacity-50 backdrop-blur transition duration-300 sm:h-[40px] sm:w-[120px] sm:text-[16px] md:h-[46px] md:w-[140px] md:text-[20px] ${
+                onLightBg
+                  ? 'border-black/20 bg-black/5 text-neutral-900'
+                  : 'border-white/20 bg-white/10 text-white'
+              } ${menuOpen ? 'pointer-events-none opacity-0' : ''}`}
+            >
+              報名尚未開始
+            </button>
+          )}
           {/* Covered by the drawer while open, same as the signup button —
               closing then relies on the drawer's own backdrop click-outside
               (see MobileNavMenu), not this button. */}
