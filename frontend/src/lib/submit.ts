@@ -1,4 +1,5 @@
 import { PRIORITY_OPTIONS, type RegistrationData } from './types'
+import { SIGNUP_OPEN } from './signupOpen'
 
 type SheetCell = string | null
 
@@ -75,6 +76,10 @@ export function buildRows(data: RegistrationData): SheetCell[][] {
 export async function submitRegistration(
   data: RegistrationData,
 ): Promise<void> {
+  if (!SIGNUP_OPEN) {
+    throw new Error('報名尚未開始')
+  }
+
   const url = import.meta.env.VITE_APPS_SCRIPT_URL
   if (!url) {
     throw new Error('VITE_APPS_SCRIPT_URL is not set')
