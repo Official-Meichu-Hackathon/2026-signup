@@ -13,6 +13,7 @@ import Navbar from './components/layout/Navbar'
 import RegistrationMethodView from './views/RegistrationMethodView'
 import ScheduleView from './views/ScheduleView'
 import SignupView from './views/SignupView'
+import { SIGNUP_OPEN } from './lib/signupOpen'
 import SuccessView from './views/SuccessView'
 import ProblemsView from './views/ProblemsView'
 import MobileProblemsView from './views/MobileProblemsView'
@@ -69,6 +70,10 @@ function HomeView() {
 
 function SignupPage() {
   const [submitted, setSubmitted] = useState(false)
+
+  if (!SIGNUP_OPEN) {
+    return <Navigate to="/" replace />
+  }
 
   return submitted ? (
     <SuccessView />
