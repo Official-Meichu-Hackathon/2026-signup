@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { SIGNUP_OPEN } from '../../lib/signupOpen'
 
 type LightTransitionRange = {
   start: number
@@ -218,12 +219,22 @@ export default function Awards({
         </AwardCard>
       </div>
 
-      <a
-        href="/signup"
-        className="home-awards-signup md:font-chiron flex h-[70px] w-full max-w-[358px] items-center justify-center rounded-[30px] border border-[rgba(211,228,252,0.8)] bg-[rgba(138,153,174,0.15)] text-2xl font-black text-[#b1a2ca] shadow-[0px_4px_20px_-1px_rgba(28,27,31,0.6)] transition-colors hover:bg-[rgba(138,153,174,0.3)] md:mt-[10px] md:h-[93px] md:text-[32px] md:leading-[40px] md:font-extrabold"
-      >
-        點我報名
-      </a>
+      {SIGNUP_OPEN ? (
+        <a
+          href="/signup"
+          className="home-awards-signup md:font-chiron flex h-[70px] w-full max-w-[358px] items-center justify-center rounded-[30px] border border-[rgba(211,228,252,0.8)] bg-[rgba(138,153,174,0.15)] text-2xl font-black text-[#b1a2ca] shadow-[0px_4px_20px_-1px_rgba(28,27,31,0.6)] transition-colors hover:bg-[rgba(138,153,174,0.3)] md:mt-[10px] md:h-[93px] md:text-[32px] md:leading-[40px] md:font-extrabold"
+        >
+          點我報名
+        </a>
+      ) : (
+        <button
+          type="button"
+          disabled
+          className="home-awards-signup md:font-chiron flex h-[70px] w-full max-w-[358px] cursor-not-allowed items-center justify-center rounded-[30px] border border-[rgba(211,228,252,0.8)] bg-[rgba(138,153,174,0.15)] text-2xl font-black text-[#b1a2ca] opacity-50 shadow-[0px_4px_20px_-1px_rgba(28,27,31,0.6)] md:mt-[10px] md:h-[93px] md:text-[32px] md:leading-[40px] md:font-extrabold"
+        >
+          報名尚未開始
+        </button>
+      )}
     </div>
   )
 }
