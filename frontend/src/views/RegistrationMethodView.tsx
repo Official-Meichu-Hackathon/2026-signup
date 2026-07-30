@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import Navbar from '../components/layout/Navbar'
 import Footer from '../components/layout/Footer'
 import CursorTrail from '../components/layout/CursorTrail'
@@ -227,51 +227,103 @@ const FAQ_SECTIONS: FaqSection[] = [
   },
 ]
 
+// One accordion row's markup, shared between the real interactive list and
+// the invisible sizer copies below (FaqAccordion) — reusing the exact same
+// classes guarantees the sizer's measured height never drifts from what the
+// real row actually renders at.
+function FaqRow({
+  section,
+  expanded,
+  onToggle,
+  interactive,
+}: {
+  section: FaqSection
+  expanded: boolean
+  onToggle?: () => void
+  interactive: boolean
+}) {
+  return (
+    <div className={`border-white/70 ${expanded ? '' : 'border-b'}`}>
+      <button
+        type="button"
+        onClick={interactive ? onToggle : undefined}
+        aria-expanded={expanded}
+        tabIndex={interactive ? undefined : -1}
+        className="flex w-full items-center justify-between border-b border-white/70 px-3 py-2 text-left transition-opacity hover:opacity-70 md:py-5"
+      >
+        <span
+          className="font-noto font-normal text-white"
+          style={{ fontSize: sectionTitleSize }}
+        >
+          {section.title}
+        </span>
+        <ToggleIcon expanded={expanded} />
+      </button>
+      {/* grid-rows 0fr→1fr animates height without a measured pixel
+          value — content stays mounted (never unmounts on collapse)
+          so the row height it needs is always available to animate to. */}
+      <div
+        className="grid transition-[grid-template-rows] duration-300 ease-out"
+        style={{ gridTemplateRows: expanded ? '1fr' : '0fr' }}
+      >
+        <div className="overflow-hidden">
+          <div
+            className="font-noto px-3 pt-5 pb-5 leading-relaxed text-[#f6f6f6] md:pb-8"
+            style={{ fontSize: faqBodyTextSize }}
+          >
+            {section.content}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Which single section is tallest once expanded depends on viewport width
+// (text reflows differently per breakpoint), so its height can't be a
+// hardcoded constant. Instead, 5 invisible copies of the full row list are
+// stacked in the same grid cell as the real list (col-start-1 row-start-1),
+// one per "what if section i were the only one open" — CSS grid's auto row
+// height then becomes the tallest of all 6 layers, at whatever width is
+// actually rendering. `invisible` (not `hidden`) is required so the layers
+// still occupy space and count toward that auto-sizing — same idiom as the
+// DateRange single-date branch's invisible width-reserving clone above.
+// The real list's own height can only ever match one of the 5 static
+// variants (or be shorter, collapsed), so the container's total height
+// never changes as the user opens/closes rows — Footer, right after this in
+// flow, stops moving.
 function FaqAccordion() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
-    <div className="animate-fade-in">
-      {FAQ_SECTIONS.map((section, i) => {
-        const expanded = openIndex === i
-        return (
-          <div
+    <div className="grid grid-cols-1">
+      <div className="animate-fade-in col-start-1 row-start-1">
+        {FAQ_SECTIONS.map((section, i) => (
+          <FaqRow
             key={section.title}
-            className={`border-white/70 ${expanded ? '' : 'border-b'}`}
-          >
-            <button
-              type="button"
-              onClick={() => setOpenIndex(expanded ? null : i)}
-              aria-expanded={expanded}
-              className="flex w-full items-center justify-between border-b border-white/70 px-3 py-2 text-left transition-opacity hover:opacity-70 md:py-5"
-            >
-              <span
-                className="font-noto font-normal text-white"
-                style={{ fontSize: sectionTitleSize }}
-              >
-                {section.title}
-              </span>
-              <ToggleIcon expanded={expanded} />
-            </button>
-            {/* grid-rows 0fr→1fr animates height without a measured pixel
-                value — content stays mounted (never unmounts on collapse)
-                so the row height it needs is always available to animate to. */}
-            <div
-              className="grid transition-[grid-template-rows] duration-300 ease-out"
-              style={{ gridTemplateRows: expanded ? '1fr' : '0fr' }}
-            >
-              <div className="overflow-hidden">
-                <div
-                  className="font-noto px-3 pt-5 pb-5 leading-relaxed text-[#f6f6f6] md:pb-8"
-                  style={{ fontSize: faqBodyTextSize }}
-                >
-                  {section.content}
-                </div>
-              </div>
-            </div>
-          </div>
-        )
-      })}
+            section={section}
+            expanded={openIndex === i}
+            onToggle={() => setOpenIndex(openIndex === i ? null : i)}
+            interactive
+          />
+        ))}
+      </div>
+      {FAQ_SECTIONS.map((_, sizerIndex) => (
+        <div
+          key={`sizer-${sizerIndex}`}
+          aria-hidden="true"
+          className="pointer-events-none invisible col-start-1 row-start-1 select-none"
+        >
+          {FAQ_SECTIONS.map((section, i) => (
+            <FaqRow
+              key={section.title}
+              section={section}
+              expanded={i === sizerIndex}
+              interactive={false}
+            />
+          ))}
+        </div>
+      ))}
     </div>
   )
 }
@@ -519,6 +571,17 @@ function DateCard() {
 // (報名時程 / 報名資訊) match the hash links MobileNavMenu's "報名方式" group
 // already points at (/registration#報名時程, /registration#報名資訊).
 export default function RegistrationMethodView() {
+  // body's global bg-white (index.css) otherwise shows through on mobile
+  // Safari's rubber-band bounce past the top/bottom edge, since this page
+  // (unlike the site default) is dark end-to-end.
+  useEffect(() => {
+    const originalBodyBg = document.body.style.backgroundColor
+    document.body.style.backgroundColor = '#040000'
+    return () => {
+      document.body.style.backgroundColor = originalBodyBg
+    }
+  }, [])
+
   return (
     <div className="relative bg-[#040000]">
       <Navbar />
@@ -566,7 +629,7 @@ export default function RegistrationMethodView() {
             data-trail-bg="registration"
             src={bgContent}
             alt=""
-            className="sticky top-0 h-[100dvh] w-full object-cover"
+            className="h-full w-full object-cover"
           />
         </div>
 
@@ -576,7 +639,7 @@ export default function RegistrationMethodView() {
 
         <section
           id="報名時程"
-          className="relative flex flex-col items-center px-6 pt-28 pb-16 md:pt-36 md:pb-20"
+          className="relative flex flex-col items-center px-6 pt-20 pb-16 md:pt-28 md:pb-20"
         >
           <h1
             className="glow-text font-zen animate-fade-in relative mb-10 text-center text-[#f6f6f6] md:mb-16"
