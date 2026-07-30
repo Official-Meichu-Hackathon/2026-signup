@@ -719,7 +719,7 @@ body {
   .partner-main {
     position: relative;
     width: 249px !important;
-    min-height: 292px;
+    min-height: 372px;
   }
 
   .partner-main > div {
@@ -728,32 +728,43 @@ body {
 
   .partner-main-grid {
     width: 249px !important;
-    height: 224px !important;
+    height: 304px !important;
     max-width: none !important;
     aspect-ratio: auto !important;
-    grid-template-rows: 46px 52px 49px 29px !important;
-    column-gap: 12px !important;
-    row-gap: 16px !important;
+    grid-template-columns: 100px 113px !important;
+    grid-template-rows: 25px 48px 31px 30px 31px !important;
+    justify-content: space-between !important;
+    row-gap: 35px !important;
+  }
+
+  .partner-logo-hsinchu-city {
+    width: 96px !important;
+    height: 25px !important;
+  }
+
+  .partner-logo-hsinchu-youth {
+    width: 113px !important;
+    height: 21px !important;
   }
 
   .partner-logo-logitech {
-    width: 109px !important;
-    height: 52px !important;
+    width: 95px !important;
+    height: 29px !important;
   }
 
   .partner-logo-amd {
-    width: 83px !important;
-    height: 20px !important;
-  }
-
-  .partner-logo-cloudmosa {
     width: 91px !important;
     height: 22px !important;
   }
 
+  .partner-logo-cloudmosa {
+    width: 100px !important;
+    height: 24px !important;
+  }
+
   .partner-logo-google {
-    width: 89px !important;
-    height: 29px !important;
+    width: 97px !important;
+    height: 31px !important;
   }
 
   .partner-logo-google img {
@@ -763,18 +774,18 @@ body {
   }
 
   .partner-logo-nxp {
-    width: 107px !important;
-    height: 52.22px !important;
+    width: 88px !important;
+    height: 31px !important;
   }
 
   .partner-logo-advantest {
-    width: 109px !important;
-    height: 49px !important;
+    width: 96px !important;
+    height: 30px !important;
   }
 
   .partner-logo-eclat {
-    width: 55px !important;
-    height: 45.86px !important;
+    width: 57px !important;
+    height: 48px !important;
   }
 
   .partner-special {
