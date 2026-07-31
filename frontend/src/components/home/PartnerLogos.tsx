@@ -12,6 +12,8 @@ import logoMaicoin from '../../assets/home/logo-maicoin.webp'
 import logoPixart from '../../assets/home/logo-pixart.webp'
 import logoCathay from '../../assets/home/logo-cathay.webp'
 import logoNchc from '../../assets/home/logo-nchc.webp'
+import logoHsinchuCity from '../../assets/home/logo-hsinchu-city.webp'
+import logoHsinchuYouth from '../../assets/home/logo-hsinchu-youth.webp'
 
 const partnerUrls = {
   logitech: 'https://www.logitech.com/zh-tw',
@@ -42,43 +44,31 @@ function SponsorTierLabel({ children }: { children: React.ReactNode }) {
 
 function MainPartnerGrid() {
   return (
-    <div className="partner-main-grid relative aspect-[812/601] w-full max-w-[812px]">
-      <a
-        href={partnerUrls.logitech}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="前往 Logitech 羅技網站"
-        className="partner-logo-logitech absolute top-0 left-0 h-[30.283%] w-[47.537%] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
-      >
+    <div className="partner-main-grid grid w-full max-w-[800px] grid-cols-[321px_362px] grid-rows-[79px_153px_99px_95px_101px] items-center justify-between justify-items-center gap-y-28">
+      <div className="partner-logo-hsinchu-city relative h-[79px] w-[308px] overflow-hidden">
         <img
-          src={logoLogitech}
-          alt="Logitech"
+          src={logoHsinchuCity}
+          alt="新竹市政府 Hsinchu City Government"
           loading="lazy"
           decoding="async"
-          className="h-full w-full object-cover"
+          className="absolute top-[-266.67%] left-[-9.74%] h-[673.84%] w-[122.08%] max-w-none"
         />
-      </a>
-      <a
-        href={partnerUrls.amd}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="前往 AMD AI Developer Program"
-        className="partner-logo-amd absolute top-[10.316%] left-[58.251%] h-[11.647%] w-[36.084%] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
-      >
+      </div>
+      <div className="partner-logo-hsinchu-youth relative h-[66px] w-[362px] overflow-hidden">
         <img
-          src={logoAmd}
-          alt="AMD"
+          src={logoHsinchuYouth}
+          alt="新竹市青年發展中心 Youth Development Center of Hsinchu City"
           loading="lazy"
           decoding="async"
-          className="h-full w-full object-cover"
+          className="absolute top-[-168.61%] left-[-14.92%] h-[511.08%] w-[129.83%] max-w-none"
         />
-      </a>
+      </div>
       <a
         href={partnerUrls.cloudmosa}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="前往 CloudMosa 徵才網站"
-        className="partner-logo-cloudmosa absolute top-[42.263%] left-[4.064%] h-[12.978%] w-[39.532%] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
+        className="partner-logo-cloudmosa h-[78px] w-[321px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
       >
         <img
           src={logoCloudMosa}
@@ -89,18 +79,33 @@ function MainPartnerGrid() {
         />
       </a>
       <a
-        href={partnerUrls.google}
+        href={partnerUrls.eclat}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="前往 Google 台灣職缺網站"
-        className="partner-logo-google absolute top-[38.436%] left-[57.143%] h-[16.805%] w-[38.3%] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
+        aria-label="前往聚陽實業 LinkedIn 專頁"
+        className="partner-logo-eclat h-[153px] w-[183.51px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
       >
         <img
-          src={logoGoogle}
-          alt="Google"
+          src={logoEclat}
+          alt="聚陽實業"
           loading="lazy"
           decoding="async"
           className="h-full w-full object-cover"
+        />
+      </a>
+      <a
+        href={partnerUrls.logitech}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="前往 Logitech 羅技網站"
+        className="partner-logo-logitech relative h-[92px] w-[305px] overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
+      >
+        <img
+          src={logoLogitech}
+          alt="Logitech"
+          loading="lazy"
+          decoding="async"
+          className="absolute top-[-62.22%] left-[-15.08%] h-[198.35%] w-[126.56%] max-w-none"
         />
       </a>
       <a
@@ -108,11 +113,26 @@ function MainPartnerGrid() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="前往 NXP Taiwan Facebook 專頁"
-        className="partner-logo-nxp absolute top-[67.221%] left-[0.616%] h-[30.616%] w-[46.429%] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
+        className="partner-logo-nxp relative h-[99px] w-[281px] overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
       >
         <img
           src={logoNxp}
           alt="NXP"
+          loading="lazy"
+          decoding="async"
+          className="absolute top-[-43.43%] left-[-17.09%] h-[185.86%] w-[134.17%] max-w-none"
+        />
+      </a>
+      <a
+        href={partnerUrls.amd}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="前往 AMD AI Developer Program"
+        className="partner-logo-amd h-[70px] w-[293px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
+      >
+        <img
+          src={logoAmd}
+          alt="AMD"
           loading="lazy"
           decoding="async"
           className="h-full w-full object-cover"
@@ -123,14 +143,29 @@ function MainPartnerGrid() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="前往 Advantest 愛德萬測試網站"
-        className="partner-logo-advantest absolute top-[71.547%] left-[52.586%] h-[28.453%] w-[47.414%] overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
+        className="partner-logo-advantest relative h-[95px] w-[308px] overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
       >
         <img
           src={logoAdvantest}
           alt="Advantest 愛德萬測試"
           loading="lazy"
           decoding="async"
-          className="absolute top-[-195.29%] left-[-93.01%] h-[459.7%] w-[286.21%] max-w-none"
+          className="absolute top-[-390.47%] left-[-129.24%] h-[827.45%] w-[357.77%] max-w-none"
+        />
+      </a>
+      <a
+        href={partnerUrls.google}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="前往 Google 台灣職缺網站"
+        className="partner-logo-google col-span-2 h-[101px] w-[311px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
+      >
+        <img
+          src={logoGoogle}
+          alt="Google"
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-cover"
         />
       </a>
     </div>
@@ -148,22 +183,6 @@ export default function PartnerLogos() {
           <SectionTitle>合作企業</SectionTitle>
           <MainPartnerGrid />
         </div>
-
-        <a
-          href={partnerUrls.eclat}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="前往聚陽實業 LinkedIn 專頁"
-          className="partner-logo-eclat mt-10 block aspect-[219.493/183] w-[100px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda] md:mt-[93px] md:w-[219.493px]"
-        >
-          <img
-            src={logoEclat}
-            alt="聚陽實業"
-            loading="lazy"
-            decoding="async"
-            className="h-full w-full object-cover"
-          />
-        </a>
       </div>
 
       <div className="partner-block partner-special mt-12 flex w-full flex-col items-center gap-6 md:mt-[149px] md:gap-[60px]">

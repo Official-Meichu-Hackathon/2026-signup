@@ -719,7 +719,7 @@ body {
   .partner-main {
     position: relative;
     width: 249px !important;
-    min-height: 299.22px;
+    min-height: 372px;
   }
 
   .partner-main > div {
@@ -728,60 +728,64 @@ body {
 
   .partner-main-grid {
     width: 249px !important;
-    height: 259.22px !important;
+    height: 304px !important;
     max-width: none !important;
     aspect-ratio: auto !important;
+    grid-template-columns: 100px 113px !important;
+    grid-template-rows: 25px 48px 31px 30px 31px !important;
+    justify-content: space-between !important;
+    row-gap: 35px !important;
+  }
+
+  .partner-logo-hsinchu-city {
+    width: 96px !important;
+    height: 25px !important;
+  }
+
+  .partner-logo-hsinchu-youth {
+    width: 113px !important;
+    height: 21px !important;
   }
 
   .partner-logo-logitech {
-    top: 0 !important;
-    left: 1px !important;
-    width: 109px !important;
-    height: 52px !important;
+    width: 95px !important;
+    height: 29px !important;
   }
 
   .partner-logo-amd {
-    top: 16px !important;
-    left: 150.5px !important;
-    width: 83px !important;
-    height: 20px !important;
-  }
-
-  .partner-logo-cloudmosa {
-    top: 76px !important;
-    left: 10px !important;
     width: 91px !important;
     height: 22px !important;
   }
 
+  .partner-logo-cloudmosa {
+    width: 100px !important;
+    height: 24px !important;
+  }
+
   .partner-logo-google {
-    top: 72.5px !important;
-    left: 147.5px !important;
-    width: 89px !important;
-    height: 29px !important;
+    width: 97px !important;
+    height: 31px !important;
+  }
+
+  .partner-logo-google img {
+    object-fit: contain !important;
+    transform: scale(0.98);
+    transform-origin: center;
   }
 
   .partner-logo-nxp {
-    top: 122px !important;
-    left: 2px !important;
-    width: 107px !important;
-    height: 52.22px !important;
+    width: 88px !important;
+    height: 31px !important;
   }
 
   .partner-logo-advantest {
-    top: 123.5px !important;
-    left: 137.5px !important;
-    width: 109px !important;
-    height: 49px !important;
+    width: 96px !important;
+    height: 30px !important;
   }
 
   .partner-logo-eclat {
-    position: absolute;
-    top: 247.6px;
-    left: 97.5px;
-    width: 55px !important;
-    height: 45.86px !important;
-    margin: 0 !important;
+    width: 57px !important;
+    height: 48px !important;
   }
 
   .partner-special {
