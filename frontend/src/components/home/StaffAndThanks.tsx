@@ -44,7 +44,7 @@ const STAFF: Record<
 > = {
   行政部: {
     photo: staffAdmin,
-    members: ['溫沛晨', '李若榆', '王傑宇'],
+    members: ['溫沛晨', '李若榆 / 王傑宇'],
   },
   行銷部: {
     photo: staffMarketing,
@@ -76,7 +76,7 @@ const STAFF: Record<
   },
   設計部: {
     photo: staffDesign,
-    members: ['陳琦青 / 許禕庭', '雲郁婷 / 嚴䒩閩 / 劉佳貞', '曾羽薇 / 陳皙倩'],
+    members: ['陳琦青 / 許禕庭', '雲郁婷 / 嚴䒩閩 / 劉佳貞 / 曾羽薇 / 陳皙倩'],
   },
   開發部: {
     photo: staffDev,
@@ -99,7 +99,6 @@ export default function StaffAndThanks() {
   const [mobileDept, setMobileDept] = useState<
     (typeof DEPARTMENTS)[number] | null
   >(null)
-  const { photo, members } = STAFF[dept]
   const mobileExpandedOffset =
     mobileDept === null
       ? 0
@@ -195,19 +194,36 @@ export default function StaffAndThanks() {
               ))}
             </div>
 
-            <div className="relative z-20 flex min-h-[407px] w-[99.29%] items-center gap-[clamp(24px,5.84%,65px)] pt-[63px] pr-[clamp(24px,4vw,48px)] pb-2">
-              <img
-                src={photo}
-                alt={`${dept}合照`}
-                loading="eager"
-                decoding="async"
-                className="ml-[clamp(24px,5.84%,65px)] h-[251px] w-[clamp(230px,36.48%,406px)] shrink-0 rounded-[30px] object-cover"
-              />
-              <div className="flex min-w-0 flex-1 flex-col text-[25px] leading-[40px] font-semibold text-[#4664ac]">
-                {members.map((line) => (
-                  <p key={line}>{line}</p>
-                ))}
-              </div>
+            <div className="relative z-20 grid min-h-[407px] w-[99.29%]">
+              {DEPARTMENTS.map((department) => {
+                const active = dept === department
+                const panel = STAFF[department]
+
+                return (
+                  <div
+                    key={department}
+                    aria-hidden={!active}
+                    className={`flex min-h-[407px] w-full items-center gap-[clamp(24px,5.84%,65px)] pt-[63px] pr-[clamp(24px,4vw,48px)] pb-2 transition-[opacity,filter,transform] duration-[240ms] ease-out [grid-area:1/1] motion-reduce:transform-none motion-reduce:transition-none ${
+                      active
+                        ? 'blur-0 relative z-10 translate-y-0 scale-100 opacity-100 delay-[45ms]'
+                        : 'pointer-events-none relative z-0 translate-y-1 scale-[0.99] opacity-0 blur-[5px] delay-0'
+                    }`}
+                  >
+                    <img
+                      src={panel.photo}
+                      alt={`${department}合照`}
+                      loading="eager"
+                      decoding="async"
+                      className="ml-[clamp(24px,5.84%,65px)] h-[251px] w-[clamp(230px,36.48%,406px)] shrink-0 rounded-[30px] object-cover"
+                    />
+                    <div className="flex min-w-0 flex-1 flex-col text-[25px] leading-[40px] font-semibold text-[#4664ac]">
+                      {panel.members.map((line) => (
+                        <p key={line}>{line}</p>
+                      ))}
+                    </div>
+                  </div>
+                )
+              })}
             </div>
           </div>
         </div>
