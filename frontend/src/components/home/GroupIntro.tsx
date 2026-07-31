@@ -240,17 +240,34 @@ export default function GroupIntro() {
               <p className="font-noto w-[26px] shrink-0 text-center text-[25px] leading-[40px] font-semibold text-white">
                 組別介紹
               </p>
-              <GlassCard className="flex min-h-[334px] min-w-0 flex-1 items-center gap-[clamp(16px,3.75vw,54px)] px-[clamp(20px,4vw,57px)] py-[clamp(32px,5vw,72px)]">
-                <img
-                  src={image}
-                  alt=""
-                  loading="eager"
-                  decoding="async"
-                  className="h-[clamp(160px,14.44vw,208px)] w-[clamp(160px,29.5%,340px)] shrink-0 rounded-[clamp(28px,2.85vw,41px)] object-cover"
-                />
-                <p className="font-noto min-w-0 flex-1 text-[clamp(14px,1.389vw,20px)] leading-[clamp(22px,2.222vw,32px)] font-semibold text-white">
-                  {intro}
-                </p>
+              <GlassCard className="grid h-[clamp(334px,14vw,350px)] min-w-0 flex-1">
+                {TABS.map(({ key }) => {
+                  const panel = CONTENT[key]
+                  const active = tab === key
+
+                  return (
+                    <div
+                      key={key}
+                      aria-hidden={!active}
+                      className={`flex w-full items-center gap-[clamp(16px,3.75vw,54px)] px-[clamp(20px,4vw,57px)] py-[clamp(32px,5vw,72px)] transition-[opacity,filter,transform] duration-[300ms] ease-out [grid-area:1/1] motion-reduce:transform-none motion-reduce:transition-none ${
+                        active
+                          ? 'blur-0 relative z-10 translate-y-0 scale-100 opacity-100 delay-[45ms]'
+                          : 'pointer-events-none relative z-0 translate-y-1 scale-[0.99] opacity-0 blur-[5px] delay-0'
+                      }`}
+                    >
+                      <img
+                        src={panel.image}
+                        alt=""
+                        loading="eager"
+                        decoding="async"
+                        className="h-[clamp(160px,14.44vw,208px)] w-[clamp(200px,50%,340px)] shrink-0 rounded-[clamp(28px,2.85vw,41px)] object-cover"
+                      />
+                      <p className="font-noto min-w-0 flex-1 text-[clamp(14px,1.389vw,20px)] leading-[clamp(22px,2.222vw,32px)] font-semibold text-white">
+                        {panel.intro}
+                      </p>
+                    </div>
+                  )
+                })}
               </GlassCard>
             </div>
 
@@ -258,20 +275,38 @@ export default function GroupIntro() {
               <p className="font-noto w-[26px] shrink-0 text-center text-[25px] leading-[40px] font-semibold text-white">
                 工作坊
               </p>
-              <GlassCard className="flex min-h-[334px] min-w-0 flex-1 items-center px-[clamp(20px,3.4vw,49px)] py-[clamp(32px,4.375vw,63px)]">
-                <div className="flex w-full max-w-[817px] min-w-0 flex-col items-start gap-[clamp(24px,3.125vw,45px)]">
-                  <p className="font-noto text-[clamp(14px,1.389vw,20px)] leading-[clamp(22px,2.222vw,32px)] font-semibold text-white">
-                    {workshop}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={openWorkshopDetail}
-                    aria-haspopup="dialog"
-                    className="font-noto w-[164px] cursor-pointer text-left text-[clamp(14px,1.389vw,20px)] leading-[clamp(20px,1.806vw,26px)] font-light text-[#9fc2ff] transition-colors hover:text-white focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9fc2ff]"
-                  >
-                    點擊查詢詳細內容
-                  </button>
-                </div>
+              <GlassCard className="grid h-[clamp(334px,14vw,350px)] min-w-0 flex-1">
+                {TABS.map(({ key }) => {
+                  const panel = CONTENT[key]
+                  const active = tab === key
+
+                  return (
+                    <div
+                      key={key}
+                      aria-hidden={!active}
+                      className={`flex w-full items-center px-[clamp(20px,3.4vw,49px)] py-[clamp(32px,4.375vw,63px)] transition-[opacity,filter,transform] duration-[300ms] ease-out [grid-area:1/1] motion-reduce:transform-none motion-reduce:transition-none ${
+                        active
+                          ? 'blur-0 relative z-10 translate-y-0 scale-100 opacity-100 delay-[45ms]'
+                          : 'pointer-events-none relative z-0 translate-y-1 scale-[0.99] opacity-0 blur-[5px] delay-0'
+                      }`}
+                    >
+                      <div className="flex w-full max-w-[817px] min-w-0 flex-col items-start gap-[clamp(24px,3.125vw,45px)]">
+                        <p className="font-noto text-[clamp(14px,1.389vw,20px)] leading-[clamp(22px,2.222vw,32px)] font-semibold text-white">
+                          {panel.workshop}
+                        </p>
+                        <button
+                          type="button"
+                          tabIndex={active ? 0 : -1}
+                          onClick={openWorkshopDetail}
+                          aria-haspopup="dialog"
+                          className="font-noto w-[164px] cursor-pointer text-left text-[clamp(14px,1.389vw,20px)] leading-[clamp(20px,1.806vw,26px)] font-light text-[#9fc2ff] transition-colors hover:text-white focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9fc2ff]"
+                        >
+                          點擊查詢詳細內容
+                        </button>
+                      </div>
+                    </div>
+                  )
+                })}
               </GlassCard>
             </div>
           </div>
