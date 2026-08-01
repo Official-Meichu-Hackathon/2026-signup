@@ -16,6 +16,8 @@ import {
   GRADE_OPTIONS,
   GRADE_OTHER,
   IDENTITY_OPTIONS,
+  IDENTITY_STUDENT,
+  IDENTITY_WORKER,
   MAKER_PRIORITY_OPTIONS,
   MAX_PLAYERS,
   PLAYER_COUNT_OPTIONS,
@@ -134,6 +136,15 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
     )
   }
 
+  const clearPlayerFields = (index: number, fields: (keyof PlayerData)[]) => {
+    const blanks = Object.fromEntries(fields.map((f) => [f, '']))
+    setPlayers((prev) =>
+      prev.map((player, i) =>
+        i === index ? { ...player, ...blanks } : player,
+      ),
+    )
+  }
+
   const step1Ok =
     groupName.trim() !== '' &&
     validateGroupName(groupName) &&
@@ -146,11 +157,13 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
     validateBirthday(player.birthday) &&
     isValidId(player.idNumber) &&
     player.identity !== '' &&
-    player.school.trim() !== '' &&
-    player.department.trim() !== '' &&
-    player.grade.trim() !== '' &&
-    player.grade !== GRADE_OTHER &&
-    player.occupation.trim() !== '' &&
+    // 學校/科系/年級 are asked of 學生, 職業 of 社會人士 — only one branch applies.
+    (player.identity === IDENTITY_WORKER ||
+      (player.school.trim() !== '' &&
+        player.department.trim() !== '' &&
+        player.grade.trim() !== '' &&
+        player.grade !== GRADE_OTHER)) &&
+    (player.identity === IDENTITY_STUDENT || player.occupation.trim() !== '') &&
     validateEmail(player.email) &&
     validatePhoneNumber(player.phone) &&
     player.dietaryRestrictions.trim() !== '' &&
@@ -328,42 +341,59 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
             title="★身份"
             options={IDENTITY_OPTIONS}
             value={players[index].identity}
-            onChange={(v) => updatePlayer(index, 'identity', v)}
+            onChange={(v) => {
+              updatePlayer(index, 'identity', v)
+              // Drop the other branch's answers so they can't be submitted.
+              if (v === IDENTITY_STUDENT)
+                clearPlayerFields(index, ['occupation'])
+              if (v === IDENTITY_WORKER)
+                clearPlayerFields(index, ['school', 'department', 'grade'])
+            }}
           />
-          <TextQuestion
-            title="★就讀學校（填寫全名 e.g. 國立清華大學）"
-            value={players[index].school}
-            onChange={(v) => updatePlayer(index, 'school', v)}
-          />
-          <TextQuestion
-            title="★科系（填寫全名 e.g. 資訊工程學系）"
-            value={players[index].department}
-            onChange={(v) => updatePlayer(index, 'department', v)}
-          />
-          <ChoiceQuestion
-            title="★年級"
-            options={GRADE_OPTIONS}
-            value={
-              isOtherGrade(players[index].grade)
-                ? GRADE_OTHER
-                : players[index].grade
-            }
-            onChange={(v) => updatePlayer(index, 'grade', v)}
-          />
-          {isOtherGrade(players[index].grade) && (
+          {players[index].identity !== IDENTITY_WORKER && (
+            <>
+              <TextQuestion
+                title="★就讀學校（填寫全名 e.g. 國立清華大學）"
+                value={players[index].school}
+                onChange={(v) => updatePlayer(index, 'school', v)}
+              />
+              <TextQuestion
+                title="★科系（填寫全名 e.g. 資訊工程學系）"
+                value={players[index].department}
+                onChange={(v) => updatePlayer(index, 'department', v)}
+              />
+              <ChoiceQuestion
+                title="★年級"
+                options={GRADE_OPTIONS}
+                value={
+                  isOtherGrade(players[index].grade)
+                    ? GRADE_OTHER
+                    : players[index].grade
+                }
+                onChange={(v) => updatePlayer(index, 'grade', v)}
+              />
+              {isOtherGrade(players[index].grade) && (
+                <TextQuestion
+                  title="其他（e.g. 碩士二年級、高中三年級、已畢業）"
+                  value={
+                    players[index].grade === GRADE_OTHER
+                      ? ''
+                      : players[index].grade
+                  }
+                  onChange={(v) =>
+                    updatePlayer(index, 'grade', v || GRADE_OTHER)
+                  }
+                />
+              )}
+            </>
+          )}
+          {players[index].identity !== IDENTITY_STUDENT && (
             <TextQuestion
-              title="其他（e.g. 碩士二年級、高中三年級、已畢業）"
-              value={
-                players[index].grade === GRADE_OTHER ? '' : players[index].grade
-              }
-              onChange={(v) => updatePlayer(index, 'grade', v || GRADE_OTHER)}
+              title="★職業"
+              value={players[index].occupation}
+              onChange={(v) => updatePlayer(index, 'occupation', v)}
             />
           )}
-          <TextQuestion
-            title="★職業"
-            value={players[index].occupation}
-            onChange={(v) => updatePlayer(index, 'occupation', v)}
-          />
           <TextQuestion
             title="★電子郵件信箱（格式：test@mail.com）"
             value={players[index].email}

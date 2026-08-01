@@ -76,7 +76,11 @@ export const MAKER_PRIORITY_OPTIONS = ['創客交流組']
 
 export const GENDER_OPTIONS = ['男', '女']
 
-export const IDENTITY_OPTIONS = ['學生', '社會人士']
+// 年級 is only asked of 學生, 職業 only of 社會人士.
+export const IDENTITY_STUDENT = '學生'
+export const IDENTITY_WORKER = '社會人士'
+
+export const IDENTITY_OPTIONS = [IDENTITY_STUDENT, IDENTITY_WORKER]
 
 export const SHIRT_SIZE_OPTIONS = [
   'XS',
