@@ -157,10 +157,10 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
     validateBirthday(player.birthday) &&
     isValidId(player.idNumber) &&
     player.identity !== '' &&
-    // 學校/科系/年級 are asked of 學生, 職業 of 社會人士 — only one branch applies.
+    player.school.trim() !== '' &&
+    // 科系/年級 are asked of 學生, 職業 of 社會人士 — only one branch applies.
     (player.identity === IDENTITY_WORKER ||
-      (player.school.trim() !== '' &&
-        player.department.trim() !== '' &&
+      (player.department.trim() !== '' &&
         player.grade.trim() !== '' &&
         player.grade !== GRADE_OTHER)) &&
     (player.identity === IDENTITY_STUDENT || player.occupation.trim() !== '') &&
@@ -350,13 +350,18 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
                 clearPlayerFields(index, ['school', 'department', 'grade'])
             }}
           />
+          {/* One column, two meanings: 學校 for 學生, free-text 單位 otherwise. */}
+          <TextQuestion
+            title={
+              players[index].identity === IDENTITY_WORKER
+                ? '★單位'
+                : '★就讀學校（填寫全名 e.g. 國立清華大學）'
+            }
+            value={players[index].school}
+            onChange={(v) => updatePlayer(index, 'school', v)}
+          />
           {players[index].identity !== IDENTITY_WORKER && (
             <>
-              <TextQuestion
-                title="★就讀學校（填寫全名 e.g. 國立清華大學）"
-                value={players[index].school}
-                onChange={(v) => updatePlayer(index, 'school', v)}
-              />
               <TextQuestion
                 title="★科系（填寫全名 e.g. 資訊工程學系）"
                 value={players[index].department}
