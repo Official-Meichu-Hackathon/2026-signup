@@ -13,7 +13,11 @@ import {
   createPlayerData,
   EXPERIENCE_MAX,
   GENDER_OPTIONS,
+  GRADE_OPTIONS,
+  GRADE_OTHER,
   IDENTITY_OPTIONS,
+  IDENTITY_STUDENT,
+  IDENTITY_WORKER,
   MAKER_PRIORITY_OPTIONS,
   MAX_PLAYERS,
   PLAYER_COUNT_OPTIONS,
@@ -32,6 +36,7 @@ import {
 } from '../lib/validators'
 import { submitRegistration } from '../lib/submit'
 import { trackSignUp } from '../lib/analytics'
+import shirtSizeChart from '../assets/signup/shirt-size-chart.png'
 
 const CONTACT_EMAIL = '2026mchackathon@gmail.com'
 
@@ -43,6 +48,10 @@ const CONSENT_PDF = '/consent/consent.pdf'
 interface SignupViewProps {
   onSuccess: () => void
 }
+
+// Anything outside 大一–大四 (including the sentinel) means 其他 is picked.
+const isOtherGrade = (grade: string) =>
+  grade !== '' && !GRADE_OPTIONS.slice(0, -1).includes(grade)
 
 function sectionForStep(currentStep: number, playerCount: number): Section {
   if (currentStep === 1) return 'option'
@@ -127,6 +136,15 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
     )
   }
 
+  const clearPlayerFields = (index: number, fields: (keyof PlayerData)[]) => {
+    const blanks = Object.fromEntries(fields.map((f) => [f, '']))
+    setPlayers((prev) =>
+      prev.map((player, i) =>
+        i === index ? { ...player, ...blanks } : player,
+      ),
+    )
+  }
+
   const step1Ok =
     groupName.trim() !== '' &&
     validateGroupName(groupName) &&
@@ -140,9 +158,12 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
     isValidId(player.idNumber) &&
     player.identity !== '' &&
     player.school.trim() !== '' &&
-    player.department.trim() !== '' &&
-    player.grade.trim() !== '' &&
-    player.occupation.trim() !== '' &&
+    // 科系/年級 are asked of 學生, 職業 of 社會人士 — only one branch applies.
+    (player.identity === IDENTITY_WORKER ||
+      (player.department.trim() !== '' &&
+        player.grade.trim() !== '' &&
+        player.grade !== GRADE_OTHER)) &&
+    (player.identity === IDENTITY_STUDENT || player.occupation.trim() !== '') &&
     validateEmail(player.email) &&
     validatePhoneNumber(player.phone) &&
     player.dietaryRestrictions.trim() !== '' &&
@@ -320,28 +341,64 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
             title="★身份"
             options={IDENTITY_OPTIONS}
             value={players[index].identity}
-            onChange={(v) => updatePlayer(index, 'identity', v)}
+            onChange={(v) => {
+              updatePlayer(index, 'identity', v)
+              // Drop the other branch's answers so they can't be submitted.
+              if (v === IDENTITY_STUDENT)
+                clearPlayerFields(index, ['occupation'])
+              if (v === IDENTITY_WORKER)
+                clearPlayerFields(index, ['school', 'department', 'grade'])
+            }}
           />
+          {/* One column, two meanings: 學校 for 學生, free-text 單位 otherwise. */}
           <TextQuestion
-            title="★就讀學校（填寫全名 e.g. 國立清華大學）"
+            title={
+              players[index].identity === IDENTITY_WORKER
+                ? '★單位'
+                : '★就讀學校（填寫全名 e.g. 國立清華大學）'
+            }
             value={players[index].school}
             onChange={(v) => updatePlayer(index, 'school', v)}
           />
-          <TextQuestion
-            title="★科系（填寫全名 e.g. 資訊工程學系）"
-            value={players[index].department}
-            onChange={(v) => updatePlayer(index, 'department', v)}
-          />
-          <TextQuestion
-            title="★年級（格式：XXX年級 e.g. 大學三年級、碩士二年級、已畢業）"
-            value={players[index].grade}
-            onChange={(v) => updatePlayer(index, 'grade', v)}
-          />
-          <TextQuestion
-            title="★職業"
-            value={players[index].occupation}
-            onChange={(v) => updatePlayer(index, 'occupation', v)}
-          />
+          {players[index].identity !== IDENTITY_WORKER && (
+            <>
+              <TextQuestion
+                title="★科系（填寫全名 e.g. 資訊工程學系）"
+                value={players[index].department}
+                onChange={(v) => updatePlayer(index, 'department', v)}
+              />
+              <ChoiceQuestion
+                title="★年級"
+                options={GRADE_OPTIONS}
+                value={
+                  isOtherGrade(players[index].grade)
+                    ? GRADE_OTHER
+                    : players[index].grade
+                }
+                onChange={(v) => updatePlayer(index, 'grade', v)}
+              />
+              {isOtherGrade(players[index].grade) && (
+                <TextQuestion
+                  title="其他（e.g. 碩士二年級、高中三年級、已畢業）"
+                  value={
+                    players[index].grade === GRADE_OTHER
+                      ? ''
+                      : players[index].grade
+                  }
+                  onChange={(v) =>
+                    updatePlayer(index, 'grade', v || GRADE_OTHER)
+                  }
+                />
+              )}
+            </>
+          )}
+          {players[index].identity !== IDENTITY_STUDENT && (
+            <TextQuestion
+              title="★職業"
+              value={players[index].occupation}
+              onChange={(v) => updatePlayer(index, 'occupation', v)}
+            />
+          )}
           <TextQuestion
             title="★電子郵件信箱（格式：test@mail.com）"
             value={players[index].email}
@@ -363,6 +420,8 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
           />
           <ChoiceQuestion
             title="★衣服尺寸"
+            image={shirtSizeChart}
+            imageAlt="AG18000 系列尺寸表"
             options={SHIRT_SIZE_OPTIONS}
             value={players[index].shirtSize}
             onChange={(v) => updatePlayer(index, 'shirtSize', v)}
