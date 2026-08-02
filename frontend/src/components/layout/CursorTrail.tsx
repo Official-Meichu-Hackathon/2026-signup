@@ -104,6 +104,27 @@ function loadMap(el: HTMLImageElement, key: string): Promise<LumMap | null> {
 
 const REROOTS_FIXED = ['transform', 'filter', 'backdropFilter', 'perspective']
 
+// The gate maps a background's on-screen box linearly onto its decoded pixels,
+// which only holds while the element is drawn upright. Tailwind v4 emits
+// `rotate-180` as the standalone `rotate` property rather than a `transform`,
+// so both have to be read — checking `transform` alone silently misses the flip
+// and the gate comes out inverted.
+const HALF_TURN_MATRIX = 'matrix(-1, 0, 0, -1, 0, 0)'
+const IDENTITY_MATRIX = 'matrix(1, 0, 0, 1, 0, 0)'
+
+function isHalfTurn(cs: CSSStyleDeclaration) {
+  return cs.rotate === '180deg' || cs.transform === HALF_TURN_MATRIX
+}
+
+function isUpright(cs: CSSStyleDeclaration) {
+  return (
+    (cs.rotate === 'none' || cs.rotate === '0deg') &&
+    (cs.transform === 'none' || cs.transform === IDENTITY_MATRIX) &&
+    cs.scale === 'none' &&
+    cs.translate === 'none'
+  )
+}
+
 let liveInstances = 0
 
 // Dev only (DEV is statically false in a build, so this all drops out). Every
@@ -157,10 +178,18 @@ function checkContract(
       )
       continue
     }
-    const fit = getComputedStyle(el).objectFit
+    const cs = getComputedStyle(el)
+    const fit = cs.objectFit
     if (fit !== 'fill') {
       warn(
         `background ${name(el)} uses object-fit: ${fit}. The gate maps the element box linearly onto the decoded pixels, so a crop or letterbox makes it sample the wrong ones. Use a natural-aspect image (w-full h-auto).`,
+      )
+    }
+    // A half turn is special-cased (see `flipped`); anything else leaves the
+    // box and the decoded pixels out of alignment.
+    if (!isUpright(cs) && !isHalfTurn(cs)) {
+      warn(
+        `background ${name(el)} is transformed (transform: ${cs.transform}, rotate: ${cs.rotate}, scale: ${cs.scale}, translate: ${cs.translate}). Only an upright image or a rotate-180 one samples correctly; anything else gates against the wrong pixels.`,
       )
     }
     const src = el.currentSrc || el.src
@@ -252,6 +281,12 @@ function CursorTrail({
     let maps: (LumMap | null)[] = []
     let keys: string[] = []
     let rects: DOMRect[] = []
+    // getBoundingClientRect() reports the box after transforms, but the map is
+    // built from the unrotated source. A background flipped with rotate-180
+    // (both problems/stats pages stack the same gradient twice, the lower one
+    // upside down) therefore reads its own opposite end — the gate comes out
+    // exactly inverted. Sampling (1-u, 1-v) for those puts it back.
+    let flipped: boolean[] = []
     let rectsDirty = true
 
     // Re-queried rather than snapshotted once: a background can be rendered
@@ -286,8 +321,11 @@ function CursorTrail({
       return matches
     }
 
+    // Read here rather than in syncBackgrounds so a class swap is picked up by
+    // the same scroll/resize invalidation that already refreshes the rects.
     function refreshRects() {
       rects = bgEls.map((el) => el.getBoundingClientRect())
+      flipped = bgEls.map((el) => isHalfTurn(getComputedStyle(el)))
       rectsDirty = false
     }
     function markDirty() {
@@ -301,8 +339,12 @@ function CursorTrail({
         const r = rects[i]
         if (!map || !r) continue
         if (x < r.left || x > r.right || y < r.top || y > r.bottom) continue
-        const u = (x - r.left) / r.width
-        const v = (y - r.top) / r.height
+        let u = (x - r.left) / r.width
+        let v = (y - r.top) / r.height
+        if (flipped[i]) {
+          u = 1 - u
+          v = 1 - v
+        }
         const cx = Math.min(map.w - 1, Math.max(0, Math.floor(u * map.w)))
         const cy = Math.min(map.h - 1, Math.max(0, Math.floor(v * map.h)))
         return map.data[cy * map.w + cx] > luminanceMax

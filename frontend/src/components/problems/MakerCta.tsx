@@ -193,12 +193,23 @@ export default function MakerCta() {
           2026
         </p>
 
-        {/* 新竹X梅竹黑客松（Variant6 起，比 2026 慢半拍浮現） */}
+        {/* 新竹X梅竹黑客松（Variant6 起，比 2026 慢半拍浮現）
+            whitespace-nowrap 是必要的，不是保險：設計稿給的文字框寬 794、字級
+            100，而這八個字實際只要 7.70em，餘裕僅 2.5%（同一張卡上其他每一行都
+            有 35% 以上）。這 2.5% 撐不住三件事——Zen Antique 是非同步載入的，載完
+            前整串用系統備援字；「X」U+0058 不在 Zen Antique 裡，永遠走備援，而各
+            平台的備援 serif 寬度不同；再加上百分比與 cqw 各自的四捨五入。任何一項
+            吃掉那 2.5%，「松」就會被擠到第二行。
+            寬度同時從設計稿的 794／295.4 改成 max-content：不換行之後那個固定寬
+            度已經不再控制任何東西（文字靠 left-1/2 + -translate-x-1/2 置中，與框
+            寬無關），但只要備援字寬超過框，溢出只會往右單邊跑、標題就會偏掉。讓
+            框貼著文字就永遠是對稱的。動畫不受影響——字級仍在 transition，框寬跟著
+            字級平滑改變。 */}
         <p
-          className="font-zen text-ink ease-out-strong absolute left-1/2 -translate-x-1/2 -translate-y-1/2 text-center transition-all"
+          className="font-zen text-ink ease-out-strong absolute left-1/2 -translate-x-1/2 -translate-y-1/2 text-center whitespace-nowrap transition-all"
           style={{
             top: isContent ? pctY(89.1) : pctY(269.2),
-            width: isContent ? pctX(295.4) : pctX(794),
+            width: 'max-content',
             fontSize: isContent ? cq(35) : cq(100),
             lineHeight: isContent ? cq(44) : cq(64),
             textShadow: glow(isContent ? 0.28 : 0.8),
