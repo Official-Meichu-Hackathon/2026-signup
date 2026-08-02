@@ -3,7 +3,8 @@
 import logoCloudMosa from '../assets/Problems/logo-cloudmosa.png'
 import logoLogitech from '../assets/Problems/logo-logitech.png'
 import logoAmdItri from '../assets/Problems/logo-amd-itri.png'
-import logoMakalot from '../assets/Problems/logo-makalot.png'
+import logoMakalot from '../assets/Problems/logo-makalot_V2.webp'
+import logoMakalotMark from '../assets/Problems/logo-makalot.png'
 import logoNxp from '../assets/Problems/logo-nxp-figma.png'
 import logoWtMicro from '../assets/Problems/logo-wtmicro-figma.png'
 import logoAdvantest from '../assets/Problems/logo-advantest-2.svg'
@@ -13,14 +14,15 @@ import logoGoogle from '../assets/Problems/logo-google.png'
 // 之分。paragraphs 保留各企業的題目全文備用，目前不會顯示。
 export const HASHTAG_NOTE = '完整題目將於比賽當日公開'
 
-// hashtag 佔位。設計稿是「#......」，聚陽、恩智浦、愛德萬、CloudMosa 尚未
-// 提供實際內容，先用佔位；主辦給了之後替換各企業的 hashtags。
-const HASHTAG_PLACEHOLDER = ['#......', '#......', '#......']
-
 export interface Problem {
   sponsor: string
   logos: string[]
-  // 比賽前的提示標籤。內容確定前用 HASHTAG_PLACEHOLDER。
+  // 收合小卡專用的 logo，沒給就沿用 logos。小卡的 logo 框是設計稿逐家手調的
+  // （見 ProblemDeck 的 LOGO_BOXES），比例固定，所以當放大卡換成另一種版式的
+  // 素材時，小卡不一定跟著換得動 —— 聚陽就是這個情況。
+  cardLogos?: string[]
+  // 比賽前的提示標籤。七家都已給實際內容；設計稿的佔位樣式是「#......」，
+  // 若日後有企業要暫時留白，照那個格式填即可。
   hashtags: string[]
   // 保密協定說明，只有部分企業有（如羅技）。設計稿放在企業名與分隔線之間。
   note?: string
@@ -58,9 +60,14 @@ export const PROBLEMS: Problem[] = [
     ],
   },
   {
-    sponsor: '聚陽實業股份有限公司',
+    // 卡片上只放「聚陽實業」——全稱十個字在 278 寬的企業名框裡放不下會斷行，
+    // 而報名表的志願序（PRIORITY_OPTIONS）本來就是用簡稱，兩邊一致。
+    sponsor: '聚陽實業',
     logos: [logoMakalot],
-    hashtags: HASHTAG_PLACEHOLDER,
+    // 小卡沿用舊的方形標誌：小卡的框（LOGO_BOXES[3]，43.31%×20.04%，比例 1.2）
+    // 是照方形標誌手調的，V2 是 5.2:1 的寬版標準字，塞進那個框只會剩細細一條。
+    cardLogos: [logoMakalotMark],
+    hashtags: ['#推薦系統', '#自然語言互動', '#時尚科技'],
     paragraphs: [],
   },
   {
