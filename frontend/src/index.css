@@ -1086,6 +1086,14 @@ body {
   mask-image: linear-gradient(to bottom, #000 42%, transparent 72%);
 }
 
+/* 內嵌（而非 <img>）的統計圖 SVG。素材本身帶著 viewBox，撐滿容器即可等比縮放；
+   容器的 aspect-ratio 與 viewBox 相同，所以不會有留白。 */
+.stats-chart-inline > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 /* will-change 只在開合動畫期間掛上（.glass-suspend 的存在區間就是動畫區間）。
    常駐會把整塊面板永久釘成合成層，而 iOS Safari 對合成層裡的 <img> SVG 是先用
    素材的 intrinsic 尺寸點陣化、再把貼圖拉伸到版面尺寸 —— 圓餅圖素材只有 343 寬，
