@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Footer from '../components/layout/Footer'
 import Navbar from '../components/layout/Navbar'
+import CursorTrail from '../components/layout/CursorTrail'
 import StatsAccordion from '../components/stats/StatsAccordion'
 import StatsStars from '../components/stats/StatsStars'
 import MobileStatsView from './MobileStatsView'
@@ -45,12 +46,14 @@ export default function StatsView() {
       <Navbar />
       {/* 背景漸層（參賽數據背景電腦 378:351）：與題目說明頁共用同一組素材。 */}
       <img
+        data-trail-bg="stats"
         src={bgGradient}
         alt=""
         className="page-glow pointer-events-none absolute top-0 left-[-9.44%] w-[109.44%] max-w-none select-none"
         style={{ height: GLOW_H }}
       />
       <img
+        data-trail-bg="stats"
         src={bgGradient}
         alt=""
         className="page-glow pointer-events-none absolute bottom-0 left-[-9.44%] w-[109.44%] max-w-none rotate-180 select-none"
@@ -59,6 +62,16 @@ export default function StatsView() {
       {/* 參賽數據電腦_星星閃爍（570:1341）：7 顆帶光暈的星，各自不同的閃爍
           相位差。鋪在背景漸層之上、內容之下。 */}
       <StatsStars />
+
+      {/* 滑鼠拖尾（與比賽時程頁同一個元件）。跟 ScheduleView 一樣不能用負的
+          z-index —— 上面兩張背景漸層是 z-index:auto 的兄弟節點，負值會讓拖尾
+          沉到它們底下。z-5 夾在背景（auto）與內容（z-10）之間，剛好蓋過背景
+          又壓在文字下面。元件是 position:fixed，外層的 overflow-hidden 不會裁
+          到它（固定定位的包含塊是視窗，除非祖先有 transform/filter）。觸控裝置
+          與 prefers-reduced-motion 下元件會自己停用，故手機版不需要另外掛。 */}
+      <div className="relative z-[5]">
+        <CursorTrail bgSelector="[data-trail-bg='stats']" />
+      </div>
 
       {/* 左上角梅竹黑客松 logo（1366:61551），與題目說明頁同一組素材。navbar
           其餘元件（報名按鈕、選單）屬他人負責範圍，此處不實作。 */}
