@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { useLayoutViewport } from '../../lib/useLayoutViewport'
 import { PROBLEMS } from '../../data/problems'
 import cardBack from '../../assets/Problems/card-back.png'
 import cardDecor from '../../assets/Problems/card-decor.svg'
@@ -32,17 +33,9 @@ function MobileZoomOverlay({
   index: number
   onClose: () => void
 }) {
-  const [viewport, setViewport] = useState(() => ({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  }))
-
-  useEffect(() => {
-    const onResize = () =>
-      setViewport({ width: window.innerWidth, height: window.innerHeight })
-    window.addEventListener('resize', onResize)
-    return () => window.removeEventListener('resize', onResize)
-  }, [])
+  // 讀版面視窗而非 window.innerWidth／innerHeight：後者在 iOS 上會跟著雙指縮放
+  // 變動，放大檢視的卡片會在縮放途中一直改尺寸。見 useLayoutViewport。
+  const viewport = useLayoutViewport()
 
   const width = Math.max(
     0,
