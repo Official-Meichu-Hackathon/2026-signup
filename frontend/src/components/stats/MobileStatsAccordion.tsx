@@ -182,13 +182,20 @@ function Collapsible({
   )
 }
 
+// 圓餅圖素材是 343×715：可見的深色面板是 283×655（Frame 39），四周各留 30／20
+// 給投影與光暈。先前用 w-full 貼滿 393 的容器，面板會被放大成 324 寬 —— 比設計稿
+// 寬 41px，也比正下方同一組的感言卡（QUOTE_CARD_W 283）寬一截；素材被拉伸 1.146
+// 倍也讓字更不銳利。照素材原寬擺，比例才對得上。
+const PIE_SVG_W = 343
+const PIE_SVG_H = 715
+
 function PiePanel() {
   return (
     <img
       src={statsChartMobile}
       alt="參賽者年級、黑客組科系、學校與創客組科系分布統計"
-      className="mx-auto block w-full"
-      style={{ aspectRatio: '343 / 715' }}
+      className="mx-auto block"
+      style={{ width: pct(PIE_SVG_W), ...ratio(PIE_SVG_W, PIE_SVG_H) }}
     />
   )
 }
