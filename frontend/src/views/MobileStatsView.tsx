@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useLayoutViewport } from '../lib/useLayoutViewport'
 import MobileFooter from '../components/layout/MobileFooter'
 import Navbar from '../components/layout/Navbar'
 import MobileStatsAccordion from '../components/stats/MobileStatsAccordion'
@@ -34,13 +34,9 @@ export default function MobileStatsView({
 }: {
   forcePreview?: boolean
 }) {
-  const [viewportWidth, setViewportWidth] = useState(() => window.innerWidth)
-
-  useEffect(() => {
-    const onResize = () => setViewportWidth(window.innerWidth)
-    window.addEventListener('resize', onResize)
-    return () => window.removeEventListener('resize', onResize)
-  }, [])
+  // 讀版面視窗而非 window.innerWidth：後者在 iOS 上會跟著雙指縮放變動，整張
+  // 畫布會重排到縮放後的寬度上。見 useLayoutViewport 的註解。
+  const { width: viewportWidth } = useLayoutViewport()
 
   const canvasWidth = forcePreview
     ? Math.min(viewportWidth, DESIGN_WIDTH)
