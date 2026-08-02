@@ -345,7 +345,7 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
               updatePlayer(index, 'identity', v)
               // Drop the other branch's answers so they can't be submitted.
               if (v === IDENTITY_STUDENT)
-                clearPlayerFields(index, ['occupation'])
+                clearPlayerFields(index, ['occupation', 'school'])
               if (v === IDENTITY_WORKER)
                 clearPlayerFields(index, ['school', 'department', 'grade'])
             }}
