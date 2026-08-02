@@ -16,6 +16,9 @@ import logoHsinchuCity from '../../assets/home/logo-hsinchu-city.webp'
 import logoHsinchuYouth from '../../assets/home/logo-hsinchu-youth.webp'
 
 const partnerUrls = {
+  hsinchuCity: 'https://www.hccg.gov.tw/hccg/index',
+  hsinchuYouth:
+    'https://www.facebook.com/YouthHsinchu?mibextid=wwXIfr&rdid=V30zluqMllNimLcb&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1D5ppcCNFf%2F%3Fmibextid%3DwwXIfr',
   logitech: 'https://www.logitech.com/zh-tw',
   amd: 'https://developer.amd.com/ai-developer-program/',
   cloudmosa: 'https://www.cloudmosa.com/jobs',
@@ -45,7 +48,13 @@ function SponsorTierLabel({ children }: { children: React.ReactNode }) {
 function MainPartnerGrid() {
   return (
     <div className="partner-main-grid grid w-full max-w-[800px] grid-cols-[321px_362px] grid-rows-[79px_153px_99px_95px_101px] items-center justify-between justify-items-center gap-y-28">
-      <div className="partner-logo-hsinchu-city relative h-[79px] w-[308px] overflow-hidden">
+      <a
+        href={partnerUrls.hsinchuCity}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="前往新竹市政府網站"
+        className="partner-logo-hsinchu-city relative h-[79px] w-[308px] overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
+      >
         <img
           src={logoHsinchuCity}
           alt="新竹市政府 Hsinchu City Government"
@@ -53,8 +62,14 @@ function MainPartnerGrid() {
           decoding="async"
           className="absolute top-[-266.67%] left-[-9.74%] h-[673.84%] w-[122.08%] max-w-none"
         />
-      </div>
-      <div className="partner-logo-hsinchu-youth relative h-[66px] w-[362px] overflow-hidden">
+      </a>
+      <a
+        href={partnerUrls.hsinchuYouth}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="前往新竹市青年發展中心 Facebook 專頁"
+        className="partner-logo-hsinchu-youth relative h-[66px] w-[362px] overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
+      >
         <img
           src={logoHsinchuYouth}
           alt="新竹市青年發展中心 Youth Development Center of Hsinchu City"
@@ -62,7 +77,7 @@ function MainPartnerGrid() {
           decoding="async"
           className="absolute top-[-168.61%] left-[-14.92%] h-[511.08%] w-[129.83%] max-w-none"
         />
-      </div>
+      </a>
       <a
         href={partnerUrls.cloudmosa}
         target="_blank"

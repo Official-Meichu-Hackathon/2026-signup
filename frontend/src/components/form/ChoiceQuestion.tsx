@@ -5,6 +5,8 @@ interface ChoiceQuestionProps {
   title: string
   description?: string
   pdf?: string
+  image?: string
+  imageAlt?: string
   options: string[]
   value: string
   onChange: (value: string) => void
@@ -14,6 +16,8 @@ export default function ChoiceQuestion({
   title,
   description,
   pdf,
+  image,
+  imageAlt = '',
   options,
   value,
   onChange,
@@ -40,6 +44,13 @@ export default function ChoiceQuestion({
         <p className="mx-4 mt-1.5 text-[0.5rem] leading-snug whitespace-pre-line text-white/80 md:mt-3 md:text-xl md:leading-relaxed">
           {description}
         </p>
+      )}
+      {image && (
+        <img
+          src={image}
+          alt={imageAlt}
+          className="mx-[2%] mt-2 w-[96%] max-w-[36rem] rounded-md md:mt-5"
+        />
       )}
       <div className="mx-4 mt-3 flex flex-wrap gap-x-8 gap-y-3 md:mt-5 md:gap-x-20 md:gap-y-6">
         {options.map((option) => (
