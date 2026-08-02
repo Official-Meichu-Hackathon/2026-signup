@@ -1022,13 +1022,16 @@ body {
 
   .site-signup {
     display: flex;
-    width: 74px;
+    width: auto;
+    min-width: 74px;
     height: 31px;
     align-items: center;
     justify-content: center;
-    padding: 0 !important;
+    padding: 0 10px !important;
     font-family: 'Zen Antique', serif;
     font-size: 12px !important;
+    line-height: 1;
+    white-space: nowrap;
   }
 
   .site-menu-button {
