@@ -122,10 +122,11 @@ export function ProblemCardFace({
           className="absolute top-[-22.69%] left-[-31.81%] h-[148.81%] w-[164%] max-w-none"
         />
       </div>
-      {/* 企業 logo：設計稿逐家手調的位置與尺寸（卡片座標系） */}
+      {/* 企業 logo：設計稿逐家手調的位置與尺寸（卡片座標系）。cardLogos 讓放大卡
+          換素材時小卡能留用原本那張——框的比例是照舊素材調的，見 Problem 的註解。 */}
       {problem &&
         index !== undefined &&
-        problem.logos.map((logo, logoIndex) => {
+        (problem.cardLogos ?? problem.logos).map((logo, logoIndex) => {
           const box = LOGO_BOXES[index]?.[logoIndex]
           if (!box) return null
           return (
@@ -143,6 +144,45 @@ export function ProblemCardFace({
             />
           )
         })}
+    </div>
+  )
+}
+
+// 聚陽的 logo（logo-makalot_V2.webp）上下自帶大片白邊：3508×2480 的畫布裡，實際
+// 的標準字只佔中間 96.5%×26.24%（上緣留白 36.2%、下緣 37.6%）。直接 object-contain
+// 會把 74% 的高度預算畫成白的，字樣只剩 240×46；而把 logo 盒加高來補償又會把底下
+// 的企業名、hashtag 整組往下推。
+//
+// 所以改成裁切：外框只有標準字的比例（5.202:1）並 overflow-hidden，內層把整張圖
+// 放大定位，只讓標準字露出來。盒高維持 AMD 那組的 176 不動，底下的排版一格都不會
+// 移，而字樣反而放大到 404×77.7 —— 比加高盒子的做法更大。
+//
+// 下面的比例是量素材的非白邊界得到的。若設計重新匯出一版緊裁的素材，就該把這個
+// 元件拿掉、改回一般的 <img>，不然會裁過頭。
+const MAKALOT_INK = { left: 0.015, top: 0.362, width: 0.965, height: 0.2624 }
+const MAKALOT_INK_ASPECT =
+  (MAKALOT_INK.width * 3508) / (MAKALOT_INK.height * 2480)
+
+function MakalotLogo({ src, alt }: { src: string; alt: string }) {
+  return (
+    <div
+      className="relative max-w-full overflow-hidden"
+      style={{
+        width: zoomCq(zpx(404)),
+        aspectRatio: `${MAKALOT_INK_ASPECT}`,
+      }}
+    >
+      <img
+        src={src}
+        alt={alt}
+        className="absolute max-w-none"
+        style={{
+          width: `${(100 / MAKALOT_INK.width).toFixed(3)}%`,
+          height: `${(100 / MAKALOT_INK.height).toFixed(3)}%`,
+          left: `${((-MAKALOT_INK.left / MAKALOT_INK.width) * 100).toFixed(3)}%`,
+          top: `${((-MAKALOT_INK.top / MAKALOT_INK.height) * 100).toFixed(3)}%`,
+        }}
+      />
     </div>
   )
 }
@@ -165,7 +205,11 @@ export function ZoomedFace({
   const isCloudMosa = problem.sponsor === 'CloudMosa'
   const isAdvantest = problem.sponsor === '愛德萬測試'
   const isNxp = problem.sponsor === '恩智浦半導體'
-  const usesAmdLayout = isAmd || isCloudMosa || isAdvantest || isNxp
+  const isMakalot = problem.sponsor === '聚陽實業'
+  // 聚陽比照 AMD 那組：logo 盒從 120 高改成 176、圖寬給到 404，企業名與 hashtag
+  // 也跟著換成大卡的尺規（35/44 的 hashtag、572 寬的框）。
+  const usesAmdLayout =
+    isAmd || isCloudMosa || isAdvantest || isNxp || isMakalot
   const isGoogle = problem.sponsor === 'Google'
   const logitechNoteLines = [
     '請務必簽署附件之保密協定，',
@@ -242,37 +286,44 @@ export function ZoomedFace({
               gap: zoomCq(zpx(isNxp ? 8 : 20)),
             }}
           >
-            {problem.logos.map((logo, index) => (
-              <img
-                key={logo}
-                src={logo}
-                alt={problem.sponsor}
-                className={`max-h-full object-contain ${
-                  isNxp ? 'max-w-none' : 'max-w-[46%]'
-                }`}
-                style={
-                  isNxp
-                    ? {
-                        width: zoomCq(zpx(nxpLogoWidths[index])),
-                        transform:
-                          index === 0
-                            ? `translateX(${zoomCq(zpx(32))}) scale(1.1)`
-                            : `translateX(-${zoomCq(zpx(40))}) scale(1.6)`,
-                      }
-                    : logoImageWidth
+            {problem.logos.map((logo, index) =>
+              isMakalot ? (
+                <MakalotLogo key={logo} src={logo} alt={problem.sponsor} />
+              ) : (
+                <img
+                  key={logo}
+                  src={logo}
+                  alt={problem.sponsor}
+                  className={`max-h-full object-contain ${
+                    isNxp ? 'max-w-none' : 'max-w-[46%]'
+                  }`}
+                  style={
+                    isNxp
                       ? {
-                          width: zoomCq(zpx(logoImageWidth)),
-                          maxWidth: '100%',
+                          width: zoomCq(zpx(nxpLogoWidths[index])),
+                          transform:
+                            index === 0
+                              ? `translateX(${zoomCq(zpx(32))}) scale(1.1)`
+                              : `translateX(-${zoomCq(zpx(40))}) scale(1.6)`,
                         }
-                      : undefined
-                }
-              />
-            ))}
+                      : logoImageWidth
+                        ? {
+                            width: zoomCq(zpx(logoImageWidth)),
+                            maxWidth: '100%',
+                          }
+                        : undefined
+                  }
+                />
+              ),
+            )}
           </div>
 
-          {/* 企業名（三級標題：Noto Sans SemiBold 30/44，輔助文字色 #A5BDE2） */}
+          {/* 企業名（三級標題：Noto Sans SemiBold 30/44，輔助文字色 #A5BDE2）。
+              一律不換行：這是單行標題，AMD 那組的框固定 278 寬，字級 30 —— 名稱
+              超過九個字就會斷行（先前聚陽用全稱時就斷在「有限公／司」）。現行七家
+              最長的是恩智浦半導體（6 字 ≈180），離 278 還有一大截。 */}
           <p
-            className="font-noto text-periwinkle text-center font-semibold"
+            className="font-noto text-periwinkle text-center font-semibold whitespace-nowrap"
             style={{
               ...sponsorBoxStyle,
               fontSize: zoomCq(zpx(30)),

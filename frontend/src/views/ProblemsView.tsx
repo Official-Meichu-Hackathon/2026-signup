@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Footer from '../components/layout/Footer'
 import Navbar from '../components/layout/Navbar'
+import CursorTrail from '../components/layout/CursorTrail'
 import ProblemDeck from '../components/problems/ProblemDeck'
 import MobileProblemsView from './MobileProblemsView'
 import ProblemStars from '../components/problems/ProblemStars'
@@ -28,17 +29,28 @@ export default function ProblemsView() {
       {/* 背景漸層（360:309 / 360:310）：同一張素材，下半部那張旋轉 180°。
           設計稿把它拉寬到 1576/1440 並壓成 1064 高，故此處不維持原比例。 */}
       <img
+        data-trail-bg="problems"
         src={bgGradient}
         alt=""
         className="page-glow pointer-events-none absolute top-0 left-[-9.44%] h-[1064px] w-[109.44%] max-w-none select-none"
       />
       <img
+        data-trail-bg="problems"
         src={bgGradient}
         alt=""
         className="page-glow pointer-events-none absolute bottom-0 left-[-9.44%] h-[1064px] w-[109.44%] max-w-none rotate-180 select-none"
       />
       {/* 小星點（共用元件）鋪底，設計稿的 5 顆大星疊在其上 */}
       <ProblemStars />
+
+      {/* 滑鼠拖尾（與比賽時程頁同一個元件）。跟 ScheduleView 一樣不能用負的
+          z-index —— 上面兩張背景漸層是 z-index:auto 的兄弟節點，負值會讓拖尾
+          沉到它們底下。z-5 夾在背景（auto）與內容（z-10）之間，剛好蓋過背景
+          又壓在文字下面。元件本身在觸控裝置與 prefers-reduced-motion 下會自己
+          停用，故手機版（MobileProblemsView）不需要另外掛。 */}
+      <div className="relative z-[5]">
+        <CursorTrail bgSelector="[data-trail-bg='problems']" />
+      </div>
 
       {/* 左上角梅竹黑客松 logo（1366:61503：x47 y13 148×67）。設計稿以
           object-cover 貼齊底部，故頂端星芒被裁切。navbar 其餘元件（報名

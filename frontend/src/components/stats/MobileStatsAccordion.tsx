@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useGlassSuspend } from './useGlassSuspend'
 import barStats from '../../assets/Stats/m-bar-stats.svg'
 import barQuotes from '../../assets/Stats/m-bar-quotes.svg'
@@ -8,7 +8,6 @@ import iconMinus from '../../assets/Stats/m-icon-minus.svg'
 import carouselArrow from '../../assets/Stats/carousel-arrow.svg'
 import { TESTIMONIALS } from './testimonials'
 import { RESULT_PLATFORM_URL } from './resultPlatform'
-import statsChartMobile from '../../assets/Stats/stats_chart_mobile.svg'
 
 // 參賽數據(手機) 165:1219。設計稿是一個 393 寬的元件，四個 variant 分別是
 // 兩條手風琴的開合組合（Frame 61 全收 / 62 開數據 / 63 開感言 / 60 全開）。
@@ -182,14 +181,66 @@ function Collapsible({
   )
 }
 
+// 圓餅圖素材是 343×715：可見的深色面板是 283×655（Frame 39，x30 y20、圓角 20），
+// 四周各留 30／20 給投影與光暈。先前用 w-full 貼滿 393 的容器，面板會被放大成 324
+// 寬 —— 比設計稿寬 41px，也比正下方同一組的感言卡（QUOTE_CARD_W 283）寬一截。
+const PIE_SVG_W = 343
+const PIE_SVG_H = 715
+const PIE_PANEL_W = 283
+const PIE_PANEL_H = 655
+const PIE_PANEL_X = 30
+const PIE_PANEL_Y = 20
+const PIE_PANEL_RADIUS = 20
+
+const svgPctX = (n: number) => `${((n / PIE_SVG_W) * 100).toFixed(4)}%`
+const svgPctY = (n: number) => `${((n / PIE_SVG_H) * 100).toFixed(4)}%`
+
 function PiePanel() {
+  // 素材有 422KB，靜態 import 會被併進主 JS chunk，連首頁訪客都得下載。改成動態
+  // 載入切出獨立 chunk。PiePanel 在收合狀態下也是掛著的（Collapsible 只是把高度
+  // 收到 0），所以進頁面就會開始抓，使用者展開手風琴時通常早就好了。
+  const [markup, setMarkup] = useState<string | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    import('./statsChartMobileMarkup').then((module) => {
+      if (!cancelled) setMarkup(module.default)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
   return (
-    <img
-      src={statsChartMobile}
-      alt="參賽者年級、黑客組科系、學校與創客組科系分布統計"
-      className="mx-auto block w-full"
-      style={{ aspectRatio: '343 / 715' }}
-    />
+    <div
+      className="relative mx-auto"
+      style={{ width: pct(PIE_SVG_W), ...ratio(PIE_SVG_W, PIE_SVG_H) }}
+    >
+      {/* 玻璃面板必須是圓餅圖的「背景」而不是「祖先」：backdrop-filter 會另建合成
+          層，把圖包進去等於又走回當初讓字變糊的那條路。素材還沒到的時候，這塊
+          先撐住版面，不會有空洞。 */}
+      <div
+        className="glass-dark absolute"
+        style={{
+          left: svgPctX(PIE_PANEL_X),
+          top: svgPctY(PIE_PANEL_Y),
+          width: svgPctX(PIE_PANEL_W),
+          height: svgPctY(PIE_PANEL_H),
+          borderRadius: mq(PIE_PANEL_RADIUS),
+        }}
+      />
+      {/* 內嵌 <svg> 而不是 <img>：WebKit 對 <img> 載入的 SVG 走 SVGImage 那條路，
+          點陣化解析度跟一般繪製管線不同，是 iOS 上向量圖變糊的常見成因。內容是
+          建置時就固定的自家素材，沒有外部輸入。 */}
+      {markup && (
+        <div
+          className="stats-chart-inline absolute inset-0"
+          role="img"
+          aria-label="參賽者年級、黑客組科系、學校與創客組科系分布統計"
+          dangerouslySetInnerHTML={{ __html: markup }}
+        />
+      )}
+    </div>
   )
 }
 
