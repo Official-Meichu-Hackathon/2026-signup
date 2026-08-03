@@ -14,6 +14,7 @@ import staffGlowEvents from '../../assets/home/staff-tabs-bg-events.svg'
 import staffGlowFinance from '../../assets/home/staff-tabs-bg-finance.svg'
 import staffGlowDesign from '../../assets/home/staff-tabs-bg-design.svg'
 import staffGlowDev from '../../assets/home/staff-tabs-bg-dev.svg'
+import logoTaipei from '../../assets/home/logo-taipei.webp'
 
 const DEPARTMENTS = [
   '行政部',
@@ -121,7 +122,15 @@ export default function StaffAndThanks() {
         </p>
         <div className="flex flex-col gap-2 font-['Zen_Antique'] text-xl text-[#4664AC] md:text-[40px] md:leading-[44px]">
           <p>國立陽明交通大學資訊工程學系</p>
+          <p>國立清華大學資訊工程學系</p>
           <p>財團法人交大思源基金會</p>
+          <img
+            src={logoTaipei}
+            alt="臺北市政府資訊局 Department of Information Technology, Taipei City Government"
+            loading="lazy"
+            decoding="async"
+            className="mx-auto mt-1 h-auto w-[150px] md:mt-2 md:w-[430px]"
+          />
         </div>
       </div>
 
