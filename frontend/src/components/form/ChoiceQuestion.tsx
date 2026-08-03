@@ -23,6 +23,8 @@ export default function ChoiceQuestion({
   onChange,
 }: ChoiceQuestionProps) {
   const groupName = useId()
+  // Long lists (衣服尺寸) wrap: equal min width keeps the rows in columns.
+  const dense = options.length > 5
 
   return (
     <div className="py-2 whitespace-pre-line md:py-8">
@@ -41,7 +43,7 @@ export default function ChoiceQuestion({
         </p>
       )}
       {description && (
-        <p className="mx-4 mt-1.5 text-[0.5rem] leading-snug whitespace-pre-line text-white/80 md:mt-3 md:text-xl md:leading-relaxed">
+        <p className="mx-4 mt-1.5 text-[0.5rem] leading-snug whitespace-pre-line text-white md:mt-3 md:text-xl md:leading-relaxed">
           {description}
         </p>
       )}
@@ -52,11 +54,17 @@ export default function ChoiceQuestion({
           className="mx-[2%] mt-2 w-[96%] max-w-[36rem] rounded-md md:mt-5"
         />
       )}
-      <div className="mx-4 mt-3 flex flex-wrap gap-x-8 gap-y-3 md:mt-5 md:gap-x-20 md:gap-y-6">
+      <div
+        className={`mx-4 mt-3 flex flex-wrap gap-y-3 md:mt-5 md:gap-y-6 ${
+          dense ? 'gap-x-3 md:gap-x-6' : 'gap-x-8 md:gap-x-20'
+        }`}
+      >
         {options.map((option) => (
           <label
             key={option}
-            className="flex cursor-pointer items-center gap-2 md:gap-3"
+            className={`flex cursor-pointer items-center gap-2 md:gap-3 ${
+              dense ? 'min-w-[3rem] md:min-w-[6.5rem]' : ''
+            }`}
           >
             <input
               type="radio"

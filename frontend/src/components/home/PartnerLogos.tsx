@@ -4,7 +4,7 @@ import logoCloudMosa from '../../assets/home/logo-cloudmosa.webp'
 import logoGoogle from '../../assets/home/logo-google.webp'
 import logoNxp from '../../assets/home/logo-nxp.webp'
 import logoAdvantest from '../../assets/home/logo-advantest.webp'
-import logoEclat from '../../assets/home/logo-eclat.webp'
+import logoEclat from '../../assets/home/logo-eclat-new.webp'
 import logoWtmicro from '../../assets/home/logo-wtmicro.webp'
 import logoTsmc from '../../assets/home/logo-tsmc.webp'
 import logoPhison from '../../assets/home/logo-phison.webp'
@@ -98,7 +98,7 @@ function MainPartnerGrid() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="前往聚陽實業 LinkedIn 專頁"
-        className="partner-logo-eclat h-[153px] w-[183.51px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
+        className="partner-logo-eclat w-[350px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
       >
         <img
           src={logoEclat}
