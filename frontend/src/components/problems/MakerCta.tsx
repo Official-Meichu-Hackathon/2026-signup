@@ -22,17 +22,24 @@ const cq = (n: number) => `${((n / CARD_W) * 100).toFixed(3)}cqw`
 const pctX = (n: number) => `${((n / CARD_W) * 100).toFixed(2)}%`
 const pctY = (n: number) => `${((n / CARD_H) * 100).toFixed(2)}%`
 
-// 設計稿的原型參數（每段時長、緩動）MCP 讀不到，故依分鏡自行拓一個節奏，
-// 全程約 3.2 秒。想調整整段快慢改這裡即可。注意 DELAY_LOGOS 加上最後一顆
-// logo 的錯開（3×60ms）再加 FADE_IN_MS 必須小於 REVEAL_MS，否則 logo 還沒
-// 淡入完就被切到下一階段（等於看不到）。
-const FADE_MS = 650 // 起始內容放大淡出
-const FADE_IN_MS = 520 // reveal 階段每個元素自己的淡入時長
-const DELAY_2026 = 0 // 以下三個是 reveal 階段內的相對延遲
-const DELAY_TITLE = 330
-const DELAY_LOGOS = 650
-const REVEAL_MS = 1800 // reveal 停留多久後進 content（logo 全亮後再停 450ms）
-const CONTENT_MS = 780 // 標題縮到頂端＋說明文字與連結浮現
+// 設計稿的原型參數（每段時長、緩動）MCP 讀不到，故依分鏡自行拓一個節奏。
+// 下面的基準值是原本的 3.2 秒版本，再乘上 SPEED 統一放慢 —— 市府反映點擊後的
+// 轉場太快。要再快或再慢只改 SPEED 一個數字即可，各段的相對比例（分鏡）不變。
+//
+// 全部時間都走同一個倍率，所以下面這個約束會自動維持：DELAY_LOGOS 加上最後一顆
+// logo 的錯開（3×LOGO_STAGGER_MS）再加 FADE_IN_MS 必須小於 REVEAL_MS，否則 logo
+// 還沒淡入完就被切到下一階段（等於看不到）。
+const SPEED = 1.5 // 1 = 原速（3.2 秒），1.5 = 現在的 4.8 秒
+const ms = (n: number) => Math.round(n * SPEED)
+
+const FADE_MS = ms(650) // 起始內容放大淡出
+const FADE_IN_MS = ms(520) // reveal 階段每個元素自己的淡入時長
+const DELAY_2026 = ms(0) // 以下三個是 reveal 階段內的相對延遲
+const DELAY_TITLE = ms(330)
+const DELAY_LOGOS = ms(650)
+const LOGO_STAGGER_MS = ms(60) // 四顆主辦單位 logo 之間的錯開
+const REVEAL_MS = ms(1800) // reveal 停留多久後進 content（logo 全亮後再停 450ms）
+const CONTENT_MS = ms(780) // 標題縮到頂端＋說明文字與連結浮現
 
 type Stage = 'idle' | 'fading' | 'reveal' | 'content'
 
@@ -46,6 +53,27 @@ const glow = (scale: number) =>
     `0 ${cq(4 * scale)} ${cq(40 * scale)} rgba(255,255,255,0.5)`,
     `0 ${cq(4 * scale)} ${cq(50 * scale)} rgba(255,255,255,0.5)`,
   ].join(', ')
+
+// 兩行主標題（2026 / 新竹X梅竹黑客松）在 reveal→content 之間會縮小並上移。
+// 原本是直接對 font-size、line-height、top 做 transition，但字級每一幀都在變，
+// 文字的基線在行框內會被重新對齊到像素格上 —— 實測沿著整條路徑取樣，字的視覺
+// 中心一階差分應該固定在 −8.98，實際卻在 −8.48 與 −9.48 之間來回跳，等於每幀
+// 偏離理想路徑約 ±0.5px。那就是看起來會抖的原因。
+//
+// 改成只動畫 transform：字級固定在大尺寸，縮小交給 scale、位移交給 translateY。
+// 瀏覽器插的是變換矩陣、不會重排文字，路徑因此完全平滑。比例剛好對得上設計稿：
+// 35/100 = 0.35，而光暈 glow(0.8) × 0.35 = glow(0.28)，正是 content 階段的值，
+// 所以 scale 會順便把光暈縮到對的大小，不必再各自動畫。
+//
+// 行高只影響行框高度：元素以自身中心對齊 top（translate 的 −50%），單行文字的
+// 視覺中心不受行高影響，故固定不動即可。寬度同理，用 max-content 讓它不參與動畫。
+const STACK_SCALE = 35 / 100
+
+// translate 的 −50% 取代原本的 -translate-x-1/2 / -translate-y-1/2 —— 內聯
+// transform 會蓋掉那兩個 class，置中必須自己帶上。dy 的單位是設計稿的 px：
+// cq(n) 換算出來的長度剛好等於 n 個設計 px，垂直方向也通用。
+const stackTransform = (dy: number, shrunk: boolean) =>
+  `translate(-50%, -50%) translateY(${cq(dy)}) scale(${shrunk ? STACK_SCALE : 1})`
 
 const ORG_LOGOS = [
   // 838:3060 勞力發展署 / 3059 市政府 / 3058 青年發展中心 / 3057 應用
@@ -174,15 +202,17 @@ export default function MakerCta() {
           </p>
         </div>
 
-        {/* 2026（Variant5 起）。Variant7→8 會縮小並移到卡片頂端 */}
+        {/* 2026（Variant5 起）。Variant7→8 會縮小並移到卡片頂端 —— 縮放與位移
+            都交給 transform，理由見 STACK_SCALE 上方的註解。 */}
         <p
-          className="font-zen text-periwinkle ease-out-strong absolute left-1/2 -translate-x-1/2 -translate-y-1/2 text-center transition-all"
+          className="font-zen text-periwinkle ease-out-strong absolute left-1/2 text-center whitespace-nowrap transition-all"
           style={{
-            top: isContent ? pctY(45) : pctY(143.2),
-            width: isContent ? pctX(219.52) : pctX(627.2),
-            fontSize: isContent ? cq(35) : cq(100),
-            lineHeight: isContent ? cq(44) : cq(64),
-            textShadow: glow(isContent ? 0.28 : 0.8),
+            top: pctY(143.2),
+            width: 'max-content',
+            fontSize: cq(100),
+            lineHeight: cq(64),
+            textShadow: glow(0.8),
+            transform: stackTransform(isContent ? 45 - 143.2 : 0, isContent),
             opacity: revealed ? 1 : 0,
             transitionDelay: stage === 'reveal' ? `${DELAY_2026}ms` : '0ms',
             transitionDuration: isContent
@@ -201,18 +231,18 @@ export default function MakerCta() {
             平台的備援 serif 寬度不同；再加上百分比與 cqw 各自的四捨五入。任何一項
             吃掉那 2.5%，「松」就會被擠到第二行。
             寬度同時從設計稿的 794／295.4 改成 max-content：不換行之後那個固定寬
-            度已經不再控制任何東西（文字靠 left-1/2 + -translate-x-1/2 置中，與框
-            寬無關），但只要備援字寬超過框，溢出只會往右單邊跑、標題就會偏掉。讓
-            框貼著文字就永遠是對稱的。動畫不受影響——字級仍在 transition，框寬跟著
-            字級平滑改變。 */}
+            度已經不再控制任何東西（文字靠 translate(-50%) 置中，與框寬無關），但
+            只要備援字寬超過框，溢出只會往右單邊跑、標題就會偏掉。讓框貼著文字就
+            永遠是對稱的。 */}
         <p
-          className="font-zen text-ink ease-out-strong absolute left-1/2 -translate-x-1/2 -translate-y-1/2 text-center whitespace-nowrap transition-all"
+          className="font-zen text-ink ease-out-strong absolute left-1/2 text-center whitespace-nowrap transition-all"
           style={{
-            top: isContent ? pctY(89.1) : pctY(269.2),
+            top: pctY(269.2),
             width: 'max-content',
-            fontSize: isContent ? cq(35) : cq(100),
-            lineHeight: isContent ? cq(44) : cq(64),
-            textShadow: glow(isContent ? 0.28 : 0.8),
+            fontSize: cq(100),
+            lineHeight: cq(64),
+            textShadow: glow(0.8),
+            transform: stackTransform(isContent ? 89.1 - 269.2 : 0, isContent),
             opacity: revealed ? 1 : 0,
             transitionDelay: stage === 'reveal' ? `${DELAY_TITLE}ms` : '0ms',
             transitionDuration: isContent
@@ -237,7 +267,9 @@ export default function MakerCta() {
               height: pctY(logo.h),
               opacity: stage === 'reveal' ? 1 : 0,
               transitionDelay:
-                stage === 'reveal' ? `${DELAY_LOGOS + index * 60}ms` : '0ms',
+                stage === 'reveal'
+                  ? `${DELAY_LOGOS + index * LOGO_STAGGER_MS}ms`
+                  : '0ms',
               transitionDuration: `${FADE_IN_MS}ms`,
             }}
           />
