@@ -3,7 +3,7 @@ import logo14th from '../../assets/Problems/logo-14th.svg'
 import ctaSparkle from '../../assets/Problems/cta-sparkle.svg'
 import cardDecor from '../../assets/Problems/maker-panel-decor.svg'
 import orgWda from '../../assets/Problems/org-wda.png'
-import orgCity from '../../assets/Problems/org-city.png'
+import orgCity from '../../assets/Problems/logo-government.svg'
 import orgYouth from '../../assets/Problems/org-youth.png'
 import orgApp from '../../assets/Problems/org-app.png'
 
@@ -75,34 +75,51 @@ const STACK_SCALE = 35 / 100
 const stackTransform = (dy: number, shrunk: boolean) =>
   `translate(-50%, -50%) translateY(${cq(dy)}) scale(${shrunk ? STACK_SCALE : 1})`
 
-const ORG_LOGOS = [
-  // 838:3060 勞力發展署 / 3059 市政府 / 3058 青年發展中心 / 3057 應用
-  {
-    src: orgWda,
-    alt: '勞動部勞動力發展署',
-    left: 233.44,
-    top: 353.6,
-    w: 90.4,
-    h: 89.6,
-  },
-  {
-    src: orgCity,
-    alt: '新竹市政府',
-    left: 360.64,
-    top: 354.4,
-    w: 85.6,
-    h: 74.4,
-  },
-  {
-    src: orgYouth,
-    alt: '新竹市青年發展中心',
-    left: 483.04,
-    top: 372.8,
-    w: 127.2,
-    h: 50.4,
-  },
-  { src: orgApp, alt: '應用', left: 647.04, top: 353.6, w: 80, h: 80 },
+// 四個主辦單位 logo（838:3060 勞力發展署 / 3059 市政府 / 3058 青年發展中心 /
+// 3057 應用）。原本四個 left 是設計稿逐個標出來的絕對座標，但市政府換成橫式標準字
+// 之後寬度從 85.6 變成 140，沿用舊座標會直接壓到青年發展中心（360.64+140=500.64
+// > 483.04），整排必須重排。
+//
+// 所以改成由寬度推算：設計稿原本四格的間距剛好都是 36.8、整排中心也落在卡片中央，
+// 這裡就照這兩個規則自動排版，換素材時只要改寬高、不用再手算每個 left。
+// （舊座標的整排中心是 480.24，與卡片中央 480.64 差 0.4，是設計稿匯出的湊整誤差，
+// 這裡改用真正的中央。）
+const ORG_GAP = 36.8
+
+// 市政府的新素材（logo-government.svg）宣告尺寸 140×36，與其他三格同一個座標系。
+// 垂直位置對齊隔壁青年發展中心的中心線 398：其餘三格的中心分別是 398.4／398.0／
+// 393.6，是設計稿手放的，沒有統一基準；市政府與青年發展中心同為橫式字樣，對齊
+// 這兩者看起來最整齊。
+const ORG_ROW_CENTRE_Y = 398
+
+const ORG_LOGOS_RAW = [
+  { src: orgWda, alt: '勞動部勞動力發展署', top: 353.6, w: 90.4, h: 89.6 },
+  { src: orgCity, alt: '新竹市政府', w: 140, h: 36 },
+  { src: orgYouth, alt: '新竹市青年發展中心', top: 372.8, w: 127.2, h: 50.4 },
+  { src: orgApp, alt: '應用', top: 353.6, w: 80, h: 80 },
 ]
+
+const ORG_ROW_W =
+  ORG_LOGOS_RAW.reduce((sum, l) => sum + l.w, 0) +
+  ORG_GAP * (ORG_LOGOS_RAW.length - 1)
+
+const ORG_LOGOS = ORG_LOGOS_RAW.reduce<
+  {
+    src: string
+    alt: string
+    left: number
+    top: number
+    w: number
+    h: number
+  }[]
+>((acc, logo) => {
+  const prev = acc.at(-1)
+  const left = prev ? prev.left + prev.w + ORG_GAP : CARD_W / 2 - ORG_ROW_W / 2
+  return [
+    ...acc,
+    { ...logo, left, top: logo.top ?? ORG_ROW_CENTRE_Y - logo.h / 2 },
+  ]
+}, [])
 
 const PARAGRAPH = [
   '競賽主題：新竹市AI領航青年數位工具補助—提升數位工具資安防禦與行政效能創新方案',
