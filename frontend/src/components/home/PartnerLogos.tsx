@@ -4,7 +4,7 @@ import logoCloudMosa from '../../assets/home/logo-cloudmosa.webp'
 import logoGoogle from '../../assets/home/logo-google.webp'
 import logoNxp from '../../assets/home/logo-nxp.webp'
 import logoAdvantest from '../../assets/home/logo-advantest.webp'
-import logoEclat from '../../assets/home/logo-makalot.webp'
+import logoEclat from '../../assets/home/logo-eclat-new.webp'
 import logoWtmicro from '../../assets/home/logo-wtmicro.webp'
 import logoTsmc from '../../assets/home/logo-tsmc.webp'
 import logoPhison from '../../assets/home/logo-phison.webp'
@@ -14,6 +14,7 @@ import logoCathay from '../../assets/home/logo-cathay.webp'
 import logoNchc from '../../assets/home/logo-nchc.webp'
 import logoHsinchuCity from '../../assets/home/logo-hsinchu-city.webp'
 import logoHsinchuYouth from '../../assets/home/logo-hsinchu-youth.webp'
+import logoETToday from '../../assets/home/logo-ettoday.webp'
 
 const partnerUrls = {
   hsinchuCity: 'https://www.hccg.gov.tw/hccg/index',
@@ -98,7 +99,7 @@ function MainPartnerGrid() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="前往聚陽實業 LinkedIn 專頁"
-        className="partner-logo-eclat w-[200px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
+        className="partner-logo-eclat w-[350px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6e8eda]"
       >
         <img
           src={logoEclat}
@@ -305,8 +306,17 @@ export default function PartnerLogos() {
         <SectionTitle>特殊贊助</SectionTitle>
       </div>
 
-      <div className="partner-block partner-placeholder mt-20 flex w-full flex-col items-center md:mt-[113px]">
+      <div className="partner-block partner-placeholder mt-24 flex w-full flex-col items-center gap-6 md:mt-[113px] md:gap-[60px]">
         <SectionTitle>媒體合作</SectionTitle>
+        <div className="h-[30px] w-[151px] md:h-[74px] md:w-[378px]">
+          <img
+            src={logoETToday}
+            alt="ETToday"
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover"
+          />
+        </div>
       </div>
     </div>
   )
