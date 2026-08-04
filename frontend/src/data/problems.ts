@@ -4,7 +4,7 @@ import logoCloudMosa from '../assets/Problems/logo-cloudmosa.png'
 import logoLogitech from '../assets/Problems/logo-logitech.png'
 import logoAmdItri from '../assets/Problems/logo-amd-itri.png'
 import logoMakalot from '../assets/Problems/logo-makalot_V2.webp'
-import logoMakalotMark from '../assets/Problems/logo-makalot.png'
+import logoMakalotMark from '../assets/Problems/logo-makalot-V3.webp'
 import logoNxp from '../assets/Problems/logo-nxp-figma.png'
 import logoWtMicro from '../assets/Problems/logo-wtmicro-figma.png'
 import logoAdvantest from '../assets/Problems/logo-advantest-2.svg'
@@ -64,8 +64,9 @@ export const PROBLEMS: Problem[] = [
     // 而報名表的志願序（PRIORITY_OPTIONS）本來就是用簡稱，兩邊一致。
     sponsor: '聚陽實業',
     logos: [logoMakalot],
-    // 小卡沿用舊的方形標誌：小卡的框（LOGO_BOXES[3]，43.31%×20.04%，比例 1.2）
-    // 是照方形標誌手調的，V2 是 5.2:1 的寬版標準字，塞進那個框只會剩細細一條。
+    // 小卡另外給一張：小卡的框（LOGO_BOXES[3]，43.31%×20.04%，比例約 1.2）是照
+    // 方形標誌手調的，放大卡用的 V2 是 5.2:1 的寬版標準字，塞進那個框只會剩細細
+    // 一條。V3（1049×688，比例 1.525）比較接近框的比例，適合小卡。
     cardLogos: [logoMakalotMark],
     hashtags: ['#推薦系統', '#自然語言互動', '#時尚科技'],
     paragraphs: [],
@@ -73,7 +74,14 @@ export const PROBLEMS: Problem[] = [
   {
     sponsor: '恩智浦半導體',
     logos: [logoNxp, logoWtMicro],
-    hashtags: ['#實體 AI（Physical AI）', '#邊緣 AI（Edge AI）', '#機器人'],
+    // 「縁」是日文新字體 U+7E01，不是繁體的「緣」U+7DE3 —— 放大卡的 hashtag 用
+    // Zen Antique（日文字型），而它沒有 U+7DE3 的字面，繁體寫法會單獨掉到備援字、
+    // 整行只有那一個字長得不一樣（市府回報過）。實測：邊/運/算 的前進寬都是
+    // 0.9961em（Zen Antique），緣 是 1.0003em（備援），改成 縁 之後回到 0.9961em。
+    // 與頁面主標題「題目説明」用日文 U+8AAC 同理，設計稿本身也是這樣處理。
+    // 只有走 font-zen 的 hashtag 需要這樣寫；下面 paragraphs 是 font-noto，用正常
+    // 的繁體「緣」即可，不要一起改。
+    hashtags: ['#實體 AI（Physical AI）', '#邊縁 AI（Edge AI）', '#機器人'],
     paragraphs: [
       '善用邊緣運算與人工智慧、結合語音影像等感測辨識，兼顧功能與資訊安全，打造具即時反應的智慧創新應用。',
       '例如，使用 FRDM i.MX93 開發板做為感測中心，以 Wi-Fi 方式連接各式感測器(如:攝影鏡頭)，進行物品辨識以判斷物品是否正常運作。這些感測器資料可以結合在一起，透過大數據、AI 演算法,做出更多不同的應用，亦可連接到手機 APP 控制，相關資料在各設備間的連結，可透過 IW416 Wi-Fi 進行安全傳輸。',
@@ -82,7 +90,8 @@ export const PROBLEMS: Problem[] = [
   {
     sponsor: '愛德萬測試',
     logos: [logoAdvantest],
-    hashtags: ['#AI', '#數據分析', '#邊緣運算'],
+    // 「縁」同上，日文新字體 U+7E01。理由見 NXP 那筆的註解。
+    hashtags: ['#AI', '#數據分析', '#邊縁運算'],
     paragraphs: [],
   },
   {

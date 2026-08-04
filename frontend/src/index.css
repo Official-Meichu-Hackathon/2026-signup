@@ -19,7 +19,16 @@ html {
   --color-ink: #f6f6f6;
   --color-periwinkle: #a5bde2;
   --color-royal: #4664ac;
-  --font-zen: 'Zen Antique', serif;
+  /* Zen Antique 是日文字型，缺少幾個繁體才有的字面，實測缺的是：
+     緣 U+7DE3（#邊緣 AI / #邊緣運算，日文寫作「縁」）、閱 U+95B1（每張放大卡
+     底部的「閱讀完畢」）、全形括號（）U+FF08/FF09、全形驚嘆號！U+FF01。
+     這些字會掉到泛用的 serif，各作業系統挑到的字型都不同（Windows 常是新細明體），
+     跟旁邊的字明顯不同體。補一層 Noto Serif TC 當備援：它同為襯線 CJK、繁體字面
+     齊全，而且 index.html 本來就在載了（那邊同時補上 400 字重，原本只載 700，
+     不然備援字會比 Zen Antique 粗一階）。
+     注意：不要為了避開缺字而把內文改成日文漢字（緣→縁），那是錯的繁中寫法。
+     題目「説明」用日文 U+8AAC 是設計稿本來就這樣寫，屬例外。 */
+  --font-zen: 'Zen Antique', 'Noto Serif TC', serif;
   --font-noto: 'Noto Sans', 'Noto Sans TC', sans-serif;
   /* Strong ease-out — built-in CSS easings are too weak for UI motion */
   --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
@@ -342,7 +351,7 @@ body {
   .home-awards-title,
   .partner-section-title,
   .staff-section-title {
-    font-family: 'Zen Antique', serif;
+    font-family: 'Zen Antique', 'Noto Serif TC', serif;
     font-size: 14px !important;
     font-weight: 400;
     line-height: 15.6px;
@@ -1027,7 +1036,7 @@ body {
     align-items: center;
     justify-content: center;
     padding: 0 10px !important;
-    font-family: 'Zen Antique', serif;
+    font-family: 'Zen Antique', 'Noto Serif TC', serif;
     font-size: 12px !important;
     line-height: 1;
     white-space: nowrap;
