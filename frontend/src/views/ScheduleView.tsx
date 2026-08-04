@@ -85,7 +85,14 @@ function Constellation({
 function DesktopSchedule() {
   return (
     <div className="overflow-x-auto">
-      <div className="relative aspect-[1440/3155] w-full min-w-[768px] overflow-hidden">
+      {/* Height comes from padding-top (3155/1440), not the `aspect-ratio`
+          property — every child here is percentage-positioned against this
+          box's height via `absolute` top/left, and WebKit has repeated,
+          still-unfixed-in-stable bugs miscalculating `aspect-ratio` on boxes
+          whose only content is `position: absolute` children. padding-top
+          sidesteps that class of bug entirely (it's just box height, not a
+          browser-computed ratio). */}
+      <div className="relative w-full min-w-[768px] overflow-hidden pt-[219.097%]">
         <img
           data-trail-bg="schedule"
           src={bgTop}
@@ -188,7 +195,9 @@ function DesktopSchedule() {
 // art and type scale, not just the desktop version shrunk down.
 function MobileSchedule() {
   return (
-    <div className="relative aspect-[390/938] w-full min-w-[320px] overflow-hidden">
+    // See the matching comment in DesktopSchedule for why this is padding-top
+    // (938/390) rather than `aspect-ratio`.
+    <div className="relative w-full min-w-[320px] overflow-hidden pt-[240.513%]">
       <img
         data-trail-bg="schedule"
         src={bgTop}

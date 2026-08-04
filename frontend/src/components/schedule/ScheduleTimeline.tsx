@@ -431,11 +431,20 @@ export default function ScheduleTimeline({
 
   const lineMask = selectedDay === '19' ? lineMask19 : lineMask20
 
+  // Height comes from padding-top, not the `aspect-ratio` property — see the
+  // matching comment in ScheduleView for why (WebKit bugs miscalculating
+  // `aspect-ratio` on boxes with only `position: absolute` children).
+  // `className` always supplies `absolute` (see both callers in
+  // ScheduleView); no default position class is set here so there's nothing
+  // for it to conflict with in the cascade.
+  const [aspectW, aspectH] = line.aspect.split('/').map(Number)
+  const paddingTop = `${(aspectH / aspectW) * 100}%`
+
   return (
     <div
       ref={containerRef}
-      className={`relative w-full transition-[aspect-ratio] duration-300 ease-out ${className}`}
-      style={{ aspectRatio: line.aspect }}
+      className={`w-full transition-[padding-top] duration-300 ease-out ${className}`}
+      style={{ paddingTop }}
     >
       <DayTab
         style={{
