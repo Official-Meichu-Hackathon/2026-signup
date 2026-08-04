@@ -14,6 +14,7 @@ import logoCathay from '../../assets/home/logo-cathay.webp'
 import logoNchc from '../../assets/home/logo-nchc.webp'
 import logoHsinchuCity from '../../assets/home/logo-hsinchu-city.webp'
 import logoHsinchuYouth from '../../assets/home/logo-hsinchu-youth.webp'
+import logoETToday from '../../assets/home/logo-ettoday.webp'
 
 const partnerUrls = {
   hsinchuCity: 'https://www.hccg.gov.tw/hccg/index',
@@ -305,8 +306,17 @@ export default function PartnerLogos() {
         <SectionTitle>特殊贊助</SectionTitle>
       </div>
 
-      <div className="partner-block partner-placeholder mt-20 flex w-full flex-col items-center md:mt-[113px]">
+      <div className="partner-block partner-placeholder mt-24 flex w-full flex-col items-center gap-6 md:mt-[113px] md:gap-[60px]">
         <SectionTitle>媒體合作</SectionTitle>
+        <div className="h-[30px] w-[151px] md:h-[74px] md:w-[378px]">
+          <img
+            src={logoETToday}
+            alt="ETToday"
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover"
+          />
+        </div>
       </div>
     </div>
   )
