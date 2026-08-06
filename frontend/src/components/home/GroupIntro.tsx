@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import groupHacker from '../../assets/home/group-hacker.webp'
 import groupMaker from '../../assets/home/group-maker.webp'
-import workshopDetailHacker from '../../assets/home/workshop-detail-1-v3.webp'
+import workshopDetailHacker from '../../assets/home/workshop-detail-1-v4.webp'
 import workshopDetailMaker from '../../assets/home/workshop-detail-2.webp'
 import { GroupTitleSparkles } from './HomeSparkles'
 
