@@ -93,6 +93,17 @@ export const validateMaxLength =
   (value: string): boolean =>
     value.length <= max
 
+// Strips emoji by removing every component character emoji are built from:
+// base pictographs, flag letters, skin tones, tag chars, ZWJ, VS16, keycap.
+// Deliberately u-flag (ES2018): the v-flag \p{RGI_Emoji} version compiled to a
+// runtime `new RegExp` under the browserslist target and threw SyntaxError on
+// pre-2023 browsers (Safari <17), killing all form input there.
+export const stripEmoji = (value: string): string =>
+  value.replace(
+    /\p{Extended_Pictographic}|\p{Regional_Indicator}|[\u{1F3FB}-\u{1F3FF}\u{E0020}-\u{E007F}]|\u200D|\uFE0F|\u20E3/gu,
+    '',
+  )
+
 export const validateEmail = (email: string): boolean =>
   /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)
 

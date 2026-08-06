@@ -385,7 +385,7 @@ const DATE_ITEMS: DateItem[] = [
     startNote: '12:00 起',
     endDate: '08.19',
     endDay: 'Wed',
-    note: '20:00 前',
+    note: '19:00 前',
     label: '開始報名',
   },
   { date: '08.20', day: 'Mon', label: '正備取隊伍與所屬企業公布' },
