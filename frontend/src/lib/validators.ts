@@ -93,6 +93,9 @@ export const validateMaxLength =
   (value: string): boolean =>
     value.length <= max
 
+export const stripEmoji = (value: string): string =>
+  value.replace(/\p{RGI_Emoji}(?:\u200D|\uFE0F)*/gv, '')
+
 export const validateEmail = (email: string): boolean =>
   /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)
 
