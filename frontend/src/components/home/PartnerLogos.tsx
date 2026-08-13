@@ -15,6 +15,7 @@ import logoNchc from '../../assets/home/logo-nchc.webp'
 import logoHsinchuCity from '../../assets/home/logo-hsinchu-city.webp'
 import logoHsinchuYouth from '../../assets/home/logo-hsinchu-youth.webp'
 import logoETToday from '../../assets/home/logo-ettoday.webp'
+import logoTWNews from '../../assets/home/logo-twnews.webp'
 
 const partnerUrls = {
   hsinchuCity: 'https://www.hccg.gov.tw/hccg/index',
@@ -315,6 +316,15 @@ export default function PartnerLogos() {
             loading="lazy"
             decoding="async"
             className="h-full w-full object-cover"
+          />
+        </div>
+        <div className="aspect-square w-[151px] md:w-[200px]">
+          <img
+            src={logoTWNews}
+            alt="TW News"
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-contain"
           />
         </div>
       </div>
