@@ -282,7 +282,7 @@ export default function SignupView({ onSuccess }: SignupViewProps) {
           description={
             isMaker
               ? ''
-              : '備註：\n(1) 企業題目或組別將依據隊伍的志願序分發。若單一企業或組別超額，將亂數抽籤決定。\n(2) 未報名創客交流組則將創客交流組的志願序填為 8。\n(3) 若未選擇，將隨機分配。'
+              : '備註：\n(1) 企業題目或組別將依據隊伍的志願序分發。若單一企業或組別超額，將綜合參賽者經歷及亂數抽籤決定。\n(2) 未報名創客交流組則將創客交流組的志願序填為 8。\n(3) 若未選擇，將隨機分配。'
           }
           value={priorityOrder}
           onChange={setPriorityOrder}
