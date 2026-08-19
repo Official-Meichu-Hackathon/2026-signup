@@ -84,7 +84,7 @@ export default function Navbar() {
                   : 'border-white/20 bg-white/10 text-white'
               } ${menuOpen ? 'pointer-events-none opacity-0' : ''}`}
             >
-              報名尚未開始
+              報名結束
             </button>
           )}
           {/* Covered by the drawer while open, same as the signup button —
