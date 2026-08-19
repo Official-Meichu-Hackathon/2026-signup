@@ -232,7 +232,7 @@ export default function Awards({
           disabled
           className="home-awards-signup md:font-chiron flex h-[70px] w-full max-w-[358px] cursor-not-allowed items-center justify-center rounded-[30px] border border-[rgba(211,228,252,0.8)] bg-[rgba(138,153,174,0.15)] text-2xl font-black text-[#b1a2ca] opacity-50 shadow-[0px_4px_20px_-1px_rgba(28,27,31,0.6)] md:mt-[10px] md:h-[93px] md:text-[32px] md:leading-[40px] md:font-extrabold"
         >
-          報名尚未開始
+          報名結束
         </button>
       )}
     </div>
