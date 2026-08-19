@@ -318,7 +318,7 @@ export default function PartnerLogos() {
             className="h-full w-full object-cover"
           />
         </div>
-        <div className="aspect-square w-[151px] md:w-[200px]">
+        <div className="h-[30px] w-[100px] md:h-[74px] md:w-[247px]">
           <img
             src={logoTWNews}
             alt="TW News"
