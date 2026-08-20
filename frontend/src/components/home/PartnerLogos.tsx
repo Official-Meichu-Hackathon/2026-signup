@@ -9,6 +9,7 @@ import logoWtmicro from '../../assets/home/logo-wtmicro.webp'
 import logoTsmc from '../../assets/home/logo-tsmc.webp'
 import logoPhison from '../../assets/home/logo-phison.webp'
 import logoMaicoin from '../../assets/home/logo-maicoin.webp'
+import logo91App from '../../assets/home/logo-91app.webp'
 import logoPixart from '../../assets/home/logo-pixart.webp'
 import logoCathay from '../../assets/home/logo-cathay.webp'
 import logoNchc from '../../assets/home/logo-nchc.webp'
@@ -269,6 +270,19 @@ export default function PartnerLogos() {
                 loading="lazy"
                 decoding="async"
                 className="absolute inset-0 h-full w-full max-w-none object-cover"
+              />
+            </div>
+          </div>
+
+          <div className="sponsor-tier sponsor-tier-91app flex w-full flex-col items-start gap-[3px]">
+            <SponsorTierLabel>Silver</SponsorTierLabel>
+            <div className="relative aspect-[1272/200] w-full">
+              <img
+                src={logo91App}
+                alt="財團法人91APP基金會"
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 h-full w-full max-w-none object-contain"
               />
             </div>
           </div>
