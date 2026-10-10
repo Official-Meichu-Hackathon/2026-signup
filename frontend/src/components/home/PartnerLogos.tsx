@@ -15,8 +15,12 @@ import logoCathay from '../../assets/home/logo-cathay.webp'
 import logoNchc from '../../assets/home/logo-nchc.webp'
 import logoHsinchuCity from '../../assets/home/logo-hsinchu-city.webp'
 import logoHsinchuYouth from '../../assets/home/logo-hsinchu-youth.webp'
-import logoETToday from '../../assets/home/logo-ettoday.webp'
+// media partners
 import logoTWNews from '../../assets/home/logo-twnews.webp'
+import logoData from '../../assets/home/logo-datainnolab.svg'
+import logoTvbs from '../../assets/home/logo-tvbs.svg'
+import logoETToday from '../../assets/home/logo-ettoday.webp'
+import logoMeritTimes from '../../assets/home/logo-merit-times.png'
 
 const partnerUrls = {
   hsinchuCity: 'https://www.hccg.gov.tw/hccg/index',
@@ -323,6 +327,33 @@ export default function PartnerLogos() {
 
       <div className="partner-block partner-placeholder mt-24 flex w-full flex-col items-center gap-6 md:mt-[113px] md:gap-[60px]">
         <SectionTitle>媒體合作</SectionTitle>
+        <div className="h-[30px] w-[100px] md:h-[74px] md:w-[247px]">
+          <img
+            src={logoTWNews}
+            alt="TW News"
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-contain"
+          />
+        </div>
+        <div className="aspect-[1439/286] w-[180px] md:w-[450px]">
+          <img
+            src={logoData}
+            alt="Data InnoLab"
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-contain"
+          />
+        </div>
+        <div className="relative aspect-[714/290] w-[74px] overflow-hidden md:w-[182px]">
+          <img
+            src={logoTvbs}
+            alt="TVBS"
+            loading="lazy"
+            decoding="async"
+            className="absolute top-[-70.02%] left-[-27.46%] h-[273.61%] w-[157.24%] max-w-none"
+          />
+        </div>
         <div className="h-[30px] w-[151px] md:h-[74px] md:w-[378px]">
           <img
             src={logoETToday}
@@ -332,10 +363,10 @@ export default function PartnerLogos() {
             className="h-full w-full object-cover"
           />
         </div>
-        <div className="h-[30px] w-[100px] md:h-[74px] md:w-[247px]">
+        <div className="aspect-[803/472] w-[100px] md:w-[220px]">
           <img
-            src={logoTWNews}
-            alt="TW News"
+            src={logoMeritTimes}
+            alt="Merit Times"
             loading="lazy"
             decoding="async"
             className="h-full w-full object-contain"
